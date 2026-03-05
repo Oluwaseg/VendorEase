@@ -7,7 +7,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 interface CurrencyContextValue {
   currency: SupportedCurrency;
   setCurrency: (c: SupportedCurrency) => void;
-  convert: (usdAmount: number) => number;
+  convert: (nairaAmount: number) => number;
 }
 
 const CurrencyContext = createContext<CurrencyContextValue | null>(null);
@@ -19,7 +19,6 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     NGN: 1,
   });
 
-  // 🌍 auto-detect location
   useEffect(() => {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -35,8 +34,11 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     getFxRates().then(setRates);
   }, []);
 
-  const convert = (usdAmount: number) => {
-    return usdAmount * rates[currency];
+  // Always treat input as NGN
+  const convert = (nairaAmount: number) => {
+    if (currency === 'NGN') return nairaAmount;
+    // Convert NGN to USD
+    return nairaAmount / rates.NGN;
   };
 
   return (

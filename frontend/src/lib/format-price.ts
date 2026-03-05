@@ -1,5 +1,7 @@
 import { CURRENCY_CONFIG, type SupportedCurrency } from './currency';
 
+import { getFxRates } from './fx';
+
 export function formatPrice(
   amount: number,
   currency: SupportedCurrency
@@ -10,6 +12,20 @@ export function formatPrice(
     style: 'currency',
     currency,
   }).format(amount);
+}
+
+// Converts NGN base price to selected currency for display
+export async function convertAndFormatPrice(
+  nairaAmount: number,
+  currency: SupportedCurrency
+): Promise<string> {
+  if (currency === 'NGN') {
+    return formatPrice(nairaAmount, 'NGN');
+  }
+  const rates = await getFxRates();
+  // Convert NGN to USD using rates
+  const usdAmount = nairaAmount / rates.NGN;
+  return formatPrice(usdAmount, 'USD');
 }
 
 export function formatPriceRange(
