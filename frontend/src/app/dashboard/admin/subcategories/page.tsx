@@ -13,6 +13,7 @@ import {
   useUpdateSubcategory,
 } from '@/hooks/use-subcategory';
 import { Subcategory } from '@/types/subcategory';
+import { format } from 'date-fns/format';
 import {
   Calendar,
   Edit2,
@@ -22,7 +23,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function SubcategoriesPage() {
@@ -43,6 +44,15 @@ export default function SubcategoriesPage() {
     description: '',
     isPublished: true,
   });
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsModalOpen(false);
+    };
+
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
 
   // Generate slug from name
   const generateSlug = (name: string) => {
@@ -101,7 +111,7 @@ export default function SubcategoriesPage() {
     setFormData({
       name: subcategory.name,
       slug: subcategory.slug,
-      category: subcategory.category,
+      category: subcategory.category._id,
       description: subcategory.description || '',
       isPublished: subcategory.isPublished,
     });
@@ -122,12 +132,16 @@ export default function SubcategoriesPage() {
       return;
     }
 
+    const submitData = {
+      ...formData,
+      category: formData.category, // send only the category ID
+    };
+
     if (selectedSubcategory) {
-      // Update
       updateMutation.mutate(
         {
           id: selectedSubcategory._id,
-          data: formData,
+          data: submitData,
         },
         {
           onSuccess: () => {
@@ -136,15 +150,13 @@ export default function SubcategoriesPage() {
         }
       );
     } else {
-      // Create
-      createMutation.mutate(formData, {
+      createMutation.mutate(submitData, {
         onSuccess: () => {
           setIsModalOpen(false);
         },
       });
     }
   };
-
   // Handle delete
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this subcategory?')) {
@@ -157,18 +169,10 @@ export default function SubcategoriesPage() {
     sub.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Get category name by ID
-  const getCategoryName = (categoryId: string) => {
-    return categories.find((cat) => cat._id === categoryId)?.name || 'Unknown';
-  };
-
   // Format date
+
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
+    return format(new Date(dateString), 'MMM dd, yyyy');
   };
 
   return (
@@ -264,7 +268,7 @@ export default function SubcategoriesPage() {
                       variant='secondary'
                       className='bg-accent/10 text-accent hover:bg-accent/15'
                     >
-                      {getCategoryName(subcategory.category)}
+                      {subcategory.category.name}
                     </Badge>
                   </div>
 
@@ -322,6 +326,7 @@ export default function SubcategoriesPage() {
                       <span className='sr-only'>Edit</span>
                     </Button>
                     <Button
+                      disabled={deleteMutation.isPending}
                       onClick={() => handleDelete(subcategory._id)}
                       size='sm'
                       variant='ghost'

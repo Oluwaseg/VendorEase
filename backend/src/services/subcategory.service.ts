@@ -70,7 +70,10 @@ class SubcategoryService {
   }
 
   async getSubcategoryById(id: string): Promise<ISubcategory> {
-    const subcategory = await Subcategory.findById(id).populate('category');
+    const subcategory = await Subcategory.findById(id).populate(
+      'category',
+      'name'
+    );
 
     if (!subcategory) {
       throw new Error('Subcategory not found');
@@ -81,7 +84,8 @@ class SubcategoryService {
 
   async getSubcategoryBySlug(slug: string): Promise<ISubcategory> {
     const subcategory = await Subcategory.findOne({ slug }).populate(
-      'category'
+      'category',
+      'name'
     );
 
     if (!subcategory) {

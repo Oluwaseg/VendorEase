@@ -2,7 +2,7 @@ import { ApiRoutes } from '@/api';
 import axiosInstance from '@/lib/axios';
 import { unwrap } from '@/lib/unwrap';
 import { ApiResponse } from '@/types/api-response';
-import { Subcategory } from '@/types/subcategory';
+import { Subcategory, SubcategoryInput } from '@/types/subcategory';
 
 // ---------------- GET ALL SUBCATEGORIES ----------------
 export const getSubcategories = async (): Promise<Subcategory[]> => {
@@ -35,7 +35,7 @@ export const getSubcategoryById = async (id: string): Promise<Subcategory> => {
 
 // ---------------- CREATE SUBCATEGORY (Moderator/Admin) ----------------
 export const createSubcategory = async (
-  data: Partial<Subcategory>
+  data: SubcategoryInput
 ): Promise<Subcategory> => {
   const res = (await axiosInstance.post<ApiResponse<Subcategory>>(
     ApiRoutes.subcategories.list,
@@ -48,7 +48,7 @@ export const createSubcategory = async (
 // ---------------- UPDATE SUBCATEGORY (Moderator/Admin) ----------------
 export const updateSubcategory = async (
   id: string,
-  data: Partial<Subcategory>
+  data: SubcategoryInput
 ): Promise<Subcategory> => {
   const res = (await axiosInstance.patch<ApiResponse<Subcategory>>(
     ApiRoutes.subcategories.byId(id),

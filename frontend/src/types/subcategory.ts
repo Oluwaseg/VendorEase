@@ -1,3 +1,5 @@
+import { Category } from './category';
+
 export interface Subcategory {
   _id: string;
 
@@ -5,11 +7,19 @@ export interface Subcategory {
   slug: string;
 
   // Relation
-  category: string; // Category _id
+  category: Category; // Category _id
 
   description?: string;
   isPublished: boolean;
 
   createdAt: string;
   updatedAt: string;
+}
+
+export interface SubcategoryInput {
+  name: string;
+  slug: string;
+  category: string; // category ID
+  description?: string;
+  isPublished: boolean;
 }

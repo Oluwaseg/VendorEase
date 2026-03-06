@@ -7,7 +7,7 @@ import {
   getSubcategoryBySlug,
   updateSubcategory,
 } from '@/services/subcategory.service';
-import { Subcategory } from '@/types/subcategory';
+import { Subcategory, SubcategoryInput } from '@/types/subcategory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -61,7 +61,7 @@ export const useSubcategoryById = (id: string) => {
 export const useCreateSubcategory = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Subcategory, Error, Partial<Subcategory>>({
+  return useMutation<Subcategory, Error, SubcategoryInput>({
     mutationFn: createSubcategory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SUBCATEGORY_KEYS.all });
@@ -82,7 +82,7 @@ export const useUpdateSubcategory = () => {
   return useMutation<
     Subcategory,
     Error,
-    { id: string; data: Partial<Subcategory> }
+    { id: string; data: SubcategoryInput }
   >({
     mutationFn: ({ id, data }) => updateSubcategory(id, data),
     onSuccess: (data) => {
