@@ -5,6 +5,7 @@ import cartRoutes from './cart.route';
 import categoryRoutes from './category.route';
 import checkoutRoutes from './checkout.route';
 import couponRoutes from './coupon.route';
+import paymentRoutes from './payment.route';
 import productRoutes from './product.route';
 import referralRoutes from './referral.route';
 import reviewRoutes from './review.route';
@@ -21,6 +22,8 @@ router.use('/cart', cartRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/checkout', checkoutRoutes);
 router.use('/coupons', couponRoutes);
+
+router.use('/payment', paymentRoutes);
 
 router.use('/admin', adminRoutes);
 
