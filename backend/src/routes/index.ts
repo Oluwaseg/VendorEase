@@ -10,6 +10,7 @@ import productRoutes from './product.route';
 import referralRoutes from './referral.route';
 import reviewRoutes from './review.route';
 import subcategoryRoutes from './subcategory.route';
+import webhookRoutes from './webhook.route';
 
 const router = Router();
 
@@ -25,6 +26,7 @@ router.use('/coupons', couponRoutes);
 
 router.use('/payment', paymentRoutes);
 
+router.use('/webhook', webhookRoutes);
 router.use('/admin', adminRoutes);
 
 export default router;

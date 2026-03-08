@@ -62,6 +62,26 @@ class PaymentService {
     );
     return response.data;
   }
+
+  async handlePaystackWebhook(event: any) {
+    // event.data.reference, event.data.status, event.data.metadata
+    const { reference, status, metadata } = event.data || {};
+    if (!reference || !metadata || !metadata.orderId) return;
+
+    const order = await Order.findById(metadata.orderId);
+    if (!order) return;
+
+    if (status === 'success' || status === 'completed') {
+      order.status = 'paid';
+      order.paymentIntentId = reference;
+      await order.save();
+      // Optionally clear cart, send confirmation, etc.
+    } else {
+      order.status = 'cancelled'; // Use allowed status value
+      order.paymentIntentId = reference;
+      await order.save();
+    }
+  }
 }
 
 export default new PaymentService();
