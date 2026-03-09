@@ -1,6 +1,5 @@
 import { ApiRoutes } from '@/api';
 import axiosInstance from '@/lib/axios';
-import { unwrap } from '@/lib/unwrap';
 import { ApiResponse } from '@/types/api-response';
 
 import { ReferralLink, ReferralStats } from '@/types/referral';
@@ -25,16 +24,21 @@ export const getReferralLink = async (): Promise<ReferralLink> => {
   );
 
   if (res.status === 'success') {
-    return res.payload;
+    return res.payload; // ✅ correct
   }
 
   throw new Error(res.message || 'Failed to fetch referral link');
 };
 // ---------------- INVITE FRIEND ----------------
-export const inviteFriend = async (email: string): Promise<null> => {
-  const res = await axiosInstance.post<ApiResponse<null>>(
+export const inviteFriend = async (emails: string[]): Promise<string> => {
+  const res: ApiResponse<null> = await axiosInstance.post(
     ApiRoutes.referrals.invite,
-    { email }
+    { emails }
   );
-  return unwrap(res.data);
+
+  if (res.status !== 'success') {
+    throw new Error(res.message);
+  }
+
+  return res.message;
 };
