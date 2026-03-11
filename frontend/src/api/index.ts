@@ -53,12 +53,15 @@ export const ApiRoutes = {
   },
   orders: {
     list: '/orders',
-    details: (orderId: string) => `/orders/${orderId}`,
+    details: (id: string) => `/orders/${id}`, 
   },
   admin: {
     users: '/admin/users',
     editUser: (id: string) => `/admin/users/${id}`,
     deleteUser: (id: string) => `/admin/users/${id}`,
+    orders: '/admin/orders',
+    orderDetails: (orderId: string) => `/admin/orders/${orderId}`,
+    updateOrderStatus: (orderId: string) => `/admin/orders/${orderId}/status`,
   },
   payment: {
     initialize: '/payment/initialize',

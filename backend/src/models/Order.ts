@@ -22,6 +22,15 @@ export interface IShippingInfo {
   deliveredAt?: Date;
 }
 
+export type PaymentStatus =
+  | 'pending'
+  | 'payment_pending'
+  | 'paid'
+  | 'cancelled'
+  | 'refunded';
+
+export type ShippingStatus = 'processing' | 'shipped' | 'delivered' | 'cancelled';
+
 export interface IOrder extends Document {
   user: mongoose.Types.ObjectId;
 
@@ -34,15 +43,8 @@ export interface IOrder extends Document {
 
   coupon?: mongoose.Types.ObjectId;
 
-  status:
-    | 'pending'
-    | 'payment_pending'
-    | 'paid'
-    | 'processing'
-    | 'shipped'
-    | 'delivered'
-    | 'cancelled'
-    | 'refunded';
+  paymentStatus: PaymentStatus;
+  shippingStatus: ShippingStatus;
 
   shipping: IShippingInfo;
 
@@ -99,19 +101,17 @@ const orderSchema = new Schema<IOrder>(
       ref: 'Coupon',
     },
 
-    status: {
+    paymentStatus: {
       type: String,
-      enum: [
-        'pending',
-        'payment_pending',
-        'paid',
-        'processing',
-        'shipped',
-        'delivered',
-        'cancelled',
-        'refunded',
-      ],
+      enum: ['pending', 'payment_pending', 'paid', 'cancelled', 'refunded'],
       default: 'pending',
+      index: true,
+    },
+
+    shippingStatus: {
+      type: String,
+      enum: ['processing', 'shipped', 'delivered', 'cancelled'],
+      default: 'processing',
       index: true,
     },
 

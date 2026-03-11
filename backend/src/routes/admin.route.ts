@@ -1,16 +1,23 @@
 import { Router } from 'express';
 import adminController from '../controllers/admin.controller';
+import orderController from '../controllers/order.controller';
 import authMiddleware from '../middlewares/auth.middleware';
 
 const router = Router();
 
-// Get all users (GET)
+// Users
 router.get('/users', authMiddleware, adminController.getUsers);
-
-// Edit user (PATCH)
 router.patch('/users/:id', authMiddleware, adminController.editUser);
-
-// Delete user (DELETE)
 router.delete('/users/:id', authMiddleware, adminController.deleteUser);
 
+// Orders
+router.get('/orders', authMiddleware, orderController.listAllOrders);
+router.get('/orders/:id', authMiddleware, orderController.getOrderById);
+router.patch(
+  '/orders/:id/status',
+  authMiddleware,
+  orderController.updateOrderStatus
+);
+
 export default router;
+
