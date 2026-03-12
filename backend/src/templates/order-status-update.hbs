@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Order Status Updated</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 24px auto;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background-color: #eff6ff;
+      color: #1d4ed8;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .muted {
+      color: #6b7280;
+      font-size: 13px;
+    }
+    .status-row {
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .status-label {
+      font-weight: 600;
+      color: #111827;
+    }
+    .status-value {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background-color: #f3f4f6;
+      font-size: 12px;
+    }
+    .footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+    }
+    .code {
+      font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+        monospace;
+      background: #111827;
+      color: #f9fafb;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      display: inline-block;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">SOSTECH Store</div>
+      <div class="badge">Order Update</div>
+    </div>
+
+    <p class="muted">Hi {{name}},</p>
+    <p class="muted">
+      The status of your order has been updated. Here are the latest details:
+    </p>
+
+    <p class="muted">
+      Order ID:
+      <span class="code">{{orderId}}</span>
+    </p>
+
+    <div class="status-row">
+      <span class="status-label">Payment status:</span>
+      <span class="status-value">{{paymentStatus}}</span>
+    </div>
+
+    <div class="status-row">
+      <span class="status-label">Shipping status:</span>
+      <span class="status-value">{{shippingStatus}}</span>
+    </div>
+
+    <p class="muted" style="margin-top: 16px;">
+      If your order is marked as "shipped", it will be on its way to you soon.
+      When it is marked "delivered", that means it has reached your address.
+    </p>
+
+    <div class="footer">
+      <p>
+        If you have any questions about this order, please contact our support
+        team and include your order ID.<br />
+        © {{currentYear}} SOSTECH Store. All rights reserved.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+

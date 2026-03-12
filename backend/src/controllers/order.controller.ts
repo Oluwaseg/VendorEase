@@ -124,6 +124,9 @@ class OrderController {
         );
       }
 
+      // Send email notification for shipping status change
+      await orderService.sendOrderStatusEmail(id);
+
       return (res as any).success(order, 'Order status updated successfully');
     } catch (error: any) {
       return (res as any).error(

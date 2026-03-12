@@ -6,6 +6,7 @@ const PAYSTACK_BASE_URL =
 
 import { Order } from '../models/Order';
 import { User } from '../models/User';
+import orderService from './order.service';
 
 class PaymentService {
   async initializeTransaction(userId: string, callbackUrl: string) {
@@ -76,7 +77,9 @@ class PaymentService {
       order.paymentStatus = 'paid';
       order.paymentIntentId = reference;
       await order.save();
-      // Optionally clear cart, send confirmation, etc.
+
+      // Send order confirmation email after successful payment
+      await orderService.sendOrderConfirmationEmail(order._id.toString());
     } else {
       order.paymentStatus = 'cancelled';
       order.paymentIntentId = reference;

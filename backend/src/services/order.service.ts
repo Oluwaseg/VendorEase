@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import { Order, IOrder, ShippingStatus } from '../models/Order';
+import { User } from '../models/User';
+import emailService from './email.service';
 
 class OrderService {
   async getUserOrders(userId: string) {
@@ -44,6 +46,51 @@ class OrderService {
     await order.save();
 
     return order;
+  }
+
+  async sendOrderConfirmationEmail(orderId: string) {
+    const order = await Order.findById(orderId).populate('user', 'email name');
+    if (!order) return;
+
+    const user = order.user as any as { email?: string; name?: string };
+    if (!user?.email) return;
+
+    await emailService.sendEmail({
+      to: user.email,
+      subject: 'Your SOSTECH Store order is confirmed',
+      template: 'order-confirmation',
+      context: {
+        name: user.name || 'Customer',
+        orderId: order._id.toString(),
+        total: order.total,
+        paymentStatus: order.paymentStatus,
+        shippingStatus: order.shippingStatus,
+        items: order.items,
+        shipping: order.shipping,
+        createdAt: order.createdAt,
+      },
+    });
+  }
+
+  async sendOrderStatusEmail(orderId: string) {
+    const order = await Order.findById(orderId).populate('user', 'email name');
+    if (!order) return;
+
+    const user = order.user as any as { email?: string; name?: string };
+    if (!user?.email) return;
+
+    await emailService.sendEmail({
+      to: user.email,
+      subject: 'Your SOSTECH Store order status updated',
+      template: 'order-status-update',
+      context: {
+        name: user.name || 'Customer',
+        orderId: order._id.toString(),
+        paymentStatus: order.paymentStatus,
+        shippingStatus: order.shippingStatus,
+        updatedAt: order.updatedAt,
+      },
+    });
   }
 }
 
