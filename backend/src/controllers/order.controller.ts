@@ -13,8 +13,11 @@ class OrderController {
         );
       }
 
-      const orders = await orderService.getUserOrders(user._id);
-      return (res as any).success(orders, 'Orders fetched successfully');
+      const { orders, stats } = await orderService.getUserOrders(user._id);
+      return (res as any).success(
+        { orders, stats },
+        'Orders and stats fetched successfully'
+      );
     } catch (error: any) {
       return (res as any).error(
         error.message || 'Failed to fetch orders',
@@ -61,8 +64,11 @@ class OrderController {
 
   async listAllOrders(_req: Request, res: Response, next: NextFunction) {
     try {
-      const orders = await orderService.getAllOrders();
-      return (res as any).success(orders, 'All orders fetched successfully');
+      const { orders, stats } = await orderService.getAllOrdersWithStats();
+      return (res as any).success(
+        { orders, stats },
+        'All orders and stats fetched successfully'
+      );
     } catch (error: any) {
       return (res as any).error(
         error.message || 'Failed to fetch orders',
@@ -102,7 +108,12 @@ class OrderController {
       id = Array.isArray(id) ? id[0] : id;
 
       const { status } = req.body as { status?: string };
-      const allowedStatuses = ['processing', 'shipped', 'delivered', 'cancelled'];
+      const allowedStatuses = [
+        'processing',
+        'shipped',
+        'delivered',
+        'cancelled',
+      ];
 
       if (!status || !allowedStatuses.includes(status)) {
         return (res as any).error(
@@ -139,4 +150,3 @@ class OrderController {
 }
 
 export default new OrderController();
-

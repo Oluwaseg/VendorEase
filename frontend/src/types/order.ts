@@ -1,13 +1,30 @@
+import { User } from './user';
+
+export interface OrderStats {
+  totalOrders: number;
+  totalAmount: number;
+  totalPaid: number;
+  totalPending: number;
+}
+
+export interface OrdersWithStats {
+  orders: Order[];
+  stats: OrderStats;
+}
 export type PaymentStatus =
-  | "pending"
-  | "payment_pending"
-  | "paid"
-  | "cancelled"
-  | "refunded";
+  | 'pending'
+  | 'payment_pending'
+  | 'paid'
+  | 'cancelled'
+  | 'refunded';
 
-export type ShippingStatus = "processing" | "shipped" | "delivered" | "cancelled";
+export type ShippingStatus =
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled';
 
-export type ShippingMethod = "standard" | "express" | "pickup";
+export type ShippingMethod = 'standard' | 'express' | 'pickup';
 
 export interface OrderItem {
   product: string; // product ID (or populated object if you later allow it)
@@ -44,4 +61,14 @@ export interface Order {
 
   createdAt: string;
   updatedAt: string;
+}
+
+// -------- Admin orders --------
+
+export interface AdminOrder extends Omit<Order, 'user'> {
+  user: User;
+}
+export interface AdminOrdersWithStats {
+  orders: AdminOrder[];
+  stats: OrderStats;
 }

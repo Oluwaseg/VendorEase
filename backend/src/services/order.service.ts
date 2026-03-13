@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import { Order, IOrder, ShippingStatus } from '../models/Order';
-import { User } from '../models/User';
+import { IOrder, Order, ShippingStatus } from '../models/Order';
 import emailService from './email.service';
 
 class OrderService {
@@ -9,7 +8,26 @@ class OrderService {
     const orders = await Order.find({ user: userObjectId })
       .sort({ createdAt: -1 })
       .lean<IOrder[]>();
-    return orders;
+
+    // Stats
+    const totalOrders = orders.length;
+    const totalAmount = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+    const totalPaid = orders
+      .filter((o) => o.paymentStatus === 'paid')
+      .reduce((sum, o) => sum + (o.total || 0), 0);
+    const totalPending = orders
+      .filter((o) => o.paymentStatus !== 'paid')
+      .reduce((sum, o) => sum + (o.total || 0), 0);
+
+    return {
+      orders,
+      stats: {
+        totalOrders,
+        totalAmount,
+        totalPaid,
+        totalPending,
+      },
+    };
   }
 
   async getUserOrderById(userId: string, orderId: string) {
@@ -21,12 +39,30 @@ class OrderService {
     return order;
   }
 
-  async getAllOrders() {
+  async getAllOrdersWithStats() {
     const orders = await Order.find()
       .sort({ createdAt: -1 })
       .populate('user', 'email name')
       .lean<IOrder[]>();
-    return orders;
+
+    const totalOrders = orders.length;
+    const totalAmount = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+    const totalPaid = orders
+      .filter((o) => o.paymentStatus === 'paid')
+      .reduce((sum, o) => sum + (o.total || 0), 0);
+    const totalPending = orders
+      .filter((o) => o.paymentStatus !== 'paid')
+      .reduce((sum, o) => sum + (o.total || 0), 0);
+
+    return {
+      orders,
+      stats: {
+        totalOrders,
+        totalAmount,
+        totalPaid,
+        totalPending,
+      },
+    };
   }
 
   async getOrderById(orderId: string) {
@@ -95,4 +131,3 @@ class OrderService {
 }
 
 export default new OrderService();
-

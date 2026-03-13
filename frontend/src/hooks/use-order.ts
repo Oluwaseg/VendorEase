@@ -1,30 +1,35 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import {
-  AdminOrder,
   getAllOrdersAdmin,
   getMyOrderById,
   getMyOrders,
   getOrderByIdAdmin,
   updateOrderStatusAdmin,
-} from "@/services/order.service";
-import { Order, ShippingStatus } from "@/types/order";
+} from '@/services/order.service';
+import {
+  AdminOrder,
+  AdminOrdersWithStats,
+  Order,
+  OrdersWithStats,
+  ShippingStatus,
+} from '@/types/order';
 
 /* ===============================
    USER ORDERS
 ================================= */
 
 export const useMyOrders = () => {
-  return useQuery<Order[], Error>({
-    queryKey: ["orders"],
+  return useQuery<OrdersWithStats, Error>({
+    queryKey: ['orders'],
     queryFn: getMyOrders,
   });
 };
 
 export const useMyOrder = (id?: string) => {
   return useQuery<Order, Error>({
-    queryKey: ["orders", id],
+    queryKey: ['orders', id],
     queryFn: () => getMyOrderById(id as string),
     enabled: Boolean(id),
   });
@@ -35,15 +40,15 @@ export const useMyOrder = (id?: string) => {
 ================================= */
 
 export const useAdminOrders = () => {
-  return useQuery<AdminOrder[], Error>({
-    queryKey: ["admin", "orders"],
+  return useQuery<AdminOrdersWithStats, Error>({
+    queryKey: ['admin', 'orders'],
     queryFn: getAllOrdersAdmin,
   });
 };
 
 export const useAdminOrder = (id?: string) => {
   return useQuery<AdminOrder, Error>({
-    queryKey: ["admin", "orders", id],
+    queryKey: ['admin', 'orders', id],
     queryFn: () => getOrderByIdAdmin(id as string),
     enabled: Boolean(id),
   });
@@ -62,12 +67,11 @@ export const useUpdateOrderStatus = () => {
   >({
     mutationFn: updateOrderStatusAdmin,
     onSuccess: () => {
-      toast.success("Order status updated");
-      queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
+      toast.success('Order status updated');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'orders'] });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update order status");
+      toast.error(error.message || 'Failed to update order status');
     },
   });
 };
-
