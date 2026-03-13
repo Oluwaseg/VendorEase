@@ -1,10 +1,10 @@
 'use client';
 
-import { Footer } from '@/components/footer';
 import { Navbar } from '@/components/navbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { useAdminOrders, useUpdateOrderStatus } from '@/hooks/use-order';
 import { ShippingStatus } from '@/types/order';
 import { format } from 'date-fns';
@@ -13,7 +13,14 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  Clock,
+  Package,
   RefreshCw,
+  Search,
+  TrendingUp,
+  Truck,
+  Wallet,
+  Zap,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -24,6 +31,51 @@ const SHIPPING_STATUSES: ShippingStatus[] = [
   'cancelled',
 ];
 
+const getStatusIcon = (status: string) => {
+  const normalizedStatus = status?.toLowerCase().replace('_', ' ');
+  switch (normalizedStatus) {
+    case 'delivered':
+      return <CheckCircle2 className='w-4 h-4' />;
+    case 'shipped':
+    case 'processing':
+      return <Truck className='w-4 h-4' />;
+    case 'pending':
+      return <Clock className='w-4 h-4' />;
+    default:
+      return <Package className='w-4 h-4' />;
+  }
+};
+
+const getStatusColors = (status: string) => {
+  const normalizedStatus = status?.toLowerCase().replace('_', ' ');
+  const colorMap: { [key: string]: { bg: string; text: string } } = {
+    delivered: {
+      bg: 'bg-emerald-500/10',
+      text: 'text-emerald-700 dark:text-emerald-400',
+    },
+    shipped: { bg: 'bg-blue-500/10', text: 'text-blue-700 dark:text-blue-400' },
+    processing: {
+      bg: 'bg-orange-500/10',
+      text: 'text-orange-700 dark:text-orange-400',
+    },
+    pending: {
+      bg: 'bg-yellow-500/10',
+      text: 'text-yellow-700 dark:text-yellow-400',
+    },
+    cancelled: { bg: 'bg-red-500/10', text: 'text-red-700 dark:text-red-400' },
+    paid: {
+      bg: 'bg-emerald-500/10',
+      text: 'text-emerald-700 dark:text-emerald-400',
+    },
+  };
+  return (
+    colorMap[normalizedStatus] || {
+      bg: 'bg-muted',
+      text: 'text-muted-foreground',
+    }
+  );
+};
+
 export default function AdminOrdersPage() {
   const { data, isLoading, error } = useAdminOrders();
   const orders = data?.orders || [];
@@ -33,177 +85,267 @@ export default function AdminOrdersPage() {
     isPending: isUpdatingStatus,
     variables: lastUpdateVars,
   } = useUpdateOrderStatus();
+
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const [searchTerm, setSearchTerm] = useState('');
+  const pageSize = 15;
+
+  const filteredOrders = useMemo(() => {
+    if (!orders) return [];
+
+    const term = searchTerm.toLowerCase();
+
+    return orders.filter((order) => {
+      return (
+        order._id.toLowerCase().includes(term) ||
+        order.user.email.toLowerCase().includes(term) ||
+        order.total.toString().includes(searchTerm)
+      );
+    });
+  }, [orders, searchTerm]);
 
   const paginated = useMemo(() => {
-    if (!orders) return [];
     const start = (page - 1) * pageSize;
-    return orders.slice(start, start + pageSize);
-  }, [orders, page]);
+    return filteredOrders.slice(start, start + pageSize);
+  }, [filteredOrders, page]);
 
   const totalPages = useMemo(() => {
-    if (!orders || orders.length === 0) return 1;
-    return Math.ceil(orders.length / pageSize);
-  }, [orders]);
+    return Math.ceil(filteredOrders.length / pageSize);
+  }, [filteredOrders]);
 
   return (
     <main className='min-h-screen bg-background'>
       <Navbar />
 
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12'>
         {/* Header */}
-        <div className='mb-8 flex items-center justify-between gap-4'>
-          <div>
-            <h1 className='text-3xl font-bold text-foreground'>
-              Orders Management
-            </h1>
-            <p className='text-foreground/60 mt-1'>
-              View and manage all customer orders.
-            </p>
+        <div className='mb-8'>
+          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+            <div>
+              <h1 className='text-3xl sm:text-4xl font-bold text-foreground mb-1'>
+                Orders Management
+              </h1>
+              <p className='text-muted-foreground'>
+                View and manage all customer orders
+              </p>
+            </div>
+            <Button
+              variant='outline'
+              size='sm'
+              className='gap-2 w-fit'
+              onClick={() => window.location.reload()}
+            >
+              <RefreshCw className='w-4 h-4' />
+              Refresh
+            </Button>
           </div>
-          <Button
-            variant='outline'
-            size='icon'
-            onClick={() => window.location.reload()}
-            className='rounded-full'
-          >
-            <RefreshCw size={18} />
-          </Button>
         </div>
 
+        {/* Stats Cards */}
+        {stats && !isLoading && (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
+            <Card className='border-border/40 bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors'>
+              <CardContent className='pt-6'>
+                <div className='flex items-start justify-between'>
+                  <div>
+                    <p className='text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1'>
+                      Total Orders
+                    </p>
+                    <p className='text-3xl font-bold text-foreground'>
+                      {stats.totalOrders}
+                    </p>
+                  </div>
+                  <div className='p-2.5 bg-primary/10 rounded-lg'>
+                    <Package className='w-5 h-5 text-primary' />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className='border-border/40 bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors'>
+              <CardContent className='pt-6'>
+                <div className='flex items-start justify-between'>
+                  <div>
+                    <p className='text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1'>
+                      Total Revenue
+                    </p>
+                    <p className='text-3xl font-bold text-foreground'>
+                      ₦{(stats.totalAmount || 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className='p-2.5 bg-blue-500/10 rounded-lg'>
+                    <TrendingUp className='w-5 h-5 text-blue-600' />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className='border-border/40 bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors'>
+              <CardContent className='pt-6'>
+                <div className='flex items-start justify-between'>
+                  <div>
+                    <p className='text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1'>
+                      Amount Paid
+                    </p>
+                    <p className='text-3xl font-bold text-foreground'>
+                      ₦{(stats.totalPaid || 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className='p-2.5 bg-emerald-500/10 rounded-lg'>
+                    <Wallet className='w-5 h-5 text-emerald-600' />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className='border-border/40 bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors'>
+              <CardContent className='pt-6'>
+                <div className='flex items-start justify-between'>
+                  <div>
+                    <p className='text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1'>
+                      Pending Payment
+                    </p>
+                    <p className='text-3xl font-bold text-foreground'>
+                      ₦{(stats.totalPending || 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className='p-2.5 bg-amber-500/10 rounded-lg'>
+                    <Zap className='w-5 h-5 text-amber-600' />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {isLoading && (
-          <div className='py-16 text-center text-foreground/60'>
-            Loading orders...
+          <div className='py-20 text-center'>
+            <div className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted/40 mb-3'>
+              <RefreshCw className='w-5 h-5 text-muted-foreground animate-spin' />
+            </div>
+            <p className='text-muted-foreground font-medium'>
+              Loading orders...
+            </p>
           </div>
         )}
 
         {error && (
-          <div className='py-16 flex items-center justify-center gap-2 text-red-500'>
-            <AlertTriangle size={18} />
-            <span>{error.message || 'Failed to load orders.'}</span>
-          </div>
-        )}
-
-        {!isLoading && !error && orders && orders.length === 0 && (
-          <div className='py-16 text-center text-foreground/60'>
-            No orders found yet.
+          <div className='rounded-lg border border-destructive/20 bg-destructive/5 p-6 flex items-center gap-3'>
+            <AlertTriangle className='w-5 h-5 text-destructive flex-shrink-0' />
+            <div>
+              <p className='text-destructive font-semibold'>
+                {error.message || 'Failed to load orders'}
+              </p>
+            </div>
           </div>
         )}
 
         {!isLoading && !error && orders && orders.length > 0 && (
-          <>
-            {stats && (
-              <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <Card className="bg-muted/30">
-                  <CardContent className="py-4 text-center">
-                    <div className="text-xs text-foreground/60">Total Orders</div>
-                    <div className="text-xl font-bold">{stats.totalOrders}</div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-muted/30">
-                  <CardContent className="py-4 text-center">
-                    <div className="text-xs text-foreground/60">Total Amount</div>
-                    <div className="text-xl font-bold">
-                      ₦{stats.totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-muted/30">
-                  <CardContent className="py-4 text-center">
-                    <div className="text-xs text-foreground/60">Total Paid</div>
-                    <div className="text-xl font-bold">
-                      ₦{stats.totalPaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-muted/30">
-                  <CardContent className="py-4 text-center">
-                    <div className="text-xs text-foreground/60">Total Pending</div>
-                    <div className="text-xl font-bold">
-                      ₦{stats.totalPending.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-            <Card className='border border-border/50 bg-card/40'>
-              <CardContent className='p-0'>
-                <div className='overflow-x-auto'>
-                  <table className='w-full text-sm'>
-                    <thead>
-                      <tr className='border-b border-border/60 bg-muted/40'>
-                        <th className='px-6 py-3 text-left text-foreground/60 font-semibold'>
-                          Order
-                        </th>
-                        <th className='px-6 py-3 text-left text-foreground/60 font-semibold'>
-                          Customer
-                        </th>
-                        <th className='px-6 py-3 text-left text-foreground/60 font-semibold'>
-                          Date
-                        </th>
-                        <th className='px-6 py-3 text-left text-foreground/60 font-semibold'>
-                          Items
-                        </th>
-                        <th className='px-6 py-3 text-left text-foreground/60 font-semibold'>
-                          Total
-                        </th>
-                        <th className='px-6 py-3 text-left text-foreground/60 font-semibold'>
-                          Payment
-                        </th>
-                        <th className='px-6 py-3 text-left text-foreground/60 font-semibold'>
-                          Shipping
-                        </th>
-                        <th className='px-6 py-3 text-right text-foreground/60 font-semibold'>
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {paginated.map((order) => (
+          <div className='space-y-6'>
+            {/* Search Bar */}
+            <div className='relative'>
+              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+              <Input
+                placeholder='Search by order ID, customer email, or amount...'
+                className='pl-10'
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPage(1);
+                }}
+              />
+            </div>
+
+            {/* Orders Table */}
+            <Card className='border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden'>
+              <div className='overflow-x-auto'>
+                <table className='w-full'>
+                  <thead>
+                    <tr className='border-b border-border/40 bg-muted/30'>
+                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                        Order
+                      </th>
+                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                        Customer
+                      </th>
+                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                        Date
+                      </th>
+                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                        Items
+                      </th>
+                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                        Total
+                      </th>
+                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                        Payment
+                      </th>
+                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                        Shipping
+                      </th>
+                      <th className='px-6 py-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                        Update Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paginated.map((order) => {
+                      const paymentColors = getStatusColors(
+                        order.paymentStatus
+                      );
+                      const shippingColors = getStatusColors(
+                        order.shippingStatus
+                      );
+
+                      return (
                         <tr
                           key={order._id}
-                          className='border-b border-border/40 hover:bg-muted/40 transition-colors'
+                          className='border-b border-border/40 hover:bg-muted/20 transition-colors'
                         >
-                          <td className='px-6 py-4 font-mono text-xs text-foreground'>
-                            #{order._id.slice(-8)}
+                          <td className='px-6 py-4'>
+                            <span className='font-mono text-sm font-semibold text-foreground'>
+                              #{order._id.slice(-8).toUpperCase()}
+                            </span>
                           </td>
-                          <td className='px-6 py-4 text-foreground/80'>
-                            {typeof order.user === 'string'
-                              ? order.user
-                              : (order.user?.email ?? 'Unknown')}
+                          <td className='px-6 py-4'>
+                            <div className='text-sm text-foreground'>
+                              {typeof order.user === 'string'
+                                ? order.user
+                                : (order.user?.email ?? 'Unknown')}
+                            </div>
                           </td>
-                          <td className='px-6 py-4 text-foreground/80'>
+                          <td className='px-6 py-4 text-sm text-muted-foreground'>
                             {format(new Date(order.createdAt), 'MMM dd, yyyy')}
                           </td>
-                          <td className='px-6 py-4 text-foreground/80'>
+                          <td className='px-6 py-4 text-sm font-medium text-foreground'>
                             {order.items.length}
                           </td>
-                          <td className='px-6 py-4 text-foreground font-semibold'>
-                            ₦{order.total.toFixed(2)}
+                          <td className='px-6 py-4'>
+                            <span className='font-bold text-foreground'>
+                              ₦{order.total.toLocaleString()}
+                            </span>
                           </td>
                           <td className='px-6 py-4'>
                             <Badge
-                              variant='outline'
-                              className='capitalize whitespace-nowrap'
+                              className={`${paymentColors.bg} ${paymentColors.text} border-0`}
                             >
-                              {order.paymentStatus?.replace('_', ' ') ??
-                                'Unknown'}
+                              {order.paymentStatus?.replace('_', ' ')}
                             </Badge>
                           </td>
                           <td className='px-6 py-4'>
-                            <Badge
-                              variant='outline'
-                              className='capitalize whitespace-nowrap mr-2'
-                            >
-                              {order.shippingStatus?.replace('_', ' ') ??
-                                'Unknown'}
-                            </Badge>
+                            <div className='flex items-center gap-1.5'>
+                              {getStatusIcon(order.shippingStatus)}
+                              <Badge
+                                className={`${shippingColors.bg} ${shippingColors.text} border-0`}
+                              >
+                                {order.shippingStatus?.replace('_', ' ')}
+                              </Badge>
+                            </div>
                           </td>
                           <td className='px-6 py-4 text-right'>
                             <select
-                              className='border border-border bg-background text-xs rounded-md px-2 py-1'
-                              value={order.shippingStatus ?? 'Unknown'}
+                              className='border border-border bg-background text-xs rounded-md px-2 py-1.5 font-medium transition-colors hover:border-border/60'
+                              value={order.shippingStatus ?? 'processing'}
                               onChange={(e) =>
                                 updateStatus({
                                   id: order._id,
@@ -223,17 +365,19 @@ export default function AdminOrdersPage() {
                             </select>
                           </td>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </Card>
 
             {/* Pagination */}
-            <div className='flex items-center justify-between mt-6'>
-              <p className='text-xs text-foreground/60'>
-                Page {page} of {totalPages} · {orders.length} orders
+            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+              <p className='text-xs text-muted-foreground font-medium'>
+                Showing {paginated.length > 0 ? (page - 1) * pageSize + 1 : 0}{' '}
+                to {Math.min(page * pageSize, filteredOrders.length)} of{' '}
+                {filteredOrders.length} orders
               </p>
               <div className='flex gap-2'>
                 <Button
@@ -241,8 +385,9 @@ export default function AdminOrdersPage() {
                   variant='outline'
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className='gap-2'
                 >
-                  <ChevronLeft size={16} />
+                  <ChevronLeft className='w-4 h-4' />
                   Previous
                 </Button>
                 <Button
@@ -250,24 +395,38 @@ export default function AdminOrdersPage() {
                   variant='outline'
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  className='gap-2'
                 >
                   Next
-                  <ChevronRight size={16} />
+                  <ChevronRight className='w-4 h-4' />
                 </Button>
               </div>
             </div>
 
+            {/* Updating Toast */}
             {isUpdatingStatus && (
-              <div className='fixed bottom-4 right-4 bg-card border border-border rounded-lg px-4 py-2 flex items-center gap-2 shadow-lg text-xs text-foreground'>
-                <CheckCircle2 size={14} className='text-primary' />
+              <div className='fixed bottom-4 right-4 bg-card border border-border rounded-lg px-4 py-3 flex items-center gap-2 shadow-lg text-sm text-foreground'>
+                <CheckCircle2 className='w-4 h-4 text-primary animate-pulse' />
                 <span>Updating order status...</span>
               </div>
             )}
-          </>
+          </div>
+        )}
+
+        {!isLoading && !error && orders.length === 0 && (
+          <div className='rounded-lg border border-border/40 bg-card/30 backdrop-blur-sm p-12 text-center'>
+            <div className='inline-flex items-center justify-center w-14 h-14 rounded-full bg-muted/40 mb-4'>
+              <Package className='w-7 h-7 text-muted-foreground' />
+            </div>
+            <h3 className='text-lg font-semibold text-foreground mb-2'>
+              No orders yet
+            </h3>
+            <p className='text-muted-foreground'>
+              There are no customer orders to display at this time.
+            </p>
+          </div>
         )}
       </div>
-
-      <Footer />
     </main>
   );
 }
