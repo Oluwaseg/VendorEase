@@ -38,6 +38,9 @@ router.post(
   authController.resendVerification
 );
 
+// User dashboard
+router.get('/dashboard', authMiddleware, authController.getDashboard);
+
 // Current authenticated user
 router.get('/me', authMiddleware, authController.getCurrentUser);
 

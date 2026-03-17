@@ -5,6 +5,9 @@ import authMiddleware from '../middlewares/auth.middleware';
 
 const router = Router();
 
+// Dashboard
+router.get('/dashboard', authMiddleware, adminController.getDashboard);
+
 // Users
 router.get('/users', authMiddleware, adminController.getUsers);
 router.patch('/users/:id', authMiddleware, adminController.editUser);
@@ -20,4 +23,3 @@ router.patch(
 );
 
 export default router;
-
