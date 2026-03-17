@@ -9,6 +9,7 @@ export const ApiRoutes = {
     resetPassword: '/auth/reset-password',
     googleAuth: '/auth/google',
     me: '/auth/me',
+    dashboard: '/auth/dashboard',
   },
   categories: {
     list: '/categories',
@@ -53,7 +54,7 @@ export const ApiRoutes = {
   },
   orders: {
     list: '/orders',
-    details: (id: string) => `/orders/${id}`, 
+    details: (id: string) => `/orders/${id}`,
   },
   admin: {
     users: '/admin/users',
@@ -62,6 +63,7 @@ export const ApiRoutes = {
     orders: '/admin/orders',
     orderDetails: (orderId: string) => `/admin/orders/${orderId}`,
     updateOrderStatus: (orderId: string) => `/admin/orders/${orderId}/status`,
+    dashboard: '/admin/dashboard',
   },
   payment: {
     initialize: '/payment/initialize',
