@@ -1,4 +1,10 @@
-import { deleteUser, editUser, getAllUsers } from '@/services/admin.service';
+import {
+  deleteUser,
+  editUser,
+  getAdminDashboard,
+  getAllUsers,
+} from '@/services/admin.service';
+import { AdminDashboardPayload } from '@/types/admin-dashboard';
 import { EditUser, User } from '@/types/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -7,6 +13,14 @@ export const useGetAllUsers = () => {
   return useQuery<User[]>({
     queryKey: ['allUsers'],
     queryFn: getAllUsers,
+  });
+};
+
+// ---------------- GET ADMIN DASHBOARD ----------------
+export const useAdminDashboard = () => {
+  return useQuery<AdminDashboardPayload>({
+    queryKey: ['adminDashboard'],
+    queryFn: getAdminDashboard,
   });
 };
 

@@ -1,6 +1,7 @@
 import { ApiRoutes } from '@/api';
 import axiosInstance from '@/lib/axios';
 import { unwrap } from '@/lib/unwrap';
+import { AdminDashboardPayload } from '@/types/admin-dashboard';
 import { ApiResponse } from '@/types/api-response';
 import { EditUser, User } from '@/types/user';
 
@@ -24,4 +25,13 @@ export const editUser = async (id: string, data: EditUser): Promise<User> => {
 // ---------------- DELETE USER ----------------
 export const deleteUser = async (id: string): Promise<void> => {
   await axiosInstance.delete(ApiRoutes.admin.deleteUser(id));
+};
+
+// ---------------- GET DASHBOARD ----------------
+export const getAdminDashboard = async (): Promise<AdminDashboardPayload> => {
+  const res = (await axiosInstance.get<ApiResponse<AdminDashboardPayload>>(
+    ApiRoutes.admin.dashboard
+  )) as unknown as ApiResponse<AdminDashboardPayload>;
+
+  return unwrap(res);
 };
