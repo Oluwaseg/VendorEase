@@ -2,6 +2,8 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useCurrency } from '@/contexts/currency-context';
+import { formatPrice } from '@/lib/format-price';
 import { RecentUserOrder } from '@/types/user-dashboard';
 import { format } from 'date-fns';
 import { ArrowRight, Package } from 'lucide-react';
@@ -39,6 +41,8 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
         return 'bg-gray-500/20 text-gray-700 dark:text-gray-300';
     }
   };
+
+  const { currency, convert } = useCurrency();
 
   if (!orders || orders.length === 0) {
     return (
@@ -115,7 +119,7 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
             </div>
             <div className='text-right'>
               <p className='text-lg font-bold text-foreground'>
-                ${(order.total / 100).toFixed(2)}
+                {formatPrice(convert(order.total), currency)}
               </p>
             </div>
           </div>

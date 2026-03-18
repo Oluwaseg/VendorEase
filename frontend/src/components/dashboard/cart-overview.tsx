@@ -1,6 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { useCurrency } from '@/contexts/currency-context';
+import { formatPrice } from '@/lib/format-price';
 import { CartStats } from '@/types/user-dashboard';
 import { CreditCard, Heart, ShoppingCart, Truck } from 'lucide-react';
 import Link from 'next/link';
@@ -10,10 +12,11 @@ interface CartOverviewProps {
 }
 
 export function CartOverview({ cartStats }: CartOverviewProps) {
+  const { currency, convert } = useCurrency();
   return (
     <div className='space-y-6'>
       {/* Cart Stats Card */}
-      <div className='bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl p-6'>
+      <div className='bg-linear-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl p-6'>
         <div className='mb-6'>
           <div className='p-3 rounded-lg bg-primary/20 w-fit mb-4'>
             <ShoppingCart size={24} className='text-primary' />
@@ -31,7 +34,7 @@ export function CartOverview({ cartStats }: CartOverviewProps) {
           <div className='flex items-center justify-between py-3'>
             <span className='text-foreground/60 text-sm'>Cart Total</span>
             <span className='text-2xl font-bold text-primary'>
-              ${(cartStats.total / 100).toFixed(2)}
+              {formatPrice(convert(cartStats.total), currency)}
             </span>
           </div>
         </div>

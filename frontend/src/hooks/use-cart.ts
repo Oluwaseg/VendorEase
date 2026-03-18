@@ -4,12 +4,12 @@ import {
   mergeCart,
   removeCartItem,
   updateCart,
-} from "@/services/cart.service";
-import { Cart } from "@/types/cart";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+} from '@/services/cart.service';
+import { Cart } from '@/types/cart';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
-const CART_QUERY_KEY = ["cart"];
+const CART_QUERY_KEY = ['cart'];
 
 // ---------------- GET CART ----------------
 export const useCart = (enabled: boolean = true) => {
@@ -30,11 +30,12 @@ export const useUpdateCart = () => {
 
     onSuccess: (data) => {
       queryClient.setQueryData(CART_QUERY_KEY, data);
-      toast.success("Cart updated");
+      queryClient.invalidateQueries({ queryKey: ['userDashboard'] });
+      toast.success('Cart updated');
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to update cart");
+      toast.error(error.message || 'Failed to update cart');
     },
   });
 };
@@ -48,11 +49,12 @@ export const useRemoveCartItem = () => {
 
     onSuccess: (data) => {
       queryClient.setQueryData(CART_QUERY_KEY, data);
-      toast.success("Item removed from cart");
+      queryClient.invalidateQueries({ queryKey: ['userDashboard'] });
+      toast.success('Item removed from cart');
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to remove item");
+      toast.error(error.message || 'Failed to remove item');
     },
   });
 };
@@ -66,11 +68,12 @@ export const useClearCart = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
-      toast.success("Cart cleared");
+      queryClient.invalidateQueries({ queryKey: ['userDashboard'] });
+      toast.success('Cart cleared');
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to clear cart");
+      toast.error(error.message || 'Failed to clear cart');
     },
   });
 };
@@ -84,11 +87,12 @@ export const useMergeCart = () => {
 
     onSuccess: (data) => {
       queryClient.setQueryData(CART_QUERY_KEY, data);
-      toast.success("Cart merged successfully");
+      queryClient.invalidateQueries({ queryKey: ['userDashboard'] });
+      toast.success('Cart merged successfully');
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to merge cart");
+      toast.error(error.message || 'Failed to merge cart');
     },
   });
 };
