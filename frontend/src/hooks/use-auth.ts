@@ -32,22 +32,28 @@ export const useLogin = () => {
 
   return useMutation<LoginResponse, Error, LoginRequest>({
     mutationFn: login,
-    onSuccess: async (data) => {
+
+    onSuccess: async () => {
       toast.success('Login successful!');
-      // Refetch user/cart immediately so UI shows the real user without refresh
-      await queryClient.invalidateQueries({ queryKey: ['current-user'] });
-      await queryClient.invalidateQueries({ queryKey: ['cart'] });
-      // Get the current user to check role
-      const userData = await getCurrentUser();
-      if (
-        userData.user.role === 'admin' ||
-        userData.user.role === 'moderator'
-      ) {
+
+      // ✅ Force fetch fresh user
+      const userData = await queryClient.fetchQuery({
+        queryKey: ['current-user'],
+        queryFn: getCurrentUser,
+      });
+
+      // Optional: refresh cart too
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+
+      const role = userData?.user?.role;
+
+      if (role === 'admin' || role === 'moderator') {
         router.push('/admin');
       } else {
         router.push('/dashboard');
       }
     },
+
     onError: (error) => {
       toast.error(error.message || 'Invalid credentials');
     },
@@ -136,21 +142,12 @@ export const useGoogleAuth = () => {
 
   return useMutation<LoginResponse, Error, string>({
     mutationFn: googleAuth,
-    onSuccess: async (data) => {
+    onSuccess: () => {
       toast.success('Google login successful!');
       // Refetch user/cart immediately so UI shows the real user without refresh
-      await queryClient.invalidateQueries({ queryKey: ['current-user'] });
-      await queryClient.invalidateQueries({ queryKey: ['cart'] });
-      // Get the current user to check role
-      const userData = await getCurrentUser();
-      if (
-        userData.user.role === 'admin' ||
-        userData.user.role === 'moderator'
-      ) {
-        router.push('/admin');
-      } else {
-        router.push('/dashboard');
-      }
+      queryClient.invalidateQueries({ queryKey: ['current-user'] });
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+      router.push('/dashboard');
     },
     onError: (error) => {
       toast.error(error.message || 'Google login failed');

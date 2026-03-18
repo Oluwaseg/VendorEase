@@ -1,6 +1,5 @@
 'use client';
 
-import { Navbar } from '@/components/navbar';
 import { OrdersList } from '@/components/orders-list';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,8 +20,6 @@ export default function OrdersPage() {
 
   return (
     <main className='min-h-screen bg-background'>
-      <Navbar />
-
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14'>
         {/* Header Section */}
         <div className='mb-10'>

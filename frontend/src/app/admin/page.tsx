@@ -1,6 +1,5 @@
 'use client';
 
-import { Navbar } from '@/components/navbar';
 import { useAuth } from '@/contexts/auth-context';
 import { useCart } from '@/hooks/use-cart';
 import { useProducts } from '@/hooks/use-product';
@@ -59,8 +58,6 @@ export default function DashboardPage() {
 
   return (
     <main className='min-h-screen bg-background'>
-      <Navbar />
-
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
         {/* Header */}
         <div className='mb-12'>
