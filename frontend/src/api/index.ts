@@ -41,6 +41,7 @@ export const ApiRoutes = {
     merge: '/cart/merge',
   },
   checkout: {
+    getInfo: '/checkout',
     create: '/checkout',
   },
   coupon: {

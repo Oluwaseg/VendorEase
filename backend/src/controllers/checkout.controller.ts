@@ -113,6 +113,31 @@ class CheckoutController {
         couponCode,
       });
 
+      // Auto-save new address if not using addressId
+      if (!addressId && shippingInfo) {
+        const { UserAddress } = require('../models/UserAddress');
+        const exists = await UserAddress.findOne({
+          user: user.userId,
+          addressLine: shippingInfo.addressLine,
+          city: shippingInfo.city,
+          country: shippingInfo.country,
+          postalCode: shippingInfo.postalCode,
+        });
+        if (!exists) {
+          // If this is the user's first address, set as default
+          const count = await UserAddress.countDocuments({ user: user.userId });
+          await UserAddress.create({
+            user: user.userId,
+            addressLine: shippingInfo.addressLine,
+            city: shippingInfo.city,
+            state: shippingInfo.state,
+            country: shippingInfo.country,
+            postalCode: shippingInfo.postalCode,
+            isDefault: count === 0,
+          });
+        }
+      }
+
       return (res as any).success(
         order,
         'Checkout completed successfully',
