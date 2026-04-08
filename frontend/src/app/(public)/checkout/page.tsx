@@ -32,14 +32,14 @@ const SHIPPING_METHODS = [
     id: 'standard',
     name: 'Standard Shipping',
     description: 'Delivery in 5-7 business days',
-    price: 9.99,
+    price: 6000,
     icon: Truck,
   },
   {
     id: 'express',
     name: 'Express Shipping',
     description: 'Delivery in 2-3 business days',
-    price: 24.99,
+    price: 12500,
     icon: Truck,
   },
   {
@@ -90,15 +90,8 @@ export default function CheckoutPage() {
   }, [checkoutInfo]);
 
   const getShippingCost = () => {
-    switch (shippingMethod) {
-      case 'pickup':
-        return 0;
-      case 'express':
-        return 24.99;
-      case 'standard':
-      default:
-        return 9.99;
-    }
+    const method = SHIPPING_METHODS.find((m) => m.id === shippingMethod);
+    return method?.price || 0;
   };
 
   const handleApplyCoupon = async () => {
@@ -470,14 +463,18 @@ export default function CheckoutPage() {
                         <p className='font-bold text-foreground'>
                           {method.price === 0
                             ? 'FREE'
-                            : `$${method.price.toFixed(2)}`}
+                            : formatPrice(convert(method.price), currency)}
                         </p>
                       </div>
                     </label>
                   ))}
                 </CardContent>
               </Card>
-
+              <Card className='mt-6 border-dashed'>
+                <CardContent className='py-4 text-center text-sm text-foreground/60'>
+                  🚚 More delivery options (GIG, DHL, FedEx, UPS) coming soon.
+                </CardContent>
+              </Card>
               {/* Coupon Section */}
               <Card>
                 <CardHeader>

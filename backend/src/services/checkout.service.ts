@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Cart } from '../models/Cart';
-import { Order, IShippingInfo } from '../models/Order';
 import { Coupon } from '../models/Coupon';
+import { IShippingInfo, Order } from '../models/Order';
 
 export interface CheckoutPayload {
   shipping: Pick<
@@ -12,13 +12,17 @@ export interface CheckoutPayload {
 }
 
 class CheckoutService {
+  /**
+   * Computes shipping fee in Naira (₦):
+   * - pickup: ₦0 (free)
+   * - standard: ₦6000
+   * - express: ₦12500
+   * The fee is the same for all states.
+   */
   private computeShippingFee(shipping: CheckoutPayload['shipping']): number {
-    // Simple placeholder logic:
-    // - pickup: free
-    // - standard: flat 0 for now
-    // - express: flat 10
     if (shipping.method === 'pickup') return 0;
-    if (shipping.method === 'express') return 10;
+    if (shipping.method === 'express') return 12500;
+    if (shipping.method === 'standard') return 6000;
     return 0;
   }
 
@@ -104,4 +108,3 @@ class CheckoutService {
 }
 
 export default new CheckoutService();
-
