@@ -1,33 +1,32 @@
-import { ApiRoutes } from "@/api";
-import axiosInstance from "@/lib/axios";
-import { unwrap } from "@/lib/unwrap";
-import { ApiResponse } from "@/types/api-response";
+import { ApiRoutes } from '@/api';
+import axiosInstance from '@/lib/axios';
+import { unwrap } from '@/lib/unwrap';
+import { ApiResponse } from '@/types/api-response';
 import {
   InitializePaymentRequest,
   InitializePaymentResponse,
   PaystackVerifyResponse,
-} from "@/types/payment";
+} from '@/types/payment';
 
 // ---------------- PAYMENT ----------------
 export const initializePayment = async (
-  data: InitializePaymentRequest = {},
+  data: InitializePaymentRequest
 ): Promise<InitializePaymentResponse> => {
   const res = (await axiosInstance.post<ApiResponse<InitializePaymentResponse>>(
     ApiRoutes.payment.initialize,
-    data,
+    data
   )) as unknown as ApiResponse<InitializePaymentResponse>;
 
   return unwrap(res);
 };
 
 export const verifyPayment = async (
-  reference: string,
+  reference: string
 ): Promise<PaystackVerifyResponse> => {
   const res = (await axiosInstance.get<ApiResponse<PaystackVerifyResponse>>(
     ApiRoutes.payment.verify,
-    { params: { reference } },
+    { params: { reference } }
   )) as unknown as ApiResponse<PaystackVerifyResponse>;
 
   return unwrap(res);
 };
-

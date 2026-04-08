@@ -82,7 +82,7 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
           <h2 className='text-2xl font-bold text-foreground'>Recent Orders</h2>
           <p className='text-sm text-foreground/60'>Your latest purchases</p>
         </div>
-        <Link href='/orders'>
+        <Link href='/dashboard/orders'>
           <Button variant='ghost' size='sm' className='gap-2'>
             View All <ArrowRight size={16} />
           </Button>

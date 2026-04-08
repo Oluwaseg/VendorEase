@@ -9,18 +9,29 @@ import { User } from '../models/User';
 import orderService from './order.service';
 
 class PaymentService {
-  async initializeTransaction(userId: string, callbackUrl: string) {
+  async initializeTransaction(userId: string, callbackUrl: string, orderId?: string) {
     // Fetch user
     const user = await User.findById(userId);
     if (!user) throw new Error('User not found');
 
-    // Fetch latest payment_pending order for user
-    const order = await Order.findOne({
-      user: userId,
-      paymentStatus: 'payment_pending',
-    }).sort({ createdAt: -1 });
-    if (!order)
-      throw new Error('No pending order found. Please checkout first.');
+    let order;
+    if (orderId) {
+      // Fetch specific order
+      order = await Order.findOne({
+        _id: orderId,
+        user: userId,
+        paymentStatus: 'payment_pending',
+      });
+      if (!order) throw new Error('Specific pending order not found or unauthorized.');
+    } else {
+      // Fetch latest payment_pending order for user
+      order = await Order.findOne({
+        user: userId,
+        paymentStatus: 'payment_pending',
+      }).sort({ createdAt: -1 });
+      if (!order)
+        throw new Error('No pending order found. Please checkout first.');
+    }
 
     // Use order's shipping info and total
     const shippingInfo = order.shipping;

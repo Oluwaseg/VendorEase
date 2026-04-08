@@ -1,6 +1,7 @@
-import { Order } from "@/types/order";
+import { Order } from '@/types/order';
 
 export interface InitializePaymentRequest {
+  orderId?: string;
   callbackUrl?: string;
 }
 
@@ -39,4 +40,3 @@ export interface PaystackVerifyResponse {
     metadata?: Record<string, unknown>;
   };
 }
-

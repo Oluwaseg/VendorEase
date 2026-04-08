@@ -15,9 +15,11 @@ class PaymentController {
       // Optionally allow callbackUrl override from frontend
       const callbackUrl =
         req.body.callbackUrl || process.env.PAYSTACK_CALLBACK_URL || '';
+      const orderId = req.body.orderId;
       const { paystack, order } = await paymentService.initializeTransaction(
         user._id,
-        callbackUrl
+        callbackUrl,
+        orderId
       );
       return (res as any).success(
         { paystack, order },

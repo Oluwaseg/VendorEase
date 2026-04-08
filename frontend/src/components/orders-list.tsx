@@ -1,6 +1,7 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import { useInitializePayment } from '@/hooks/use-payment';
 import { format } from 'date-fns';
 import {
   AlertCircle,
@@ -12,6 +13,7 @@ import {
   Truck,
 } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface Order {
   _id: string;
@@ -99,6 +101,24 @@ const getStatusColors = (status: string) => {
 };
 
 export function OrdersList({ orders }: OrdersListProps) {
+  const { mutate: initializePayment, isPending } = useInitializePayment();
+  const handleRetryPayment = (orderId: string) => {
+    initializePayment(
+      {
+        orderId,
+        callbackUrl: window.location.origin + '/payment-success',
+      },
+      {
+        onSuccess: (res) => {
+          const url = res.paystack.data.authorization_url;
+          window.location.href = url;
+        },
+        onError: (err) => {
+          toast.error(err.message || 'Failed to retry payment');
+        },
+      }
+    );
+  };
   return (
     <div className='space-y-4'>
       {orders.map((order) => {
@@ -172,6 +192,19 @@ export function OrdersList({ orders }: OrdersListProps) {
                         {order.paymentStatus?.replace('_', ' ')}
                       </span>
                     </div>
+                    {/* Retry Button (ONLY when pending) */}
+                    {order.paymentStatus === 'payment_pending' && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleRetryPayment(order._id);
+                        }}
+                        disabled={isPending}
+                        className='px-3 py-1.5 text-xs font-medium rounded-md bg-primary text-white hover:opacity-90 transition'
+                      >
+                        {isPending ? 'Redirecting...' : 'Retry Payment'}
+                      </button>
+                    )}
 
                     {/* Shipping Status */}
                     <div

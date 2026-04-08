@@ -9,4 +9,3 @@ router.get('/', authMiddleware, orderController.listMyOrders);
 router.get('/:id', authMiddleware, orderController.getMyOrder);
 
 export default router;
-
