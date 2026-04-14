@@ -30,7 +30,7 @@ The email service uses Nodemailer with Handlebars templates. In development, it'
    NODE_ENV=development
    MAILHOG_HOST=localhost
    MAILHOG_PORT=1025
-   EMAIL_FROM=SOSTECH Store <noreply@sostech.com>
+   EMAIL_FROM=VendorEase <noreply@yourdomain.com>
    FRONTEND_URL=http://localhost:3000
    ```
 
@@ -45,7 +45,7 @@ SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
-EMAIL_FROM=SOSTECH Store <noreply@sostech.com>
+EMAIL_FROM=VendorEase <noreply@yourdomain.com>
 FRONTEND_URL=https://yourdomain.com
 ```
 

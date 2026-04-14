@@ -116,14 +116,14 @@ export function StoreNavbar() {
             <Link href='/' className='flex items-center gap-2.5 flex-shrink-0'>
               <Image
                 src={logo}
-                alt='SOS Store Logo'
+                alt='VendorEase Logo'
                 width={32}
                 height={24}
                 priority
                 className='object-contain'
               />
               <span className='font-bold text-primary text-sm hidden sm:inline'>
-                SOS
+                VendorEase
               </span>
             </Link>
 
@@ -808,7 +808,7 @@ export function StoreNavbar() {
                 ) : (
                   <div className='px-4 py-4 border-b border-border bg-muted/50'>
                     <p className='text-sm font-semibold text-foreground mb-3'>
-                      Welcome to SOS Store
+                      Welcome to VendorEase
                     </p>
                     <Link
                       href='/login'

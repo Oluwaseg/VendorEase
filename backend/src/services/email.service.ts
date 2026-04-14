@@ -80,7 +80,7 @@ class EmailService {
 
       // Email options
       const mailOptions = {
-        from: process.env.EMAIL_FROM || 'SOSTECH Store <noreply@sostech.com>',
+        from: process.env.EMAIL_FROM || 'VendorEase <noreply@yourdomain.com>',
         to,
         subject,
         html,
@@ -177,7 +177,7 @@ class EmailService {
 
     await this.sendEmail({
       to,
-      subject: `${fromName} invited you to SOSTECH Store`,
+      subject: `${fromName} invited you to VendorEase`,
       template: 'referral-invite',
       context: {
         fromName,

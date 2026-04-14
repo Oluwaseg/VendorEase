@@ -59,14 +59,14 @@ export function DashboardNavbar() {
           >
             <Image
               src={logo}
-              alt="SOS Store Logo"
+              alt="VendorEase Logo"
               width={32}
               height={24}
               priority
               className="object-contain transition-transform duration-300 group-hover:scale-105"
             />
             <span className="ml-2 font-black text-base text-primary tracking-tight">
-              SOS Dashboard
+              VendorEase Dashboard
             </span>
           </Link>
 

@@ -1,8 +1,8 @@
-# SOSTECH Store – Backend
+# VendorEase – Backend
 
 ## Overview
 
-**SOSTECH Store** is a modern, headless e-commerce backend built to go beyond basic online store functionality. It provides a robust foundation for real-world commerce use cases such as advanced checkout logic, referral-driven promotions, dynamic shipping rates, role-based administration, real-time support chat, and a deep order lifecycle.
+**VendorEase** is a modern, headless e-commerce backend built to go beyond basic online store functionality. It provides a robust foundation for real-world commerce use cases such as advanced checkout logic, referral-driven promotions, dynamic shipping rates, role-based administration, real-time support chat, and a deep order lifecycle.
 
 This project is a ground-up rebuild inspired by lessons learned from an earlier e-commerce system. While it reuses proven concepts (auth, cart, orders), it intentionally focuses on **domain depth**, **extensibility**, and **production-style architecture**, rather than just CRUD endpoints.
 
@@ -67,7 +67,7 @@ The architecture supports future extensions such as partial shipments and partia
 
 ### Referral-Based Promotions
 
-SOSTECH Store includes a **milestone-driven referral system**:
+VendorEase includes a **milestone-driven referral system**:
 
 - Each user gets a referral code
 - Invited users are tracked
@@ -185,7 +185,7 @@ User registers or logs in → browses products → adds items to cart → applie
 
 ## Brand & Vision
 
-SOSTECH Store reflects the SOSTECH brand philosophy: building systems that are practical, scalable, and engineered with long-term growth in mind. This backend is intended to demonstrate strong backend engineering fundamentals, thoughtful system design, and real-world commerce problem solving.
+VendorEase is designed for small vendors and entrepreneurs who need a professional, scalable e-commerce solution. It demonstrates strong backend engineering fundamentals, thoughtful system design, and real-world commerce problem solving.
 
 ---
 

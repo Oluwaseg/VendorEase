@@ -27,7 +27,7 @@ const faqs = [
       "Yes. Every message includes a simple unsubscribe option. No questions asked. We respect your inbox and your time.",
   },
   {
-    question: "Is SOS-Store already live?",
+    question: "Is VendorEase already live?",
     answer:
       "Yes, the web app is ready. This page exists to give early access and priority updates to interested shoppers who want to be the first to experience what we've built.",
   },
@@ -62,7 +62,7 @@ export function FaqSection() {
               Frequently Asked Questions
             </h2>
             <p className="text-lg text-foreground/60">
-              Everything you need to know about SOS-Store
+              Everything you need to know about VendorEase
             </p>
           </div>
 

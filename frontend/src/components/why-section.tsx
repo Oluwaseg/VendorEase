@@ -8,7 +8,7 @@ export function WhySection() {
           {/* Heading */}
           <div className="text-center space-y-4">
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground text-balance">
-              Why SOS-Store Exists
+              Why VendorEase Exists
             </h2>
             <p className="text-lg text-foreground/60 max-w-2xl mx-auto text-balance">
               Online shopping should feel simple, not stressful.
@@ -30,7 +30,7 @@ export function WhySection() {
                   No endless scrolling. No confusing steps. No disappointment.
                 </h3>
                 <p className="text-foreground/70 leading-relaxed">
-                  We created SOS-Store for people who want to find what they
+                  We created VendorEase for people who want to find what they
                   need, trust what they're buying, and check out without
                   friction. Every interaction is designed with your time in
                   mind.
@@ -80,7 +80,7 @@ export function WhySection() {
                   <div className="text-center space-y-4">
                     <Zap size={64} className="text-accent mx-auto" />
                     <p className="text-foreground font-medium">
-                      SOS-Store approach
+                      VendorEase approach
                     </p>
                   </div>
                 </div>

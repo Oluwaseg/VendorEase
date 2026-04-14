@@ -64,7 +64,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/iphone-15-1',
+        publicId: 'vendorease/products/iphone-15-1',
         isThumbnail: true,
       },
     ],
@@ -85,7 +85,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1707028148873-104c8f537dbd?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/galaxy-s24-1',
+        publicId: 'vendorease/products/galaxy-s24-1',
         isThumbnail: true,
       },
     ],
@@ -106,7 +106,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1696446702105-02fce270eb59?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/google-pixel-8-pro',
+        publicId: 'vendorease/products/google-pixel-8-pro',
         isThumbnail: true,
       },
     ],
@@ -127,7 +127,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1707297920786-81cf137d6e7f?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/oneplus-12',
+        publicId: 'vendorease/products/oneplus-12',
         isThumbnail: true,
       },
     ],
@@ -150,7 +150,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/macbook-pro-16-m3-max',
+        publicId: 'vendorease/products/macbook-pro-16-m3-max',
         isThumbnail: true,
       },
     ],
@@ -171,7 +171,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/dell-xps-15',
+        publicId: 'vendorease/products/dell-xps-15',
         isThumbnail: true,
       },
     ],
@@ -192,7 +192,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/lenovo-thinkpad-x1-carbon',
+        publicId: 'vendorease/products/lenovo-thinkpad-x1-carbon',
         isThumbnail: true,
       },
     ],
@@ -215,7 +215,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/sony-wh-1000xm5',
+        publicId: 'vendorease/products/sony-wh-1000xm5',
         isThumbnail: true,
       },
     ],
@@ -236,7 +236,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1628202926206-c63a34b1618f?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/apple-airpods-pro-2nd-gen',
+        publicId: 'vendorease/products/apple-airpods-pro-2nd-gen',
         isThumbnail: true,
       },
     ],
@@ -257,7 +257,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/bose-quietcomfort-ultra',
+        publicId: 'vendorease/products/bose-quietcomfort-ultra',
         isThumbnail: true,
       },
     ],
@@ -280,7 +280,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/premium-cotton-tshirt',
+        publicId: 'vendorease/products/premium-cotton-tshirt',
         isThumbnail: true,
       },
     ],
@@ -301,7 +301,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/formal-business-shirt',
+        publicId: 'vendorease/products/formal-business-shirt',
         isThumbnail: true,
       },
     ],
@@ -324,7 +324,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/running-athletic-shoes',
+        publicId: 'vendorease/products/running-athletic-shoes',
         isThumbnail: true,
       },
     ],
@@ -345,7 +345,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/casual-sneakers',
+        publicId: 'vendorease/products/casual-sneakers',
         isThumbnail: true,
       },
     ],
@@ -368,7 +368,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1580974511812-4b71eceb14ba?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/wooden-dining-table',
+        publicId: 'vendorease/products/wooden-dining-table',
         isThumbnail: true,
       },
     ],
@@ -389,7 +389,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/comfortable-office-chair',
+        publicId: 'vendorease/products/comfortable-office-chair',
         isThumbnail: true,
       },
     ],
@@ -412,7 +412,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/yoga-mat',
+        publicId: 'vendorease/products/yoga-mat',
         isThumbnail: true,
       },
     ],
@@ -433,7 +433,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1504280390224-ddc78d067cc3?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/camping-tent',
+        publicId: 'vendorease/products/camping-tent',
         isThumbnail: true,
       },
     ],
@@ -456,7 +456,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/the-art-of-programming',
+        publicId: 'vendorease/products/the-art-of-programming',
         isThumbnail: true,
       },
     ],
@@ -477,7 +477,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/fiction-adventure-novel',
+        publicId: 'vendorease/products/fiction-adventure-novel',
         isThumbnail: true,
       },
     ],
@@ -500,7 +500,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/moisturizing-face-cream',
+        publicId: 'vendorease/products/moisturizing-face-cream',
         isThumbnail: true,
       },
     ],
@@ -521,7 +521,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1596462502278-27bf85033e5a?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/premium-makeup-set',
+        publicId: 'vendorease/products/premium-makeup-set',
         isThumbnail: true,
       },
     ],
@@ -544,7 +544,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1608248593842-8021c6a8b13c?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/action-figure-collection',
+        publicId: 'vendorease/products/action-figure-collection',
         isThumbnail: true,
       },
     ],
@@ -565,7 +565,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1605901309584-818e25960b8f?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/latest-aaa-video-game',
+        publicId: 'vendorease/products/latest-aaa-video-game',
         isThumbnail: true,
       },
     ],
@@ -588,7 +588,7 @@ const seedProducts: SeedProduct[] = [
     images: [
       {
         url: 'https://images.unsplash.com/photo-1605335520979-11ba10dd06a2?auto=format&fit=crop&w=500&q=80',
-        publicId: 'sostech/products/car-seat-covers-set',
+        publicId: 'vendorease/products/car-seat-covers-set',
         isThumbnail: true,
       },
     ],
@@ -598,7 +598,7 @@ const seedProducts: SeedProduct[] = [
 async function connectDB(): Promise<void> {
   try {
     const mongoUri =
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/sostech-store';
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/VendorEase';
 
     await mongoose.connect(mongoUri);
     logger.info(`MongoDB connected to: ${mongoUri}`);

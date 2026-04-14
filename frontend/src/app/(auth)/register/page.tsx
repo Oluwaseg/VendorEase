@@ -105,7 +105,7 @@ export default function RegisterPage() {
               <div className="flex justify-center">
                 <Image
                   src={logo}
-                  alt="SOS-Store Logo"
+                  alt="VendorEase Logo"
                   width={80}
                   height={80}
                   priority
@@ -118,7 +118,7 @@ export default function RegisterPage() {
               </h1>
 
               <p className="text-sm text-foreground/60">
-                Join SOS-Store for curated shopping
+                Join VendorEase for curated shopping
               </p>
             </div>
 

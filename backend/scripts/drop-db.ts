@@ -7,7 +7,7 @@ dotenv.config();
 async function connectDB(): Promise<void> {
   try {
     const mongoUri =
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/sostech-store';
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/VendorEase';
 
     await mongoose.connect(mongoUri);
     logger.info(`MongoDB connected to: ${mongoUri}`);
@@ -39,7 +39,7 @@ async function dropDatabase(): Promise<void> {
   try {
     await connectDB();
 
-    const dbName = mongoose.connection.name || 'sostech-store';
+    const dbName = mongoose.connection.name || 'VendorEase';
 
     logger.warn(`WARNING: About to drop database: ${dbName}`);
     logger.warn('This action cannot be undone!');

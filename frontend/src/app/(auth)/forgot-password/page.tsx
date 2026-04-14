@@ -55,7 +55,7 @@ export default function ForgotPasswordPage() {
                   <div className="flex justify-center">
                     <Image
                       src={logo}
-                      alt="SOS-Store Logo"
+                      alt="VendorEase Logo"
                       width={60}
                       height={30}
                       priority

@@ -83,7 +83,7 @@ export function Footer() {
                 <Image src={logo} alt='Logo' fill className='object-contain' />
               </div>
               <span className='text-lg font-bold text-foreground'>
-                SOS-Store
+                VendorEase
               </span>
             </div>
             <p className='mt-3 text-sm text-muted-foreground leading-relaxed'>
@@ -138,7 +138,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className='flex flex-col items-center justify-between gap-4 sm:flex-row'>
           <p className='text-xs text-muted-foreground'>
-            © {currentYear} SOS-Store. All rights reserved.
+            © {currentYear} VendorEase. All rights reserved.
           </p>
           <div className='flex gap-6'>
             <Link

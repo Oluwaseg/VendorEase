@@ -115,7 +115,7 @@ export default function LoginPage() {
               <div className="flex justify-center">
                 <Image
                   src={logo}
-                  alt="SOS-Store Logo"
+                  alt="VendorEase Logo"
                   width={60}
                   height={30}
                   priority
@@ -126,7 +126,7 @@ export default function LoginPage() {
                 Welcome Back
               </h1>
               <p className="text-sm text-foreground/60">
-                Sign in to your SOS-Store account
+                Sign in to your VendorEase account
               </p>
             </div>
 

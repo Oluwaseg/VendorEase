@@ -189,7 +189,7 @@ const seedSubcategories: SeedSubcategory[] = [
 async function connectDB(): Promise<void> {
   try {
     const mongoUri =
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/sostech-store';
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/VendorEase';
 
     await mongoose.connect(mongoUri);
     logger.info(`MongoDB connected to: ${mongoUri}`);

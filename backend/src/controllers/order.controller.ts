@@ -151,7 +151,7 @@ class OrderController {
     const builder = new InvoiceBuilder(doc);
 
     // Build invoice using structured layout system
-    builder.header('SOSTECH Store', 'Modern ecommerce orders & invoice');
+    builder.header('VendorEase', 'Modern ecommerce orders & invoice');
 
     builder.metaRow(
       order._id.toString().slice(-8).toUpperCase(),
@@ -186,7 +186,7 @@ class OrderController {
       total: order.total,
     });
 
-    builder.footer('support@sostechstore.com', 'sostechstore.com');
+    builder.footer('support@vendorease.com', 'vendorease.com');
   }
 
   // ----- Admin-side -----

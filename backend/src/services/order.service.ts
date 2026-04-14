@@ -100,7 +100,7 @@ class OrderService {
 
     await emailService.sendEmail({
       to: user.email,
-      subject: 'Your SOSTECH Store order is confirmed',
+      subject: 'Your VendorEase order is confirmed',
       template: 'order-confirmation',
       context: {
         name: user.name || 'Customer',
@@ -125,7 +125,7 @@ class OrderService {
 
     await emailService.sendEmail({
       to: user.email,
-      subject: 'Your SOSTECH Store order status updated',
+      subject: 'Your VendorEase order status updated',
       template: 'order-status-update',
       context: {
         name: user.name || 'Customer',

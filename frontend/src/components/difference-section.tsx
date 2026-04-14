@@ -45,10 +45,10 @@ export function DifferenceSection() {
           {/* Heading */}
           <div className="text-center space-y-4">
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground text-balance">
-              What Makes SOS-Store Different
+              What Makes VendorEase Different
             </h2>
             <p className="text-lg text-foreground/60 max-w-2xl mx-auto text-balance">
-              SOS-Store is not about listing everything. It's about listing the
+              VendorEase is not about listing everything. It's about listing the
               right things.
             </p>
           </div>

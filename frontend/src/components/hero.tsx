@@ -18,7 +18,7 @@ export function Hero() {
             </div>
 
             <p className="text-lg text-foreground/70 leading-relaxed max-w-lg text-balance">
-              Most online stores overwhelm you with noise. SOS-Store is built
+              Most online stores overwhelm you with noise. VendorEase is built
               differently — clean products, fast checkout, and a smooth buying
               experience from start to finish.
             </p>
@@ -74,7 +74,7 @@ export function Hero() {
           <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden">
             <Image
               src="/hero-shopping.jpg"
-              alt="Premium curated products at SOS-Store"
+              alt="Premium curated products at VendorEase"
               fill
               className="object-cover"
               priority

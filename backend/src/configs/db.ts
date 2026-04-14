@@ -4,7 +4,7 @@ import logger from '../libs/logger';
 const connectDB = async (): Promise<void> => {
   try {
     const mongoUri =
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/sostech-store';
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/VendorEase';
 
     await mongoose.connect(mongoUri);
 
