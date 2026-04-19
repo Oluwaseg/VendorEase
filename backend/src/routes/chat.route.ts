@@ -100,4 +100,14 @@ router.patch(
   chatController.closeChat
 );
 
+/**
+ * Delete a resolved chat
+ * DELETE /api/chat/admin/chats/:chatId
+ */
+router.delete(
+  '/admin/chats/:chatId',
+  authorize('admin'),
+  chatController.deleteChat
+);
+
 export default router;

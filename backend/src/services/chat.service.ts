@@ -287,16 +287,43 @@ class ChatService {
   }
 
   /**
+   * Delete a resolved support chat (admin only)
+   */
+  async deleteChat(chatId: string) {
+    try {
+      const chat = await Chat.findById(chatId);
+      if (!chat) {
+        throw new Error('Chat not found');
+      }
+      if (chat.status !== 'resolved') {
+        throw new Error('Only resolved chats can be deleted');
+      }
+
+      await Chat.findByIdAndDelete(chatId);
+      return true;
+    } catch (error) {
+      logger.error(`Error deleting chat: ${error}`);
+      throw error;
+    }
+  }
+
+  /**
    * Get all active support chats (admin/moderator only)
    */
-  async getAllActiveChats(page: number = 1, pageSize: number = 10) {
+  async getAllActiveChats(
+    page: number = 1,
+    pageSize: number = 10,
+    status: string = 'active'
+  ) {
     try {
       const skip = (page - 1) * pageSize;
+      const query: any = { type: 'support' };
 
-      const chats = await Chat.find({
-        type: 'support',
-        status: 'active',
-      })
+      if (status && status !== 'all') {
+        query.status = status;
+      }
+
+      const chats = await Chat.find(query)
         .sort({ lastMessageAt: -1, createdAt: -1 })
         .skip(skip)
         .limit(pageSize)
@@ -304,10 +331,7 @@ class ChatService {
         .populate('assignedTo', 'name email avatar')
         .populate('createdBy', 'name email avatar');
 
-      const total = await Chat.countDocuments({
-        type: 'support',
-        status: 'active',
-      });
+      const total = await Chat.countDocuments(query);
 
       return {
         data: chats,

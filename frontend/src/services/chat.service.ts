@@ -55,11 +55,15 @@ export const getChatMessages = async (
 
 export const getAdminActiveChats = async (
   page: number = 1,
-  pageSize: number = 10
+  pageSize: number = 10,
+  status: string = 'active'
 ): Promise<ChatConversationList> => {
+  const params: any = { page, pageSize };
+  if (status) params.status = status;
+
   const res = (await axiosInstance.get<ApiResponse<ChatConversationList>>(
     ApiRoutes.chat.adminChats,
-    { params: { page, pageSize } }
+    { params }
   )) as unknown as ApiResponse<ChatConversationList>;
 
   return unwrap(res);
@@ -129,7 +133,9 @@ export const resolveChat = async (
   const payload = unwrap(res);
   return 'chat' in payload ? payload.chat : payload;
 };
-
+export const deleteChat = async (chatId: string): Promise<void> => {
+  await axiosInstance.delete(ApiRoutes.chat.deleteChat(chatId));
+};
 export const closeChat = async (chatId: string): Promise<ChatConversation> => {
   const res = (await axiosInstance.patch<
     ApiResponse<{ chat: ChatConversation }>

@@ -231,8 +231,13 @@ class ChatController {
         1,
         parseInt(req.query.pageSize as string) || 10
       );
+      const status = (req.query.status as string) || 'active';
 
-      const result = await chatService.getAllActiveChats(page, pageSize);
+      const result = await chatService.getAllActiveChats(
+        page,
+        pageSize,
+        status
+      );
 
       return (res as any).success(result, 'Active chats retrieved', 200);
     } catch (error: any) {
@@ -358,6 +363,31 @@ class ChatController {
       return (res as any).success({ chat }, 'Chat closed', 200);
     } catch (error: any) {
       logger.error(`Error closing chat: ${error.message}`);
+      return (res as any).error(error.message, 'ERROR', 500);
+    }
+  }
+
+  /**
+   * Delete a resolved support chat
+   * DELETE /api/chat/admin/chats/:chatId
+   */
+  async deleteChat(req: Request, res: Response) {
+    try {
+      const chatId = String(req.params.chatId);
+
+      await chatService.deleteChat(chatId);
+
+      const io = (req as any).app?.get('io');
+      if (io) {
+        emitAdminChatUpdate(req, {
+          chatId,
+          type: 'chat.deleted',
+        });
+      }
+
+      return (res as any).success(null, 'Chat deleted', 200);
+    } catch (error: any) {
+      logger.error(`Error deleting chat: ${error.message}`);
       return (res as any).error(error.message, 'ERROR', 500);
     }
   }

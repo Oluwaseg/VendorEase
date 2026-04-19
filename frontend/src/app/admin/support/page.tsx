@@ -12,6 +12,7 @@ import {
   useChatConversation,
   useChatMessages,
   useCloseChat,
+  useDeleteChat,
   useResolveChat,
   useSendChatMessage,
 } from '@/hooks/use-chat';
@@ -36,6 +37,9 @@ export default function AdminSupportPage() {
   const [message, setMessage] = useState('');
   const [page] = useState(1);
   const [pageSize] = useState(20);
+  const [statusFilter, setStatusFilter] = useState<
+    'all' | 'active' | 'resolved' | 'closed'
+  >('active');
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [assignStaffId, setAssignStaffId] = useState('');
   const { user: currentUser } = useAuth();
@@ -46,13 +50,14 @@ export default function AdminSupportPage() {
     data: activeChats,
     isLoading: loadingChats,
     error: chatsError,
-  } = useAdminActiveChats(page, 20);
+  } = useAdminActiveChats(page, 20, statusFilter);
 
   const selectedChatQuery = useChatConversation(selectedChatId ?? '');
   const messagesQuery = useChatMessages(selectedChatId ?? '', page, pageSize);
   const sendMessageMutation = useSendChatMessage(selectedChatId ?? '');
   const resolveChatMutation = useResolveChat(selectedChatId ?? '');
   const closeChatMutation = useCloseChat(selectedChatId ?? '');
+  const deleteChatMutation = useDeleteChat(selectedChatId ?? '');
   const assignChatMutation = useAssignChat(selectedChatId ?? '');
   const { data: staffMembers = [] } = useGetAllUsers('admin');
   const { data: moderators = [] } = useGetAllUsers('moderator');
@@ -70,6 +75,15 @@ export default function AdminSupportPage() {
 
   useEffect(() => {
     if (!selectedChatId && chats.length > 0) {
+      setSelectedChatId(chats[0]._id);
+      return;
+    }
+
+    if (
+      selectedChatId &&
+      chats.length > 0 &&
+      !chats.some((chat) => chat._id === selectedChatId)
+    ) {
       setSelectedChatId(chats[0]._id);
     }
   }, [chats, selectedChatId]);
@@ -168,6 +182,23 @@ export default function AdminSupportPage() {
       toast.success('Chat closed successfully');
     } catch (error: any) {
       toast.error(error.message || 'Failed to close chat');
+    }
+  };
+
+  const handleDeleteChat = async () => {
+    if (!selectedChatId) return;
+
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this resolved chat? This action cannot be undone.'
+    );
+    if (!confirmed) return;
+
+    try {
+      await deleteChatMutation.mutateAsync();
+      setSelectedChatId(null);
+      toast.success('Chat deleted successfully');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete chat');
     }
   };
 
@@ -312,12 +343,39 @@ export default function AdminSupportPage() {
           {/* Conversations Sidebar */}
           <section className='rounded-2xl border-2 border-border bg-card p-5 shadow-sm h-fit xl:h-[calc(100vh-180px)] xl:sticky xl:top-8 overflow-hidden flex flex-col'>
             <div className='mb-5 pb-4 border-b-2 border-border'>
-              <h2 className='text-lg font-bold text-foreground'>
-                Conversations
-              </h2>
-              <p className='text-xs text-muted-foreground mt-1'>
-                {chatCount} {chatCount === 1 ? 'chat' : 'chats'} waiting
-              </p>
+              <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
+                <div>
+                  <h2 className='text-lg font-bold text-foreground'>
+                    Conversations
+                  </h2>
+                  <p className='text-xs text-muted-foreground mt-1'>
+                    {chatCount} {chatCount === 1 ? 'chat' : 'chats'} waiting
+                  </p>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <label className='text-xs font-medium text-muted-foreground'>
+                    Status:
+                  </label>
+                  <select
+                    value={statusFilter}
+                    onChange={(event) =>
+                      setStatusFilter(
+                        event.target.value as
+                          | 'all'
+                          | 'active'
+                          | 'resolved'
+                          | 'closed'
+                      )
+                    }
+                    className='rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20'
+                  >
+                    <option value='all'>All</option>
+                    <option value='active'>Active</option>
+                    <option value='resolved'>Resolved</option>
+                    <option value='closed'>Closed</option>
+                  </select>
+                </div>
+              </div>
             </div>
             <div className='flex-1 overflow-y-auto pr-2 space-y-0'>
               {content}
@@ -400,6 +458,20 @@ export default function AdminSupportPage() {
                         {closeChatMutation.isPending ? 'Closing...' : 'Close'}
                       </Button>
                     )}
+                    {currentUser?.role === 'admin' &&
+                      selectedChat.status === 'resolved' && (
+                        <Button
+                          onClick={handleDeleteChat}
+                          disabled={deleteChatMutation.isPending}
+                          variant='destructive'
+                          size='sm'
+                          className='text-xs'
+                        >
+                          {deleteChatMutation.isPending
+                            ? 'Deleting...'
+                            : 'Delete'}
+                        </Button>
+                      )}
                   </div>
                 </div>
 

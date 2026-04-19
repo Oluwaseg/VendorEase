@@ -1,6 +1,7 @@
 import {
   assignChat,
   closeChat,
+  deleteChat,
   getAdminActiveChats,
   getAssignedChats,
   getChatConversation,
@@ -43,11 +44,12 @@ export const useChatConversations = (
 
 export const useAdminActiveChats = (
   page: number = 1,
-  pageSize: number = 10
+  pageSize: number = 10,
+  status: string = 'active'
 ) => {
   return useQuery<ChatConversationList, Error>({
-    queryKey: ['admin-active-chats', page, pageSize],
-    queryFn: () => getAdminActiveChats(page, pageSize),
+    queryKey: ['admin-active-chats', page, pageSize, status],
+    queryFn: () => getAdminActiveChats(page, pageSize, status),
     staleTime: 1000 * 60 * 2,
   });
 };
@@ -155,6 +157,25 @@ export const useCloseChat = (chatId: string) => {
       });
       queryClient.invalidateQueries({ queryKey: ['admin-active-chats'] });
       queryClient.invalidateQueries({ queryKey: ['assigned-chats'] });
+    },
+  });
+};
+
+export const useDeleteChat = (chatId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, void>({
+    mutationFn: () => deleteChat(chatId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['admin-active-chats'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['assigned-chats'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['chat-conversation', chatId],
+      });
     },
   });
 };

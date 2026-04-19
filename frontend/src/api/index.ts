@@ -51,6 +51,7 @@ export const ApiRoutes = {
     assignChat: (chatId: string) => `/chat/admin/chats/${chatId}/assign`,
     resolveChat: (chatId: string) => `/chat/admin/chats/${chatId}/resolve`,
     closeChat: (chatId: string) => `/chat/admin/chats/${chatId}/close`,
+    deleteChat: (chatId: string) => `/chat/admin/chats/${chatId}`,
   },
   checkout: {
     getInfo: '/checkout',
