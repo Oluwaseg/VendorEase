@@ -47,6 +47,10 @@ export const ApiRoutes = {
     messages: (chatId: string) => `/chat/conversations/${chatId}/messages`,
     markAsRead: (chatId: string) => `/chat/conversations/${chatId}/read`,
     adminChats: '/chat/admin/chats',
+    assignedChats: '/chat/admin/my-chats',
+    assignChat: (chatId: string) => `/chat/admin/chats/${chatId}/assign`,
+    resolveChat: (chatId: string) => `/chat/admin/chats/${chatId}/resolve`,
+    closeChat: (chatId: string) => `/chat/admin/chats/${chatId}/close`,
   },
   checkout: {
     getInfo: '/checkout',

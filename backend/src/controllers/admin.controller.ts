@@ -95,7 +95,8 @@ class AdminController {
   }
   async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await adminService.getAllUsers();
+      const role = req.query.role as string | undefined;
+      const users = await adminService.getAllUsers(role);
       return (res as any).success(users, 'User list fetched successfully');
     } catch (error: any) {
       return (res as any).error(

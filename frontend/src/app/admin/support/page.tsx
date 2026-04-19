@@ -3,15 +3,21 @@
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
+import { useAuth } from '@/contexts/auth-context';
 import { useSocket } from '@/contexts/socket-context';
+import { useGetAllUsers } from '@/hooks/use-admin';
 import {
   useAdminActiveChats,
+  useAssignChat,
   useChatConversation,
   useChatMessages,
+  useCloseChat,
+  useResolveChat,
   useSendChatMessage,
 } from '@/hooks/use-chat';
 import { ChatConversation } from '@/types/chat';
 import { useQueryClient } from '@tanstack/react-query';
+import { Clock, MessageCircle, User, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -30,6 +36,9 @@ export default function AdminSupportPage() {
   const [message, setMessage] = useState('');
   const [page] = useState(1);
   const [pageSize] = useState(20);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [assignStaffId, setAssignStaffId] = useState('');
+  const { user: currentUser } = useAuth();
   const { socket, isConnected, joinChat, leaveChat } = useSocket();
   const queryClient = useQueryClient();
 
@@ -42,10 +51,20 @@ export default function AdminSupportPage() {
   const selectedChatQuery = useChatConversation(selectedChatId ?? '');
   const messagesQuery = useChatMessages(selectedChatId ?? '', page, pageSize);
   const sendMessageMutation = useSendChatMessage(selectedChatId ?? '');
+  const resolveChatMutation = useResolveChat(selectedChatId ?? '');
+  const closeChatMutation = useCloseChat(selectedChatId ?? '');
+  const assignChatMutation = useAssignChat(selectedChatId ?? '');
+  const { data: staffMembers = [] } = useGetAllUsers('admin');
+  const { data: moderators = [] } = useGetAllUsers('moderator');
 
-  const chats = activeChats?.data || [];
+  const chats = (activeChats?.data || []).filter(
+    (chat) => chat.createdBy._id !== currentUser?._id
+  );
   const selectedChat = selectedChatQuery.data;
   const messages = messagesQuery.data?.messages || selectedChat?.messages || [];
+  const availableStaff = [...staffMembers, ...moderators].filter(
+    (staff) => staff._id !== currentUser?._id
+  );
 
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -130,7 +149,55 @@ export default function AdminSupportPage() {
     }
   };
 
+  const handleResolveChat = async () => {
+    if (!selectedChatId) return;
+
+    try {
+      await resolveChatMutation.mutateAsync();
+      toast.success('Chat marked as resolved');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to resolve chat');
+    }
+  };
+
+  const handleCloseChat = async () => {
+    if (!selectedChatId) return;
+
+    try {
+      await closeChatMutation.mutateAsync();
+      toast.success('Chat closed successfully');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to close chat');
+    }
+  };
+
+  const handleAssignChat = async () => {
+    if (!assignStaffId.trim() || !selectedChatId) return;
+
+    try {
+      await assignChatMutation.mutateAsync(assignStaffId.trim());
+      toast.success('Chat assigned successfully');
+      setAssignStaffId('');
+      setShowAssignModal(false);
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to assign chat');
+    }
+  };
+
   const chatCount = chats.length;
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'open':
+        return 'bg-emerald-100 text-emerald-700';
+      case 'resolved':
+        return 'bg-blue-100 text-blue-700';
+      case 'closed':
+        return 'bg-slate-100 text-slate-700';
+      default:
+        return 'bg-muted text-muted-foreground';
+    }
+  };
+
   const content = useMemo(() => {
     if (loadingChats) {
       return (
@@ -142,7 +209,7 @@ export default function AdminSupportPage() {
 
     if (chatsError) {
       return (
-        <div className='p-6 text-sm text-red-600'>
+        <div className='p-6 text-sm text-destructive'>
           Failed to load support chats. Please refresh.
         </div>
       );
@@ -150,14 +217,20 @@ export default function AdminSupportPage() {
 
     if (chats.length === 0) {
       return (
-        <div className='p-6 text-sm text-muted-foreground'>
-          No active support conversations at the moment.
+        <div className='flex flex-col items-center justify-center py-12 text-center'>
+          <MessageCircle className='w-12 h-12 text-muted-foreground mb-3 opacity-40' />
+          <p className='text-sm text-muted-foreground'>
+            No active support conversations
+          </p>
+          <p className='text-xs text-muted-foreground mt-1'>
+            Conversations will appear here
+          </p>
         </div>
       );
     }
 
     return (
-      <div className='space-y-3'>
+      <div className='space-y-2'>
         {chats.map((chat) => {
           const isSelected = chat._id === selectedChatId;
           return (
@@ -165,30 +238,38 @@ export default function AdminSupportPage() {
               key={chat._id}
               type='button'
               onClick={() => handleSelectChat(chat)}
-              className={`w-full text-left rounded-2xl border p-4 transition-all duration-200 ${
+              className={`w-full text-left transition-all duration-200 rounded-xl border-2 p-4 ${
                 isSelected
-                  ? 'border-primary bg-primary/10'
-                  : 'border-border bg-card hover:border-primary/40 hover:bg-muted'
+                  ? 'border-primary bg-primary/8 shadow-sm'
+                  : 'border-border bg-card hover:border-primary/30 hover:bg-muted/50'
               }`}
             >
-              <div className='flex items-center justify-between gap-2'>
-                <div>
-                  <p className='font-semibold text-foreground'>
+              <div className='flex items-start justify-between gap-2 mb-3'>
+                <div className='flex-1 min-w-0'>
+                  <p className='font-semibold text-foreground truncate text-sm'>
                     {chat.subject || `Support #${chat._id.slice(-6)}`}
                   </p>
-                  <p className='text-xs text-muted-foreground'>
-                    {chat.createdBy?.name || 'Unknown user'} ·{' '}
-                    {chat.createdBy?.email || 'Unknown email'}
-                  </p>
+                  <div className='flex items-center gap-1 mt-1.5'>
+                    <User className='w-3 h-3 text-muted-foreground flex-shrink-0' />
+                    <p className='text-xs text-muted-foreground truncate'>
+                      {chat.createdBy?.name || 'Unknown'} •{' '}
+                      {chat.createdBy?.email || 'No email'}
+                    </p>
+                  </div>
                 </div>
-                <span className='rounded-full bg-muted px-2 py-1 text-[11px] uppercase tracking-[.18em] text-muted-foreground'>
+                <span
+                  className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase whitespace-nowrap flex-shrink-0 ${getStatusColor(chat.status)}`}
+                >
                   {chat.status}
                 </span>
               </div>
-              <div className='mt-3 flex items-center justify-between text-sm text-foreground/70'>
-                <span>{chat.lastMessage || 'No messages yet'}</span>
-                <span>
-                  {chat.lastMessageAt ? formatTime(chat.lastMessageAt) : ''}
+              <div className='flex items-center justify-between gap-2 text-xs'>
+                <span className='text-muted-foreground truncate line-clamp-1'>
+                  {chat.lastMessage || 'No messages yet'}
+                </span>
+                <span className='text-muted-foreground flex-shrink-0 flex items-center gap-1'>
+                  <Clock className='w-3 h-3' />
+                  {chat.lastMessageAt ? formatTime(chat.lastMessageAt) : '—'}
                 </span>
               </div>
             </button>
@@ -200,68 +281,130 @@ export default function AdminSupportPage() {
 
   return (
     <main className='min-h-screen bg-background'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10'>
-        <div className='mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
-          <div>
-            <h1 className='text-3xl font-bold text-foreground'>
-              Support Chats
-            </h1>
-            <p className='mt-2 text-sm text-muted-foreground'>
-              Manage active customer support conversations and reply instantly.
-            </p>
-          </div>
-          <div className='rounded-2xl border border-border bg-card px-4 py-3 text-sm'>
-            Active conversations:{' '}
-            <span className='font-semibold'>{chatCount}</span>
-          </div>
-        </div>
-
-        <div className='grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-6'>
-          <section className='rounded-3xl border border-border bg-card p-5 shadow-sm'>
-            <div className='flex items-center justify-between gap-3 mb-5'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+        {/* Header */}
+        <div className='mb-10'>
+          <div className='flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4'>
+            <div>
+              <h1 className='text-4xl sm:text-5xl font-bold text-foreground text-balance tracking-tight'>
+                Support Center
+              </h1>
+              <p className='mt-3 text-base text-muted-foreground max-w-xl'>
+                Manage customer conversations and provide support in real-time.
+              </p>
+            </div>
+            <div className='inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/8 border-2 border-primary/20'>
+              <MessageCircle className='w-5 h-5 text-primary' />
               <div>
-                <h2 className='text-lg font-semibold text-foreground'>
-                  Active chats
-                </h2>
-                <p className='text-sm text-muted-foreground'>
-                  Select a conversation to reply.
+                <p className='text-xs font-semibold text-muted-foreground uppercase tracking-wide'>
+                  Active
+                </p>
+                <p className='text-2xl font-bold text-foreground'>
+                  {chatCount}
                 </p>
               </div>
             </div>
-            {content}
+          </div>
+        </div>
+
+        {/* Main Grid */}
+        <div className='grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-6'>
+          {/* Conversations Sidebar */}
+          <section className='rounded-2xl border-2 border-border bg-card p-5 shadow-sm h-fit xl:h-[calc(100vh-180px)] xl:sticky xl:top-8 overflow-hidden flex flex-col'>
+            <div className='mb-5 pb-4 border-b-2 border-border'>
+              <h2 className='text-lg font-bold text-foreground'>
+                Conversations
+              </h2>
+              <p className='text-xs text-muted-foreground mt-1'>
+                {chatCount} {chatCount === 1 ? 'chat' : 'chats'} waiting
+              </p>
+            </div>
+            <div className='flex-1 overflow-y-auto pr-2 space-y-0'>
+              {content}
+            </div>
           </section>
 
-          <section className='rounded-3xl border border-border bg-card p-5 shadow-sm flex flex-col'>
+          {/* Chat Panel */}
+          <section className='rounded-2xl border-2 border-border bg-card p-6 shadow-sm flex flex-col'>
             {!selectedChat ? (
-              <div className='flex min-h-[320px] items-center justify-center text-sm text-muted-foreground'>
-                Select a chat to view conversation details.
+              <div className='flex flex-col items-center justify-center h-full text-center'>
+                <MessageCircle className='w-16 h-16 text-muted-foreground mb-4 opacity-20' />
+                <h3 className='text-lg font-semibold text-foreground mb-2'>
+                  No conversation selected
+                </h3>
+                <p className='text-sm text-muted-foreground max-w-xs'>
+                  Select a conversation from the list to start responding to
+                  customers.
+                </p>
               </div>
             ) : (
               <>
-                <div className='mb-5 flex flex-col gap-3 border-b border-border pb-4'>
-                  <div className='flex items-center justify-between gap-4'>
-                    <div>
-                      <p className='text-base font-semibold text-foreground'>
+                {/* Chat Header */}
+                <div className='pb-4 border-b border-border mb-4'>
+                  <div className='flex items-start justify-between gap-3 mb-3'>
+                    <div className='flex-1 min-w-0'>
+                      <h3 className='text-base font-bold text-foreground'>
                         {selectedChat.subject || 'Support Conversation'}
-                      </p>
-                      <p className='text-sm text-muted-foreground'>
-                        {selectedChat.createdBy?.name || 'Unknown user'} ·{' '}
-                        {selectedChat.createdBy?.email || 'Unknown email'}
-                      </p>
-                    </div>
-                    <div className='text-right'>
-                      <p className='text-sm font-semibold text-foreground'>
-                        {selectedChat.status}
-                      </p>
-                      <p className='text-xs text-muted-foreground'>
-                        Assigned to:{' '}
-                        {selectedChat.assignedTo?.name || 'Unassigned'}
+                      </h3>
+                      <p className='text-xs text-muted-foreground mt-1'>
+                        {selectedChat.createdBy?.name || 'Unknown'} •{' '}
+                        {selectedChat.createdBy?.email || 'No email'}
                       </p>
                     </div>
+                    <div
+                      className={`rounded-full px-2.5 py-1 font-semibold text-xs whitespace-nowrap flex-shrink-0 ${getStatusColor(selectedChat.status)}`}
+                    >
+                      {selectedChat.status.charAt(0).toUpperCase() +
+                        selectedChat.status.slice(1)}
+                    </div>
+                  </div>
+
+                  <div className='flex flex-wrap items-center gap-2 text-xs mb-3'>
+                    <span className='text-muted-foreground'>Assigned to:</span>
+                    <span className='font-semibold text-foreground'>
+                      {selectedChat.assignedTo?.name || 'Unassigned'}
+                    </span>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className='flex flex-wrap gap-2'>
+                    <Button
+                      onClick={() => setShowAssignModal(true)}
+                      variant='outline'
+                      size='sm'
+                      className='text-xs'
+                    >
+                      Assign
+                    </Button>
+                    {selectedChat.status !== 'resolved' && (
+                      <Button
+                        onClick={handleResolveChat}
+                        disabled={resolveChatMutation.isPending}
+                        variant='outline'
+                        size='sm'
+                        className='text-xs'
+                      >
+                        {resolveChatMutation.isPending
+                          ? 'Resolving...'
+                          : 'Resolve'}
+                      </Button>
+                    )}
+                    {selectedChat.status !== 'closed' && (
+                      <Button
+                        onClick={handleCloseChat}
+                        disabled={closeChatMutation.isPending}
+                        variant='destructive'
+                        size='sm'
+                        className='text-xs'
+                      >
+                        {closeChatMutation.isPending ? 'Closing...' : 'Close'}
+                      </Button>
+                    )}
                   </div>
                 </div>
 
-                <div className='flex-1 overflow-hidden'>
+                {/* Messages Area */}
+                <div className='flex-1 overflow-hidden mb-5'>
                   <div
                     ref={panelRef}
                     className='space-y-4 overflow-y-auto pr-2 pb-4 max-h-[calc(100vh-28rem)]'
@@ -277,18 +420,29 @@ export default function AdminSupportPage() {
                         return (
                           <div
                             key={message._id}
-                            className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}
+                            className={`flex gap-2 ${isAdmin ? 'flex-row-reverse justify-end' : 'justify-start'}`}
                           >
                             <div
-                              className={`max-w-[80%] rounded-3xl px-4 py-3 text-sm shadow-sm ${
-                                isAdmin
-                                  ? 'bg-primary text-white'
-                                  : 'bg-slate-100 text-slate-900'
-                              }`}
+                              className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold ${isAdmin ? 'bg-primary text-primary-foreground' : 'bg-slate-200 text-slate-700'}`}
                             >
-                              <p>{message.content}</p>
-                              <p className='mt-2 text-[11px] text-muted-foreground'>
-                                {message.sender.name} •{' '}
+                              {isAdmin ? 'S' : 'C'}
+                            </div>
+                            <div
+                              className={`flex flex-col gap-1 max-w-xs ${isAdmin ? 'items-end' : 'items-start'}`}
+                            >
+                              <p className='text-xs font-medium text-muted-foreground px-2'>
+                                {message.sender.name}
+                              </p>
+                              <div
+                                className={`rounded-xl px-3 py-2 text-sm leading-relaxed break-words ${
+                                  isAdmin
+                                    ? 'bg-primary text-primary-foreground rounded-tr-none'
+                                    : 'bg-muted text-foreground rounded-tl-none'
+                                }`}
+                              >
+                                {message.content}
+                              </div>
+                              <p className='text-xs text-muted-foreground px-2'>
                                 {formatTime(message.createdAt)}
                               </p>
                             </div>
@@ -299,24 +453,29 @@ export default function AdminSupportPage() {
                   </div>
                 </div>
 
-                <div className='mt-5 border-t border-border pt-4'>
+                {/* Input Area */}
+                <div className='border-t-2 border-border pt-5'>
                   <Textarea
-                    className='min-h-[120px]'
+                    className='min-h-[100px] mb-4 resize-none rounded-xl'
                     value={message}
                     onChange={(event) => setMessage(event.target.value)}
-                    placeholder='Write a response to the customer...'
+                    placeholder='Type your response here...'
                   />
-                  <div className='mt-4 flex items-center justify-between gap-3'>
-                    <span className='text-xs text-muted-foreground'>
-                      {selectedChat.participants.length} participant(s)
-                    </span>
+                  <div className='flex items-center justify-between gap-3'>
+                    <p className='text-xs text-muted-foreground font-medium'>
+                      {selectedChat.participants.length} participant
+                      {selectedChat.participants.length !== 1 ? 's' : ''}
+                    </p>
                     <Button
                       onClick={handleSendMessage}
                       disabled={
                         !message.trim() || sendMessageMutation.isPending
                       }
+                      className='font-semibold'
                     >
-                      Send reply
+                      {sendMessageMutation.isPending
+                        ? 'Sending...'
+                        : 'Send Reply'}
                     </Button>
                   </div>
                 </div>
@@ -325,6 +484,74 @@ export default function AdminSupportPage() {
           </section>
         </div>
       </div>
+
+      {/* Assign Chat Modal */}
+      {showAssignModal && (
+        <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4'>
+          <div className='bg-background border-2 border-border rounded-2xl w-full max-w-md shadow-2xl animate-in fade-in zoom-in-95'>
+            {/* Modal Header */}
+            <div className='border-b-2 border-border px-6 py-5 flex items-center justify-between'>
+              <h2 className='text-xl font-bold text-foreground'>Assign Chat</h2>
+              <button
+                onClick={() => {
+                  setShowAssignModal(false);
+                  setAssignStaffId('');
+                }}
+                className='p-1 hover:bg-muted rounded-lg transition-colors'
+              >
+                <X className='w-5 h-5' />
+              </button>
+            </div>
+
+            <div className='p-6 space-y-5'>
+              <div>
+                <label className='block text-sm font-semibold text-foreground mb-3'>
+                  Select Staff Member
+                </label>
+                <select
+                  value={assignStaffId}
+                  onChange={(e) => setAssignStaffId(e.target.value)}
+                  className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-medium'
+                >
+                  <option value=''>-- Choose Staff --</option>
+                  {availableStaff.map((staff) => (
+                    <option key={staff._id} value={staff._id}>
+                      {staff.name} ({staff.role})
+                    </option>
+                  ))}
+                </select>
+                {availableStaff.length === 0 && (
+                  <p className='text-xs text-muted-foreground mt-3 font-medium'>
+                    No available staff members
+                  </p>
+                )}
+              </div>
+
+              <div className='flex gap-3 justify-end pt-2'>
+                <Button
+                  onClick={() => {
+                    setShowAssignModal(false);
+                    setAssignStaffId('');
+                  }}
+                  variant='outline'
+                  className='font-semibold'
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleAssignChat}
+                  disabled={
+                    !assignStaffId.trim() || assignChatMutation.isPending
+                  }
+                  className='font-semibold'
+                >
+                  {assignChatMutation.isPending ? 'Assigning...' : 'Assign'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -176,18 +176,18 @@ export default function ChatWidget() {
     if (authLoading) {
       return (
         <div className='flex h-full items-center justify-center'>
-          <div className='text-center space-y-3'>
+          <div className='text-center space-y-4'>
             <div className='flex justify-center'>
-              <div className='relative h-8 w-8'>
-                <div className='absolute inset-0 rounded-full bg-gradient-to-r from-primary/40 to-primary/20 animate-pulse'></div>
+              <div className='relative h-10 w-10'>
+                <div className='absolute inset-0 rounded-full border-2 border-blue-200 dark:border-blue-800'></div>
                 <div
-                  className='absolute inset-1 rounded-full bg-gradient-to-r from-primary/60 to-primary/30 animate-spin'
-                  style={{ animationDuration: '2s' }}
+                  className='absolute inset-0 rounded-full border-2 border-transparent border-t-blue-600 dark:border-t-blue-400 animate-spin'
+                  style={{ animationDuration: '1s' }}
                 ></div>
               </div>
             </div>
-            <p className='text-xs text-muted-foreground font-medium'>
-              Checking authentication...
+            <p className='text-xs text-slate-600 dark:text-slate-400 font-medium'>
+              Loading...
             </p>
           </div>
         </div>
@@ -198,10 +198,10 @@ export default function ChatWidget() {
       return (
         <div className='flex h-full flex-col items-center justify-center gap-6 p-8 text-center'>
           <div className='relative'>
-            <div className='absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/20 to-primary/10 blur-2xl'></div>
-            <div className='relative rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 p-4 border border-primary/20'>
+            <div className='absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-blue-400/10 blur-2xl'></div>
+            <div className='relative rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 p-4 border border-blue-200 dark:border-blue-800'>
               <svg
-                className='h-8 w-8 text-primary'
+                className='h-8 w-8 text-blue-600 dark:text-blue-400'
                 fill='none'
                 stroke='currentColor'
                 viewBox='0 0 24 24'
@@ -217,15 +217,15 @@ export default function ChatWidget() {
           </div>
           <div className='space-y-2'>
             <p className='text-sm font-semibold text-foreground'>
-              Sign in to chat
+              Sign in to get support
             </p>
-            <p className='text-xs text-muted-foreground leading-relaxed'>
-              Connect with our support team to get instant help and answers
+            <p className='text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xs'>
+              Please log in to start chatting with our support team
             </p>
           </div>
           <Link href='/login' className='w-full'>
-            <Button className='w-full h-10 rounded-lg bg-gradient-to-r from-primary to-primary/85 hover:from-primary/90 hover:to-primary/75 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200'>
-              Sign in now
+            <Button className='w-full h-11 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-medium shadow-lg transition-all duration-200'>
+              Sign in
             </Button>
           </Link>
         </div>
@@ -233,37 +233,37 @@ export default function ChatWidget() {
     }
 
     return (
-      <div className='flex h-full flex-col overflow-hidden bg-background'>
+      <div className='flex h-full flex-col overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800'>
         {/* Loading State */}
         {creatingSupport || isLoadingMessages ? (
           <div className='flex flex-1 items-center justify-center'>
-            <div className='text-center space-y-3.5'>
+            <div className='text-center space-y-4'>
               <div className='flex justify-center gap-2'>
                 <div
-                  className='h-2.5 w-2.5 animate-bounce rounded-full bg-primary'
+                  className='h-2.5 w-2.5 animate-bounce rounded-full bg-blue-600'
                   style={{ animationDelay: '0ms' }}
                 ></div>
                 <div
-                  className='h-2.5 w-2.5 animate-bounce rounded-full bg-primary'
+                  className='h-2.5 w-2.5 animate-bounce rounded-full bg-blue-600'
                   style={{ animationDelay: '150ms' }}
                 ></div>
                 <div
-                  className='h-2.5 w-2.5 animate-bounce rounded-full bg-primary'
+                  className='h-2.5 w-2.5 animate-bounce rounded-full bg-blue-600'
                   style={{ animationDelay: '300ms' }}
                 ></div>
               </div>
-              <p className='text-xs text-muted-foreground font-medium'>
-                {creatingSupport ? 'Opening chat...' : 'Loading messages...'}
+              <p className='text-xs text-slate-600 dark:text-slate-400 font-medium'>
+                {creatingSupport ? 'Opening chat...' : 'Loading...'}
               </p>
             </div>
           </div>
         ) : !allMessages.length ? (
           <div className='flex flex-1 flex-col items-center justify-center gap-4 px-6 py-12 text-center'>
             <div className='relative'>
-              <div className='absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 to-primary/10 blur-2xl'></div>
-              <div className='relative rounded-full bg-gradient-to-br from-primary/10 to-primary/5 p-4 border border-primary/20'>
+              <div className='absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-400/10 blur-2xl'></div>
+              <div className='relative rounded-full bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 p-5 border border-blue-200 dark:border-blue-800'>
                 <svg
-                  className='h-7 w-7 text-primary'
+                  className='h-8 w-8 text-blue-600 dark:text-blue-400'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'
@@ -277,66 +277,78 @@ export default function ChatWidget() {
                 </svg>
               </div>
             </div>
-            <div className='space-y-1.5'>
+            <div className='space-y-2'>
               <p className='text-sm font-semibold text-foreground'>
                 Start a conversation
               </p>
-              <p className='text-xs text-muted-foreground leading-relaxed'>
-                Say hello! Our support team is ready to help you.
+              <p className='text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xs'>
+                Say hello! Our support team is ready to assist you.
               </p>
             </div>
           </div>
         ) : (
           <div
             ref={listRef}
-            className='flex-1 space-y-3 overflow-y-auto px-4 py-6'
+            className='flex-1 space-y-4 overflow-y-auto px-6 py-6 flex flex-col'
           >
             {allMessages.map((message: ChatMessage, idx) => {
               const isMine = message.sender._id === supportChat?.createdBy._id;
+              const isSupport = !isMine;
               return (
                 <div
                   key={message._id}
-                  className={`flex flex-col gap-1.5 animate-in fade-in slide-in-from-bottom-2 duration-300`}
+                  className={`flex gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 ${
+                    isMine ? 'flex-row-reverse self-end' : 'flex-row self-start'
+                  } max-w-sm`}
                   style={{ animationDelay: `${idx * 50}ms` }}
                 >
-                  {!isMine && (
-                    <span className='text-xs font-semibold text-muted-foreground px-2'>
-                      {message.sender.name}
-                    </span>
-                  )}
                   <div
-                    className={`max-w-xs rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-md transition-all duration-200 hover:shadow-lg ${
-                      isMine
-                        ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground ml-auto rounded-br-none'
-                        : 'bg-white dark:bg-slate-800 text-foreground rounded-bl-none border border-border/50'
+                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white ${
+                      isMine ? 'bg-blue-600' : 'bg-slate-400 dark:bg-slate-600'
                     }`}
                   >
-                    {message.content}
+                    {message.sender.name.charAt(0).toUpperCase()}
                   </div>
-                  <span
-                    className={`text-xs transition-opacity ${
-                      isMine
-                        ? 'text-right pr-2 text-muted-foreground'
-                        : 'pl-2 text-muted-foreground/60'
-                    }`}
-                  >
-                    {formatTime(message.createdAt)}
-                  </span>
+                  <div className='flex flex-col gap-1'>
+                    {isSupport && (
+                      <span className='text-xs font-semibold text-slate-600 dark:text-slate-300 px-2'>
+                        {message.sender.name}
+                      </span>
+                    )}
+                    <div
+                      className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm transition-all duration-200 ${
+                        isMine
+                          ? 'bg-blue-600 text-white rounded-br-none'
+                          : 'bg-slate-100 dark:bg-slate-700 text-foreground rounded-bl-none'
+                      }`}
+                    >
+                      {message.content}
+                    </div>
+                    <span className='text-xs px-2 text-slate-500 dark:text-slate-400'>
+                      {formatTime(message.createdAt)}
+                    </span>
+                  </div>
                 </div>
               );
             })}
             {someoneTyping && (
-              <div className='flex items-start gap-2 animate-in fade-in duration-200'>
-                <div className='rounded-2xl rounded-bl-none bg-white dark:bg-slate-800 px-4 py-3 border border-border/50 shadow-md'>
-                  <div className='flex items-center gap-2'>
+              <div className='flex gap-3 self-start max-w-sm animate-in fade-in duration-200'>
+                <div className='w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white bg-slate-400 dark:bg-slate-600'>
+                  S
+                </div>
+                <div className='flex flex-col gap-1'>
+                  <span className='text-xs font-semibold text-slate-600 dark:text-slate-300 px-2'>
+                    Support Agent
+                  </span>
+                  <div className='rounded-2xl rounded-bl-none bg-slate-100 dark:bg-slate-700 px-4 py-3 shadow-sm'>
                     <div className='flex gap-1.5'>
-                      <div className='h-2.5 w-2.5 animate-bounce rounded-full bg-primary'></div>
+                      <div className='h-2 w-2 animate-bounce rounded-full bg-blue-600'></div>
                       <div
-                        className='h-2.5 w-2.5 animate-bounce rounded-full bg-primary'
+                        className='h-2 w-2 animate-bounce rounded-full bg-blue-600'
                         style={{ animationDelay: '0.1s' }}
                       ></div>
                       <div
-                        className='h-2.5 w-2.5 animate-bounce rounded-full bg-primary'
+                        className='h-2 w-2 animate-bounce rounded-full bg-blue-600'
                         style={{ animationDelay: '0.2s' }}
                       ></div>
                     </div>
@@ -346,52 +358,6 @@ export default function ChatWidget() {
             )}
           </div>
         )}
-
-        {/* Input Area - Premium styling */}
-        <div className='border-t border-border/30 bg-gradient-to-t from-background/95 to-background px-4 py-4'>
-          <div className='flex gap-2.5'>
-            <div className='flex-1 relative'>
-              <Textarea
-                className='max-h-20 min-h-11 resize-none rounded-xl border border-border/50 bg-white dark:bg-slate-800 text-sm placeholder-muted-foreground/70 focus:border-primary/50 focus:ring-primary/30 transition-all shadow-sm focus:shadow-md'
-                placeholder='Type a message...'
-                value={draft}
-                onChange={(event) => setDraft(event.target.value)}
-                disabled={!chatId || sendMessageMutation.isPending}
-              />
-            </div>
-            <Button
-              onClick={handleSend}
-              disabled={
-                !draft.trim() || !chatId || sendMessageMutation.isPending
-              }
-              size='sm'
-              className='mt-auto h-11 w-11 rounded-xl bg-gradient-to-r from-primary to-primary/85 hover:from-primary/90 hover:to-primary/75 text-white shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
-            >
-              {sendMessageMutation.isPending ? (
-                <div className='flex gap-1.5'>
-                  <div className='h-1.5 w-1.5 animate-bounce rounded-full bg-white'></div>
-                  <div
-                    className='h-1.5 w-1.5 animate-bounce rounded-full bg-white'
-                    style={{ animationDelay: '0.1s' }}
-                  ></div>
-                </div>
-              ) : (
-                <svg
-                  className='h-5 w-5'
-                  fill='currentColor'
-                  viewBox='0 0 20 20'
-                >
-                  <path d='M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5.951-1.429 5.951 1.429a1 1 0 001.169-1.409l-7-14z' />
-                </svg>
-              )}
-            </Button>
-          </div>
-          {!chatId && (
-            <p className='mt-2.5 text-xs text-muted-foreground/70 animate-pulse'>
-              Getting ready...
-            </p>
-          )}
-        </div>
       </div>
     );
   }, [
@@ -411,89 +377,145 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Vertical Pill Widget - Always visible */}
-      <button
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-label={isOpen ? 'Close chat' : 'Open chat'}
-        className='fixed right-0 top-1/2 -translate-y-1/2 z-50 group flex h-48 w-14 flex-col items-center justify-center gap-3 rounded-l-2xl border border-r-0 border-primary/20 bg-gradient-to-b from-primary via-primary to-primary/90 px-3 py-4 text-primary-foreground shadow-2xl shadow-primary/25 backdrop-blur-md transition-all duration-300 ease-out hover:w-20 hover:shadow-2xl hover:shadow-primary/35 focus:outline-none'
-      >
-        {/* Message count badge - animated */}
-        {allMessages.length > 0 && isAuthenticated && !isOpen && (
-          <div className='absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-pink-500 text-xs font-bold text-white shadow-lg shadow-red-500/50 animate-bounce'>
-            {allMessages.length > 9 ? '9+' : allMessages.length}
-          </div>
-        )}
-
-        {/* Chat Icon */}
-        <div className='flex items-center justify-center transition-transform duration-300 group-hover:scale-110'>
-          <svg className='h-6 w-6' fill='currentColor' viewBox='0 0 24 24'>
+      {/* Chat Button - Modern floating button */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          aria-label='Open chat'
+          className='fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-2xl shadow-primary/40 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/60 hover:scale-110 active:scale-95'
+        >
+          {/* Message count badge */}
+          {allMessages.length > 0 && isAuthenticated && (
+            <div className='absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-lg'>
+              {allMessages.length > 9 ? '9+' : allMessages.length}
+            </div>
+          )}
+          <svg className='h-7 w-7' fill='currentColor' viewBox='0 0 24 24'>
             <path d='M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z' />
           </svg>
-        </div>
+        </button>
+      )}
 
-        {/* Vertical Text */}
-        <p
-          className='text-xs font-bold tracking-widest uppercase opacity-80 group-hover:opacity-100 transition-opacity'
-          style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
-        >
-          Chat
-        </p>
-
-        {/* Online indicator dot */}
-        <div className='h-2 w-2 rounded-full bg-white/60 shadow-sm group-hover:bg-white transition-colors'></div>
-      </button>
-
-      {/* Expanded Chat Panel - Slides in from right with premium effects */}
+      {/* Full Screen Chat Modal */}
       {isOpen && (
         <>
-          {/* Overlay - enhanced blur */}
+          {/* Overlay */}
           <div
-            className='fixed inset-0 z-40 bg-black/30 backdrop-blur-xl animate-in fade-in duration-300'
+            className='fixed inset-0 z-40 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Chat Panel - Premium styling */}
-          <div className='fixed right-0 top-0 z-50 h-screen w-96 max-w-[calc(100vw-48px)] overflow-hidden rounded-l-3xl bg-gradient-to-b from-background to-background/95 shadow-2xl shadow-black/30 animate-in slide-in-from-right duration-400 ease-out'>
-            {/* Header - Premium gradient */}
-            <div className='relative overflow-hidden bg-gradient-to-r from-primary via-primary/95 to-primary/85 px-6 py-5 text-primary-foreground shadow-lg shadow-primary/20'>
-              <div className='absolute inset-0 overflow-hidden'>
-                <div className='absolute -top-1/2 -right-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl'></div>
-              </div>
+          {/* Chat Container - Full Screen on Mobile, Centered on Desktop */}
+          <div className='fixed inset-0 z-50 flex items-end md:items-center md:justify-center animate-in fade-in duration-200 md:p-4'>
+            <div className='w-full md:w-[600px] md:max-w-2xl h-full md:h-[90vh] md:rounded-2xl bg-background flex flex-col shadow-2xl md:shadow-2xl overflow-hidden'>
+              {/* Header - Modern Design */}
+              <div className='relative overflow-hidden bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 px-6 py-6 text-white shadow-lg'>
+                {/* Decorative blur element */}
+                <div className='absolute -top-20 -right-20 h-40 w-40 rounded-full bg-white/10 blur-3xl'></div>
 
-              <div className='relative flex items-start justify-between'>
-                <div className='flex-1'>
-                  <h2 className='text-base font-bold leading-tight'>
-                    Support Team
-                  </h2>
-                  <p className='mt-1 text-xs opacity-85'>
-                    We typically reply in minutes
-                  </p>
-                </div>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  aria-label='Close chat'
-                  className='relative ml-3 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 transition-all duration-200 hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary'
-                >
-                  <svg
-                    className='h-5 w-5'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
+                <div className='relative flex items-start justify-between gap-4'>
+                  <div className='flex-1'>
+                    {/* Chat Label */}
+                    <div className='flex items-center gap-2 mb-3'>
+                      <svg
+                        className='h-5 w-5'
+                        fill='currentColor'
+                        viewBox='0 0 24 24'
+                      >
+                        <path d='M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z' />
+                      </svg>
+                      <span className='text-sm font-semibold tracking-wide'>
+                        Chat
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h2 className='text-xl font-bold leading-tight'>
+                      Get Instant Support
+                    </h2>
+
+                    {/* Status */}
+                    <div className='mt-2 flex items-center gap-2'>
+                      <div className='h-2 w-2 rounded-full bg-green-300 animate-pulse'></div>
+                      <span className='text-sm text-blue-50 opacity-90'>
+                        Support team is online
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    aria-label='Close chat'
+                    className='mt-1 inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/20 transition-colors hover:bg-white/30 focus:outline-none'
                   >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2.5}
-                      d='M6 18L18 6M6 6l12 12'
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      className='h-6 w-6'
+                      fill='none'
+                      stroke='currentColor'
+                      viewBox='0 0 24 24'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M6 18L18 6M6 6l12 12'
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {/* Chat Content with premium scroll styling */}
-            <div className='h-[calc(100vh-140px)] overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent hover:scrollbar-thumb-primary/40'>
-              {content}
+              {/* Messages Container */}
+              <div className='flex-1 overflow-y-auto bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800'>
+                {content}
+              </div>
+
+              {/* Input Area */}
+              <div className='border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-6 py-4 shadow-lg'>
+                <div className='flex gap-3 items-end'>
+                  <div className='flex-1 relative'>
+                    <Textarea
+                      className='resize-none rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm placeholder-slate-400 dark:placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all min-h-11 max-h-24'
+                      placeholder='Type your message...'
+                      value={draft}
+                      onChange={(event) => setDraft(event.target.value)}
+                      disabled={!chatId || sendMessageMutation.isPending}
+                    />
+                  </div>
+                  <Button
+                    onClick={handleSend}
+                    disabled={
+                      !draft.trim() || !chatId || sendMessageMutation.isPending
+                    }
+                    size='sm'
+                    className='h-11 w-11 flex-shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                  >
+                    {sendMessageMutation.isPending ? (
+                      <div className='flex gap-1'>
+                        <div className='h-1.5 w-1.5 animate-bounce rounded-full bg-white'></div>
+                        <div
+                          className='h-1.5 w-1.5 animate-bounce rounded-full bg-white'
+                          style={{ animationDelay: '0.1s' }}
+                        ></div>
+                      </div>
+                    ) : (
+                      <svg
+                        className='h-5 w-5'
+                        fill='currentColor'
+                        viewBox='0 0 20 20'
+                      >
+                        <path d='M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5.951-1.429 5.951 1.429a1 1 0 001.169-1.409l-7-14z' />
+                      </svg>
+                    )}
+                  </Button>
+                </div>
+                {!chatId && (
+                  <p className='mt-2 text-xs text-slate-500 dark:text-slate-400'>
+                    Connecting...
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </>

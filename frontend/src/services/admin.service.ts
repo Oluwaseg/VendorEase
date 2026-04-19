@@ -6,9 +6,10 @@ import { ApiResponse } from '@/types/api-response';
 import { EditUser, User } from '@/types/user';
 
 // ---------------- GET ALL USERS ----------------
-export const getAllUsers = async (): Promise<User[]> => {
+export const getAllUsers = async (role?: string): Promise<User[]> => {
   const res = (await axiosInstance.get<ApiResponse<User[]>>(
-    ApiRoutes.admin.users
+    ApiRoutes.admin.users,
+    { params: role ? { role } : undefined }
   )) as unknown as ApiResponse<User[]>;
   return unwrap(res);
 };

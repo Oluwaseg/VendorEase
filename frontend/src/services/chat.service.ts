@@ -90,3 +90,53 @@ export const markChatRead = async (
   const payload = unwrap(res);
   return 'chat' in payload ? payload.chat : payload;
 };
+
+export const getAssignedChats = async (
+  page: number = 1,
+  pageSize: number = 10
+): Promise<ChatConversationList> => {
+  const res = (await axiosInstance.get<ApiResponse<ChatConversationList>>(
+    ApiRoutes.chat.assignedChats,
+    { params: { page, pageSize } }
+  )) as unknown as ApiResponse<ChatConversationList>;
+
+  return unwrap(res);
+};
+
+export const assignChat = async (
+  chatId: string,
+  staffId: string
+): Promise<ChatConversation> => {
+  const res = (await axiosInstance.patch<
+    ApiResponse<{ chat: ChatConversation }>
+  >(ApiRoutes.chat.assignChat(chatId), {
+    staffId,
+  })) as unknown as ApiResponse<{ chat: ChatConversation }>;
+
+  const payload = unwrap(res);
+  return 'chat' in payload ? payload.chat : payload;
+};
+
+export const resolveChat = async (
+  chatId: string
+): Promise<ChatConversation> => {
+  const res = (await axiosInstance.patch<
+    ApiResponse<{ chat: ChatConversation }>
+  >(ApiRoutes.chat.resolveChat(chatId))) as unknown as ApiResponse<{
+    chat: ChatConversation;
+  }>;
+
+  const payload = unwrap(res);
+  return 'chat' in payload ? payload.chat : payload;
+};
+
+export const closeChat = async (chatId: string): Promise<ChatConversation> => {
+  const res = (await axiosInstance.patch<
+    ApiResponse<{ chat: ChatConversation }>
+  >(ApiRoutes.chat.closeChat(chatId))) as unknown as ApiResponse<{
+    chat: ChatConversation;
+  }>;
+
+  const payload = unwrap(res);
+  return 'chat' in payload ? payload.chat : payload;
+};

@@ -9,10 +9,10 @@ import { EditUser, User } from '@/types/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // ---------------- GET ALL USERS (ADMIN) ----------------
-export const useGetAllUsers = () => {
+export const useGetAllUsers = (role?: string) => {
   return useQuery<User[]>({
-    queryKey: ['allUsers'],
-    queryFn: getAllUsers,
+    queryKey: ['allUsers', role],
+    queryFn: () => getAllUsers(role),
   });
 };
 

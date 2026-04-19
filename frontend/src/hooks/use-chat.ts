@@ -1,10 +1,14 @@
 import {
+  assignChat,
+  closeChat,
   getAdminActiveChats,
+  getAssignedChats,
   getChatConversation,
   getChatConversations,
   getChatMessages,
   getSupportChat,
   markChatRead,
+  resolveChat,
   sendChatMessage,
 } from '@/services/chat.service';
 import {
@@ -95,6 +99,62 @@ export const useMarkChatRead = (chatId: string) => {
         queryKey: ['chat-conversation', chatId],
       });
       queryClient.invalidateQueries({ queryKey: ['chat-conversations'] });
+    },
+  });
+};
+
+export const useGetAssignedChats = (
+  page: number = 1,
+  pageSize: number = 10
+) => {
+  return useQuery<ChatConversationList, Error>({
+    queryKey: ['assigned-chats', page, pageSize],
+    queryFn: () => getAssignedChats(page, pageSize),
+    staleTime: 1000 * 60 * 2,
+  });
+};
+
+export const useAssignChat = (chatId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<ChatConversation, Error, string>({
+    mutationFn: (staffId: string) => assignChat(chatId, staffId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['chat-conversation', chatId],
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin-active-chats'] });
+      queryClient.invalidateQueries({ queryKey: ['assigned-chats'] });
+    },
+  });
+};
+
+export const useResolveChat = (chatId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<ChatConversation, Error, void>({
+    mutationFn: () => resolveChat(chatId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['chat-conversation', chatId],
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin-active-chats'] });
+      queryClient.invalidateQueries({ queryKey: ['assigned-chats'] });
+    },
+  });
+};
+
+export const useCloseChat = (chatId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<ChatConversation, Error, void>({
+    mutationFn: () => closeChat(chatId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['chat-conversation', chatId],
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin-active-chats'] });
+      queryClient.invalidateQueries({ queryKey: ['assigned-chats'] });
     },
   });
 };

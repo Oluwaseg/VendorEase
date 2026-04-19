@@ -1,8 +1,12 @@
 import { User } from '../models/User';
 
 class AdminService {
-  async getAllUsers() {
-    return User.find({}, '-password').lean();
+  async getAllUsers(role?: string) {
+    const query: any = {};
+    if (role) {
+      query.role = role;
+    }
+    return User.find(query, '-password').lean();
   }
 
   async editUser(userId: string, update: Partial<any>) {
