@@ -7,31 +7,31 @@ import {
   getProductBySlug,
   getProducts,
   updateProduct,
-} from "@/services/product.service";
+} from '@/services/product.service';
 import {
   CreateProduct,
   Product,
   ProductListPayload,
   ProductQueryParams,
   UpdateProduct,
-} from "@/types/product";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+} from '@/types/product';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 /* ===============================
    Query Keys
 ================================= */
 
 const PRODUCT_KEYS = {
-  all: ["products"] as const,
+  all: ['products'] as const,
   lists: (params?: ProductQueryParams) =>
     [
       ...PRODUCT_KEYS.all,
-      "list",
-      params ? JSON.stringify(params) : "",
+      'list',
+      params ? JSON.stringify(params) : '',
     ] as const,
   detail: (identifier: string) =>
-    [...PRODUCT_KEYS.all, "detail", identifier] as const,
+    [...PRODUCT_KEYS.all, 'detail', identifier] as const,
 };
 
 /* ===============================
@@ -97,11 +97,11 @@ export const useCreateProduct = () => {
         queryKey: PRODUCT_KEYS.all,
       });
 
-      toast.success("Product created successfully");
+      toast.success('Product created successfully');
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to create product");
+      toast.error(error.message || 'Failed to create product');
     },
   });
 };
@@ -123,11 +123,15 @@ export const useUpdateProduct = () => {
         queryKey: PRODUCT_KEYS.lists(),
       });
 
-      toast.success("Product updated successfully");
+      queryClient.invalidateQueries({
+        queryKey: PRODUCT_KEYS.all,
+      });
+
+      toast.success('Product updated successfully');
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to update product");
+      toast.error(error.message || 'Failed to update product');
     },
   });
 };
@@ -147,11 +151,11 @@ export const useDeleteProduct = () => {
         queryKey: PRODUCT_KEYS.all,
       });
 
-      toast.success("Product deleted successfully");
+      toast.success('Product deleted successfully');
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to delete product");
+      toast.error(error.message || 'Failed to delete product');
     },
   });
 };
@@ -161,7 +165,7 @@ export const useDeleteProduct = () => {
 ================================= */
 export const useOtherProducts = (slug: string) => {
   return useQuery<Product[], Error>({
-    queryKey: [...PRODUCT_KEYS.detail(slug), "others"],
+    queryKey: [...PRODUCT_KEYS.detail(slug), 'others'],
     queryFn: () => getOtherProducts(slug),
     enabled: !!slug,
   });

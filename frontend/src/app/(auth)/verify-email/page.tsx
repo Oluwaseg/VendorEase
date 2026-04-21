@@ -6,9 +6,9 @@ import { useVerifyEmail } from '@/hooks/use-auth';
 import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get('token');
@@ -149,5 +149,34 @@ export default function VerifyEmailPage() {
         </Card>
       </section>
     </main>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <main>
+          <section className='min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-background py-8 sm:py-12'>
+            <Card className='w-full max-w-sm border-2 border-border shadow-lg'>
+              <div className='p-6 sm:p-8 space-y-6'>
+                <div className='flex justify-center'>
+                  <div className='bg-primary/10 p-4 rounded-full'>
+                    <Loader2 className='w-8 h-8 text-primary animate-spin' />
+                  </div>
+                </div>
+                <div className='text-center space-y-2'>
+                  <h1 className='text-2xl sm:text-3xl font-bold text-foreground'>
+                    Loading...
+                  </h1>
+                </div>
+              </div>
+            </Card>
+          </section>
+        </main>
+      }
+    >
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

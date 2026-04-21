@@ -14,7 +14,6 @@ export interface IProduct extends Document {
   images: {
     url: string;
     publicId: string;
-    isThumbnail: boolean;
   }[];
 
   category: Types.ObjectId;

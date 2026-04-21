@@ -5,6 +5,7 @@ import cartRoutes from './cart.route';
 import categoryRoutes from './category.route';
 import chatRoutes from './chat.route';
 import checkoutRoutes from './checkout.route';
+import cloudinaryRoutes from './cloudinary.route';
 import couponRoutes from './coupon.route';
 import orderRoutes from './order.route';
 import paymentRoutes from './payment.route';
@@ -32,5 +33,6 @@ router.use('/orders', orderRoutes);
 
 router.use('/webhook', webhookRoutes);
 router.use('/admin', adminRoutes);
+router.use('/cloudinary', cloudinaryRoutes);
 
 export default router;

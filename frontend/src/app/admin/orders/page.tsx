@@ -1,79 +1,22 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
+import { OrdersTable } from '@/components/orders-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useAdminOrders, useUpdateOrderStatus } from '@/hooks/use-order';
-import { ShippingStatus } from '@/types/order';
-import { format } from 'date-fns';
 import {
   AlertTriangle,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Clock,
   Package,
   RefreshCw,
   Search,
   TrendingUp,
-  Truck,
   Wallet,
   Zap,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-
-const SHIPPING_STATUSES: ShippingStatus[] = [
-  'processing',
-  'shipped',
-  'delivered',
-  'cancelled',
-];
-
-const getStatusIcon = (status: string) => {
-  const normalizedStatus = status?.toLowerCase().replace('_', ' ');
-  switch (normalizedStatus) {
-    case 'delivered':
-      return <CheckCircle2 className='w-4 h-4' />;
-    case 'shipped':
-    case 'processing':
-      return <Truck className='w-4 h-4' />;
-    case 'pending':
-      return <Clock className='w-4 h-4' />;
-    default:
-      return <Package className='w-4 h-4' />;
-  }
-};
-
-const getStatusColors = (status: string) => {
-  const normalizedStatus = status?.toLowerCase().replace('_', ' ');
-  const colorMap: { [key: string]: { bg: string; text: string } } = {
-    delivered: {
-      bg: 'bg-emerald-500/10',
-      text: 'text-emerald-700 dark:text-emerald-400',
-    },
-    shipped: { bg: 'bg-blue-500/10', text: 'text-blue-700 dark:text-blue-400' },
-    processing: {
-      bg: 'bg-orange-500/10',
-      text: 'text-orange-700 dark:text-orange-400',
-    },
-    pending: {
-      bg: 'bg-yellow-500/10',
-      text: 'text-yellow-700 dark:text-yellow-400',
-    },
-    cancelled: { bg: 'bg-red-500/10', text: 'text-red-700 dark:text-red-400' },
-    paid: {
-      bg: 'bg-emerald-500/10',
-      text: 'text-emerald-700 dark:text-emerald-400',
-    },
-  };
-  return (
-    colorMap[normalizedStatus] || {
-      bg: 'bg-muted',
-      text: 'text-muted-foreground',
-    }
-  );
-};
 
 export default function AdminOrdersPage() {
   const { data, isLoading, error } = useAdminOrders();
@@ -97,7 +40,8 @@ export default function AdminOrdersPage() {
     return orders.filter((order) => {
       return (
         order._id.toLowerCase().includes(term) ||
-        order.user.email.toLowerCase().includes(term) ||
+        (typeof order.user !== 'string' &&
+          order.user?.email.toLowerCase().includes(term)) ||
         order.total.toString().includes(searchTerm)
       );
     });
@@ -254,120 +198,12 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Orders Table */}
-            <Card className='border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden'>
-              <div className='overflow-x-auto'>
-                <table className='w-full'>
-                  <thead>
-                    <tr className='border-b border-border/40 bg-muted/30'>
-                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
-                        Order
-                      </th>
-                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
-                        Customer
-                      </th>
-                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
-                        Date
-                      </th>
-                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
-                        Items
-                      </th>
-                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
-                        Total
-                      </th>
-                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
-                        Payment
-                      </th>
-                      <th className='px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
-                        Shipping
-                      </th>
-                      <th className='px-6 py-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
-                        Update Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginated.map((order) => {
-                      const paymentColors = getStatusColors(
-                        order.paymentStatus
-                      );
-                      const shippingColors = getStatusColors(
-                        order.shippingStatus
-                      );
-
-                      return (
-                        <tr
-                          key={order._id}
-                          className='border-b border-border/40 hover:bg-muted/20 transition-colors'
-                        >
-                          <td className='px-6 py-4'>
-                            <span className='font-mono text-sm font-semibold text-foreground'>
-                              #{order._id.slice(-8).toUpperCase()}
-                            </span>
-                          </td>
-                          <td className='px-6 py-4'>
-                            <div className='text-sm text-foreground'>
-                              {typeof order.user === 'string'
-                                ? order.user
-                                : (order.user?.email ?? 'Unknown')}
-                            </div>
-                          </td>
-                          <td className='px-6 py-4 text-sm text-muted-foreground'>
-                            {format(new Date(order.createdAt), 'MMM dd, yyyy')}
-                          </td>
-                          <td className='px-6 py-4 text-sm font-medium text-foreground'>
-                            {order.items.length}
-                          </td>
-                          <td className='px-6 py-4'>
-                            <span className='font-bold text-foreground'>
-                              ₦{order.total.toLocaleString()}
-                            </span>
-                          </td>
-                          <td className='px-6 py-4'>
-                            <Badge
-                              className={`${paymentColors.bg} ${paymentColors.text} border-0`}
-                            >
-                              {order.paymentStatus?.replace('_', ' ')}
-                            </Badge>
-                          </td>
-                          <td className='px-6 py-4'>
-                            <div className='flex items-center gap-1.5'>
-                              {getStatusIcon(order.shippingStatus)}
-                              <Badge
-                                className={`${shippingColors.bg} ${shippingColors.text} border-0`}
-                              >
-                                {order.shippingStatus?.replace('_', ' ')}
-                              </Badge>
-                            </div>
-                          </td>
-                          <td className='px-6 py-4 text-right'>
-                            <select
-                              className='border border-border bg-background text-xs rounded-md px-2 py-1.5 font-medium transition-colors hover:border-border/60'
-                              value={order.shippingStatus ?? 'processing'}
-                              onChange={(e) =>
-                                updateStatus({
-                                  id: order._id,
-                                  status: e.target.value as ShippingStatus,
-                                })
-                              }
-                              disabled={
-                                isUpdatingStatus &&
-                                lastUpdateVars?.id === order._id
-                              }
-                            >
-                              {SHIPPING_STATUSES.map((status) => (
-                                <option key={status} value={status}>
-                                  {status.replace('_', ' ')}
-                                </option>
-                              ))}
-                            </select>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
+            <OrdersTable
+              orders={paginated}
+              onStatusUpdate={(id, status) => updateStatus({ id, status })}
+              isUpdatingStatus={isUpdatingStatus}
+              lastUpdateId={lastUpdateVars?.id}
+            />
 
             {/* Pagination */}
             <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
@@ -399,14 +235,6 @@ export default function AdminOrdersPage() {
                 </Button>
               </div>
             </div>
-
-            {/* Updating Toast */}
-            {isUpdatingStatus && (
-              <div className='fixed bottom-4 right-4 bg-card border border-border rounded-lg px-4 py-3 flex items-center gap-2 shadow-lg text-sm text-foreground'>
-                <CheckCircle2 className='w-4 h-4 text-primary animate-pulse' />
-                <span>Updating order status...</span>
-              </div>
-            )}
           </div>
         )}
 

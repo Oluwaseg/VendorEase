@@ -13,9 +13,9 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { Suspense, useEffect, useMemo } from 'react';
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const reference = useMemo(
     () => searchParams.get('reference') || '',
@@ -211,5 +211,37 @@ export default function PaymentSuccessPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className='min-h-screen bg-background'>
+          <section className='pt-16 pb-24 px-4 sm:px-6 lg:px-8 bg-background min-h-[calc(100vh-80px)] flex items-center'>
+            <div className='w-full max-w-2xl mx-auto'>
+              <Card className='border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden'>
+                <div className='p-8 sm:p-12 text-center space-y-6'>
+                  <div className='flex justify-center'>
+                    <div className='relative'>
+                      <div className='absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/0 rounded-full blur-xl animate-pulse' />
+                      <div className='relative w-16 h-16 border-4 border-border rounded-full border-t-primary animate-spin' />
+                    </div>
+                  </div>
+                  <div>
+                    <h1 className='text-2xl sm:text-3xl font-bold text-foreground mb-2'>
+                      Loading...
+                    </h1>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </section>
+        </main>
+      }
+    >
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }

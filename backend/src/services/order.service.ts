@@ -67,7 +67,7 @@ class OrderService {
 
   async getOrderById(orderId: string) {
     const order = await Order.findById(orderId)
-      .populate('user', 'email name')
+      .populate('user', 'email name phone isActive isEmailVerified createdAt')
       .lean<IOrder | null>();
     return order;
   }
