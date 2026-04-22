@@ -1,5 +1,6 @@
 'use client';
 
+import { AddressAutocomplete } from '@/components/address-autocomplete';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -21,6 +22,7 @@ import { useCurrency } from '@/contexts/currency-context';
 import { useCheckout, useCheckoutInfo } from '@/hooks/use-checkout';
 import { useInitializePayment } from '@/hooks/use-payment';
 import { formatPrice } from '@/lib/format-price';
+import { parseLocationToAddress } from '@/lib/locationiq';
 import { Address, CheckoutRequest } from '@/types/checkout';
 import {
   AlertCircle,
@@ -110,14 +112,12 @@ export default function CheckoutPage() {
       toast.error('Please enter a coupon code');
       return;
     }
-    // Open confirmation modal before applying
     setShowConfirmModal(true);
   };
 
   const handleConfirmApply = async () => {
     setIsApplyingCoupon(true);
     try {
-      // Simulate backend validation - in real app, this would be an API call
       await new Promise((resolve) => setTimeout(resolve, 600));
       setCouponApplied(true);
       setShowConfirmModal(false);
@@ -135,6 +135,17 @@ export default function CheckoutPage() {
 
   const handleCancelConfirm = () => {
     setShowConfirmModal(false);
+  };
+
+  const handleLocationSelect = (location: any) => {
+    const addressData = parseLocationToAddress(location);
+    setNewAddress({
+      addressLine: addressData.addressLine,
+      city: addressData.city,
+      state: addressData.state,
+      country: addressData.country,
+      postalCode: addressData.postalCode,
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -478,24 +489,18 @@ export default function CheckoutPage() {
                       </div>
                     ) : (
                       <div className='space-y-4'>
-                        <div>
-                          <label className='block text-sm font-semibold text-foreground mb-2'>
-                            Street Address *
-                          </label>
-                          <input
-                            type='text'
-                            value={newAddress.addressLine}
-                            onChange={(e) =>
-                              setNewAddress({
-                                ...newAddress,
-                                addressLine: e.target.value,
-                              })
-                            }
-                            placeholder='123 Main Street'
-                            className='w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary'
-                            required
-                          />
-                        </div>
+                        <AddressAutocomplete
+                          value={newAddress.addressLine}
+                          onChange={(value) =>
+                            setNewAddress({
+                              ...newAddress,
+                              addressLine: value,
+                            })
+                          }
+                          onLocationSelect={handleLocationSelect}
+                          placeholder='e.g., 123 Main Street, New York'
+                          label='Street Address'
+                        />
 
                         <div className='grid sm:grid-cols-2 gap-4'>
                           <div>
