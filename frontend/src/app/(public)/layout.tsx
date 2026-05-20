@@ -22,9 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className='font-sans antialiased'>
+      <body className='font-display antialiased'>
         <NavbarWrapper />
-        <main className='pt-16'>{children}</main>
+        {children}
         <Footer />
       </body>
     </html>

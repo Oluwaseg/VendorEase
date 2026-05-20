@@ -1,4 +1,5 @@
 import { AnimatedShowcase } from '@/components/animated-showcase';
+import CTA from '@/components/cta';
 import { FaqSection } from '@/components/faq-section';
 import {
   BestSellerProducts,
@@ -50,6 +51,7 @@ export default function Page() {
       <ShopByCategory />
       <FlashSaleProducts />
       <BestSellerProducts />
+      <CTA />
       <ParallaxGallery />
       <AnimatedShowcase />
       <NotifySection />

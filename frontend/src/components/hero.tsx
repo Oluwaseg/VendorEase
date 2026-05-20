@@ -69,7 +69,7 @@ export function Hero({ slides }: HeroCarouselProps) {
   }, [api]);
 
   return (
-    <div className='relative w-full overflow-hidden rounded-3xl my-3'>
+    <div className='relative w-full overflow-hidden rounded-3xl my-2'>
       <Carousel
         setApi={setApi}
         opts={{ loop: true }}
