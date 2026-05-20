@@ -109,7 +109,7 @@ export function StoreNavbar() {
         ✨ Premium Shopping Experience • Fast Shipping on All Orders
       </div> */}
 
-      <nav className='sticky top-0 z-50 bg-card border-b border-border'>
+      <nav className='fixed inset-x-0 top-0 z-50 bg-card border-b border-border'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex items-center justify-between h-16'>
             {/* LEFT: Logo */}
