@@ -18,7 +18,9 @@ const LABELS: Record<string, string> = {
 };
 
 function humanize(segment: string) {
-  const cleaned = /^[a-f\d]{24}$/i.test(segment) ? 'Details' : segment.replace(/-/g, ' ');
+  const cleaned = /^[a-f\d]{24}$/i.test(segment)
+    ? 'Details'
+    : segment.replace(/-/g, ' ');
   return cleaned.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
@@ -40,7 +42,9 @@ export function AdminHeader({
     const path = `/${segments.slice(0, index + 1).join('/')}`;
     const label =
       LABELS[segment.toLowerCase()] ??
-      (/^[a-f\d]{24}$/i.test(segment) ? `Order · ${segment.slice(0, 8)}…` : humanize(segment));
+      (/^[a-f\d]{24}$/i.test(segment)
+        ? `Order · ${segment.slice(0, 8)}…`
+        : humanize(segment));
     const isLast = index === segments.length - 1;
     return { path, label, isLast };
   });
@@ -66,7 +70,9 @@ export function AdminHeader({
             onClick={onToggleSidebarCollapsed}
             title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             aria-expanded={!sidebarCollapsed}
-            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label={
+              sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'
+            }
           >
             {sidebarCollapsed ? (
               <PanelLeft className='size-[18px]' aria-hidden />
@@ -79,14 +85,20 @@ export function AdminHeader({
 
       <div className='h-4 w-px shrink-0 bg-border' aria-hidden />
 
-      <nav aria-label='Breadcrumb' className='min-w-0 flex flex-1 items-center gap-1.5 text-sm'>
+      <nav
+        aria-label='Breadcrumb'
+        className='min-w-0 flex flex-1 items-center gap-1.5 text-sm'
+      >
         {crumbs.length === 0 ? (
           <span className='font-medium text-muted-foreground'>Home</span>
         ) : (
           crumbs.flatMap(({ path, label, isLast }, i) => {
             const parts = [
               isLast ? (
-                <span key={path} className='truncate font-medium text-foreground'>
+                <span
+                  key={path}
+                  className='truncate font-medium text-foreground'
+                >
                   {label}
                 </span>
               ) : (
@@ -105,7 +117,7 @@ export function AdminHeader({
                   key={`${path}-sep`}
                   className='size-4 shrink-0 text-muted-foreground/60'
                   aria-hidden
-                />,
+                />
               );
             }
             return parts;
@@ -116,9 +128,9 @@ export function AdminHeader({
       <div className='ml-auto hidden sm:block'>
         <Link
           href='/'
-          className='text-muted-foreground text-sm underline-offset-4 transition-colors hover:text-foreground hover:underline'
+          className='text-muted-foreground text-sm underline-offset-4 transition-colors hover:text-foreground hover:underline bg-accent py-2 px-3 rounded-3xl'
         >
-          View storefront
+          View Store-Front
         </Link>
       </div>
     </header>
