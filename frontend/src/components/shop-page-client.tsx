@@ -1,7 +1,7 @@
 'use client';
 
 import { ProductFilters, type FilterState } from '@/components/product-filters';
-import { ProductCard } from '@/components/products/product-card';
+import { ProductCard, ProductGridSection } from '@/components/products';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/use-product';
 import type { Product } from '@/types/product';
@@ -86,32 +86,6 @@ export default function ShopPageClient() {
       {/* Products Section */}
       <section className='px-4 sm:px-6 lg:px-8 py-20 bg-background'>
         <div className='max-w-7xl mx-auto'>
-          {/* Section Header */}
-          <div className='flex items-center justify-between mb-16'>
-            <div>
-              <h2 className='text-3xl sm:text-4xl font-bold text-foreground mb-2'>
-                All Products
-              </h2>
-              <p className='text-foreground/60'>
-                Shop from our complete collection
-              </p>
-            </div>
-            <div className='hidden sm:flex items-center gap-2 bg-muted p-1 rounded-lg'>
-              <select
-                value={limit}
-                onChange={(e) => {
-                  setLimit(Number(e.target.value));
-                  setPage(1);
-                }}
-                className='bg-transparent px-3 py-2 text-sm font-medium text-foreground focus:outline-none'
-              >
-                <option value={6}>Show 6</option>
-                <option value={12}>Show 12</option>
-                <option value={24}>Show 24</option>
-              </select>
-            </div>
-          </div>
-
           {/* Filters and Products Layout */}
           <div className='flex flex-col lg:flex-row gap-8'>
             {/* Sidebar Filters */}
@@ -123,38 +97,36 @@ export default function ShopPageClient() {
             </div>
             {/* Products Grid */}
             <div className='flex-1'>
-              {/* Products Grid */}
-              {isLoading ? (
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'>
-                  {[...Array(12)].map((_, i) => (
-                    <div key={i} className='animate-pulse'>
-                      <div className='bg-muted aspect-square rounded-lg mb-4' />
-                      <div className='h-4 bg-muted rounded w-3/4 mb-2' />
-                      <div className='h-3 bg-muted rounded w-1/2' />
-                    </div>
-                  ))}
-                </div>
-              ) : isError ? (
-                <div className='text-center py-20'>
-                  <p className='text-foreground/60'>
-                    Failed to load products. Please try again.
-                  </p>
-                </div>
-              ) : products.length === 0 ? (
-                <div className='text-center py-20'>
-                  <p className='text-foreground/60'>No products found.</p>
-                </div>
-              ) : (
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'>
-                  {products.map((product) => (
-                    <ProductCard
-                      key={product._id}
-                      product={product}
-                      className='rounded-xl'
-                    />
-                  ))}
-                </div>
-              )}
+              <ProductGridSection
+                title='All Products'
+                subtitle='Shop from our complete collection'
+                sectionClassName='py-0 bg-transparent'
+                containerClassName='max-w-none px-0'
+                products={products}
+                isLoading={isLoading}
+                isError={isError}
+                emptyMessage='No products found.'
+                skeletonCount={12}
+                actions={
+                  <div className='hidden sm:flex items-center gap-2 rounded-lg bg-muted p-1'>
+                    <select
+                      value={limit}
+                      onChange={(e) => {
+                        setLimit(Number(e.target.value));
+                        setPage(1);
+                      }}
+                      className='bg-transparent px-3 py-2 text-sm font-medium text-foreground focus:outline-none'
+                    >
+                      <option value={6}>Show 6</option>
+                      <option value={12}>Show 12</option>
+                      <option value={24}>Show 24</option>
+                    </select>
+                  </div>
+                }
+                renderItem={(product) => (
+                  <ProductCard key={product._id} product={product} className='rounded-xl' />
+                )}
+              />
 
               {/* Pagination */}
               {products.length > 0 && (
