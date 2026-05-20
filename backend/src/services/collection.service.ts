@@ -1,19 +1,36 @@
-import { Collection, ICollection } from '../models/Collection';
+import { DEFAULT_HERO_TEXT_POSITION } from '../constants/hero-position';
+import {
+  Collection,
+  ICollection,
+  ICollectionImage,
+} from '../models/Collection';
+import type { HeroTextPosition } from '../constants/hero-position';
+import type { SortOrder } from 'mongoose';
 
 export interface CreateCollectionData {
   name: string;
   slug: string;
   description?: string;
+  ctaText?: string;
+  position?: HeroTextPosition;
+  image?: ICollectionImage;
   productIds: string[];
   isActive?: boolean;
+  featuredOnHomepage?: boolean;
+  heroOrder?: number;
 }
 
 export interface UpdateCollectionData {
   name?: string;
   slug?: string;
   description?: string;
+  ctaText?: string;
+  position?: HeroTextPosition;
+  image?: ICollectionImage | null;
   productIds?: string[];
   isActive?: boolean;
+  featuredOnHomepage?: boolean;
+  heroOrder?: number;
 }
 
 class CollectionService {
@@ -31,8 +48,14 @@ class CollectionService {
       name: data.name,
       slug: data.slug,
       description: data.description,
+      ctaText: data.ctaText,
+      position: data.position ?? DEFAULT_HERO_TEXT_POSITION,
+      image: data.image,
       productIds: data.productIds,
       isActive: data.isActive !== undefined ? data.isActive : true,
+      featuredOnHomepage:
+        data.featuredOnHomepage !== undefined ? data.featuredOnHomepage : false,
+      heroOrder: data.heroOrder ?? 0,
     });
 
     return collection;
@@ -40,16 +63,25 @@ class CollectionService {
 
   async getCollections(filters?: {
     isActive?: boolean;
+    featuredOnHomepage?: boolean;
   }): Promise<ICollection[]> {
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (filters?.isActive !== undefined) {
       query.isActive = filters.isActive;
     }
 
+    if (filters?.featuredOnHomepage !== undefined) {
+      query.featuredOnHomepage = filters.featuredOnHomepage;
+    }
+
+    const sort: Record<string, SortOrder> = filters?.featuredOnHomepage
+      ? { heroOrder: 1, createdAt: -1 }
+      : { createdAt: -1 };
+
     const collections = await Collection.find(query)
       .populate('productIds')
-      .sort({ createdAt: -1 });
+      .sort(sort);
     return collections;
   }
 

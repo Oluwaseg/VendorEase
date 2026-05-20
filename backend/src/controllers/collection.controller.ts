@@ -22,11 +22,18 @@ class CollectionController {
 
   async getCollections(req: Request, res: Response, next: NextFunction) {
     try {
-      const { isActive } = req.query;
-      const filters: any = {};
+      const { isActive, featuredOnHomepage } = req.query;
+      const filters: {
+        isActive?: boolean;
+        featuredOnHomepage?: boolean;
+      } = {};
 
       if (isActive !== undefined) {
         filters.isActive = isActive === 'true';
+      }
+
+      if (featuredOnHomepage !== undefined) {
+        filters.featuredOnHomepage = featuredOnHomepage === 'true';
       }
 
       const collections = await collectionService.getCollections(filters);

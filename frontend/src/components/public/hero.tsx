@@ -5,24 +5,15 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
 import * as React from 'react';
 
-export type TextPosition =
-  | 'top-left'
-  | 'top-center'
-  | 'top-right'
-  | 'center-left'
-  | 'center'
-  | 'center-right'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'bottom-right';
+import type { HeroTextPosition } from '@/types/hero-position';
+
+export type TextPosition = HeroTextPosition;
 
 export interface CarouselSlide {
   id: string;
@@ -144,7 +135,7 @@ export function Hero({ slides }: HeroCarouselProps) {
                   </div>
                 </div>
 
-                <div className='absolute bottom-6 left-6 right-6 flex items-center justify-between'>
+                {/* <div className='absolute bottom-6 left-6 right-6 flex items-center justify-between'>
                   <div className='text-sm font-medium text-white/80'>
                     {current} of {count}
                   </div>
@@ -160,7 +151,7 @@ export function Hero({ slides }: HeroCarouselProps) {
                       variant='outline'
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </CarouselItem>
           ))}

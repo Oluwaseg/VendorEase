@@ -12,10 +12,14 @@ import { Product } from '@/types/product';
 // -------------------- GET ALL COLLECTIONS --------------------
 export const getCollections = async (filters?: {
   isActive?: boolean;
+  featuredOnHomepage?: boolean;
 }): Promise<Collection[]> => {
   const params = new URLSearchParams();
   if (filters?.isActive !== undefined) {
     params.append('isActive', String(filters.isActive));
+  }
+  if (filters?.featuredOnHomepage !== undefined) {
+    params.append('featuredOnHomepage', String(filters.featuredOnHomepage));
   }
 
   const url = params.toString()

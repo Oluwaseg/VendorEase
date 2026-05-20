@@ -1,6 +1,7 @@
 import {
   LayoutDashboard,
   Layers,
+  LayoutGrid,
   type LucideIcon,
   Package,
   ShoppingBag,
@@ -36,6 +37,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
     label: 'Catalog',
     items: [
       { title: 'Products', href: '/admin/products', icon: Package },
+      { title: 'Collections', href: '/admin/collections', icon: LayoutGrid },
       { title: 'Categories', href: '/admin/categories', icon: TreeDeciduous },
       { title: 'Subcategories', href: '/admin/subcategories', icon: Layers },
     ],

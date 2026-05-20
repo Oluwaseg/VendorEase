@@ -23,7 +23,7 @@ import { toast } from 'sonner';
 ================================= */
 const COLLECTION_KEYS = {
   all: ['collections'] as const,
-  list: (filters?: { isActive?: boolean }) =>
+  list: (filters?: { isActive?: boolean; featuredOnHomepage?: boolean }) =>
     [...COLLECTION_KEYS.all, 'list', filters] as const,
   detail: (identifier: string) =>
     [...COLLECTION_KEYS.all, 'detail', identifier] as const,
@@ -34,7 +34,10 @@ const COLLECTION_KEYS = {
 /* ===============================
    GET ALL COLLECTIONS
 ================================= */
-export const useCollections = (filters?: { isActive?: boolean }) => {
+export const useCollections = (filters?: {
+  isActive?: boolean;
+  featuredOnHomepage?: boolean;
+}) => {
   return useQuery<Collection[], Error>({
     queryKey: COLLECTION_KEYS.list(filters),
     queryFn: () => getCollections(filters),
