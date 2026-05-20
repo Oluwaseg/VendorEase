@@ -131,6 +131,7 @@ export default function ShopPageClient() {
                   <ProductCard
                     key={product._id}
                     product={product}
+                    showDescription
                     className='rounded-xl'
                   />
                 )}
