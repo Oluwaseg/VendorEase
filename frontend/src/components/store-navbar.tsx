@@ -73,6 +73,7 @@ export function StoreNavbar() {
   const cartCount = getCartCount();
   const wishlistCount = getWishlistCount();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const mobileDropdownRef = useRef<HTMLDivElement | null>(null);
   const cartButtonRef = useRef<HTMLButtonElement | null>(null);
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
   const userButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -93,19 +94,22 @@ export function StoreNavbar() {
   }, [pathname]);
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node) &&
-      cartButtonRef.current &&
-      !cartButtonRef.current.contains(event.target as Node)
-    ) {
+    const target = event.target as Node;
+    const clickedCartButton =
+      cartButtonRef.current && cartButtonRef.current.contains(target);
+    const clickedCartPanel =
+      (dropdownRef.current && dropdownRef.current.contains(target)) ||
+      (mobileDropdownRef.current && mobileDropdownRef.current.contains(target));
+
+    if (!clickedCartButton && !clickedCartPanel) {
       setIsCartDropdownOpen(false);
     }
+
     if (
       userDropdownRef.current &&
-      !userDropdownRef.current.contains(event.target as Node) &&
+      !userDropdownRef.current.contains(target) &&
       userButtonRef.current &&
-      !userButtonRef.current.contains(event.target as Node)
+      !userButtonRef.current.contains(target)
     ) {
       setIsUserDropdownOpen(false);
     }
@@ -174,6 +178,191 @@ export function StoreNavbar() {
   const handleLogout = () => {
     logout.mutate();
   };
+
+  const cartDropdownContent = (
+    <>
+      {/* Tabs */}
+      <div className='mb-3 flex items-center gap-1 rounded-full bg-surface p-1'>
+        <button
+          onClick={() => setActiveTab('cart')}
+          className={[
+            'flex-1 rounded-full px-4 py-1.5 text-xs font-semibold transition-all',
+            activeTab === 'cart'
+              ? 'bg-card text-foreground shadow-sm ring-1 ring-border/60'
+              : 'text-foreground/60 hover:text-foreground',
+          ].join(' ')}
+        >
+          Cart ({cartCount})
+        </button>
+        <button
+          onClick={() => setActiveTab('wishlist')}
+          className={[
+            'flex-1 inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all',
+            activeTab === 'wishlist'
+              ? 'bg-card text-foreground shadow-sm ring-1 ring-border/60'
+              : 'text-foreground/60 hover:text-foreground',
+          ].join(' ')}
+        >
+          <Heart className='h-3 w-3' />
+          Saved ({wishlistCount})
+        </button>
+      </div>
+
+      {/* Cart Content */}
+      {activeTab === 'cart' &&
+        (cartItems.length === 0 ? (
+          <EmptyState
+            icon={<ShoppingBag className='h-6 w-6' />}
+            title='Your cart is empty'
+            subtitle='Browse the shop to add items'
+          />
+        ) : (
+          <>
+            <ul className='max-h-80 space-y-2 overflow-y-auto pr-1'>
+              {cartItems.map((item) => (
+                <li
+                  key={item.id}
+                  className='group rounded-xl border border-border/50 bg-surface/60 p-3 transition-colors hover:bg-card-hover'
+                >
+                  <div className='flex items-start justify-between gap-3'>
+                    <div className='min-w-0'>
+                      <p className='truncate text-sm font-medium text-foreground'>
+                        {item.name}
+                      </p>
+                      <p className='mt-0.5 text-xs font-semibold text-brand'>
+                        {formatPrice(
+                          convert(
+                            typeof item.price === 'number'
+                              ? item.price
+                              : parseFloat(String(item.price))
+                          ),
+                          currency
+                        )}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className='rounded-md p-1 text-foreground/40 transition-colors hover:bg-destructive/10 hover:text-destructive'
+                      aria-label='Remove item'
+                    >
+                      <X className='h-3.5 w-3.5' />
+                    </button>
+                  </div>
+                  <div className='mt-2 inline-flex items-center gap-1 rounded-full border border-border/60 bg-card p-0.5'>
+                    <button
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      disabled={item.quantity <= 1}
+                      className='grid h-6 w-6 place-items-center rounded-full transition-colors hover:bg-surface-2 disabled:opacity-40'
+                      aria-label='Decrease quantity'
+                    >
+                      <Minus className='h-3 w-3' />
+                    </button>
+                    <span className='min-w-6 text-center text-xs font-semibold'>
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      className='grid h-6 w-6 place-items-center rounded-full transition-colors hover:bg-surface-2'
+                      aria-label='Increase quantity'
+                    >
+                      <Plus className='h-3 w-3' />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className='mt-3 space-y-2 border-t border-border/60 pt-3'>
+              <div className='flex items-center justify-between text-sm'>
+                <span className='text-foreground/60'>Subtotal</span>
+                <span className='font-semibold text-foreground'>
+                  {getTotalPrice()}
+                </span>
+              </div>
+              <Link
+                href='/checkout'
+                onClick={() => setIsCartDropdownOpen(false)}
+                className='block'
+              >
+                <Button
+                  className='w-full text-brand-foreground'
+                  style={{ background: 'var(--gradient-brand)' }}
+                >
+                  Checkout
+                </Button>
+              </Link>
+              <Link href='/cart' className='block'>
+                <Button variant='outline' className='w-full'>
+                  View Cart
+                </Button>
+              </Link>
+            </div>
+          </>
+        ))}
+
+      {/* Wishlist Content */}
+      {activeTab === 'wishlist' &&
+        (wishlistItems.length === 0 ? (
+          <EmptyState
+            icon={<Heart className='h-6 w-6' />}
+            title='No saved items'
+            subtitle='Save your favorites for later'
+          />
+        ) : (
+          <>
+            <ul className='max-h-80 space-y-2 overflow-y-auto pr-1'>
+              {wishlistItems.map((item) => (
+                <li
+                  key={item.id}
+                  className='rounded-xl border border-border/50 bg-surface/60 p-3'
+                >
+                  <div className='flex items-start justify-between gap-3'>
+                    <div className='min-w-0'>
+                      <p className='truncate text-sm font-medium text-foreground'>
+                        {item.name}
+                      </p>
+                      <p className='mt-0.5 text-xs font-semibold text-brand'>
+                        {formatPrice(
+                          convert(
+                            typeof item.price === 'number'
+                              ? item.price
+                              : parseFloat(String(item.price))
+                          ),
+                          currency
+                        )}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => removeFromWishlist(item.id)}
+                      className='rounded-md p-1 text-foreground/40 transition-colors hover:bg-destructive/10 hover:text-destructive'
+                      aria-label='Remove from wishlist'
+                    >
+                      <X className='h-3.5 w-3.5' />
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => {
+                      addWishlistToCart(item);
+                      removeFromWishlist(item.id);
+                    }}
+                    className='mt-2 w-full rounded-lg bg-surface-2 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-card-hover'
+                  >
+                    Add to Cart
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href='/wishlist'
+              onClick={() => setIsCartDropdownOpen(false)}
+              className='mt-3 block text-center text-xs font-medium text-brand hover:underline'
+            >
+              View all {wishlistItems.length} wishlist items →
+            </Link>
+          </>
+        ))}
+    </>
+  );
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname?.startsWith(href);
@@ -352,200 +541,29 @@ export function StoreNavbar() {
                 )}
               </button>
 
-              {/* Cart Dropdown — Desktop */}
+              {/* Cart Dropdown — Desktop + Mobile */}
               {isCartDropdownOpen && (
-                <div
-                  ref={dropdownRef}
-                  id='cart-dropdown'
-                  role='dialog'
-                  aria-label='Cart and wishlist'
-                  className='absolute right-0 top-full z-50 mt-3 hidden w-[380px] origin-top-right animate-in fade-in slide-in-from-top-2 rounded-2xl border border-border/70 bg-card/95 p-3 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.35)] backdrop-blur-xl md:block'
-                >
-                  {/* Tabs */}
-                  <div className='mb-3 flex items-center gap-1 rounded-full bg-surface p-1'>
-                    <button
-                      onClick={() => setActiveTab('cart')}
-                      className={[
-                        'flex-1 rounded-full px-4 py-1.5 text-xs font-semibold transition-all',
-                        activeTab === 'cart'
-                          ? 'bg-card text-foreground shadow-sm ring-1 ring-border/60'
-                          : 'text-foreground/60 hover:text-foreground',
-                      ].join(' ')}
-                    >
-                      Cart ({cartCount})
-                    </button>
-                    <button
-                      onClick={() => setActiveTab('wishlist')}
-                      className={[
-                        'flex-1 inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all',
-                        activeTab === 'wishlist'
-                          ? 'bg-card text-foreground shadow-sm ring-1 ring-border/60'
-                          : 'text-foreground/60 hover:text-foreground',
-                      ].join(' ')}
-                    >
-                      <Heart className='h-3 w-3' />
-                      Saved ({wishlistCount})
-                    </button>
+                <>
+                  <div
+                    ref={mobileDropdownRef}
+                    id='cart-dropdown-mobile'
+                    role='dialog'
+                    aria-label='Cart and wishlist'
+                    className='fixed inset-x-4 top-16 z-50 block max-h-[calc(100vh-7rem)] overflow-y-auto rounded-2xl border border-border/70 bg-card/95 p-3 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.35)] backdrop-blur-xl md:hidden'
+                  >
+                    {cartDropdownContent}
                   </div>
 
-                  {/* Cart Content */}
-                  {activeTab === 'cart' &&
-                    (cartItems.length === 0 ? (
-                      <EmptyState
-                        icon={<ShoppingBag className='h-6 w-6' />}
-                        title='Your cart is empty'
-                        subtitle='Browse the shop to add items'
-                      />
-                    ) : (
-                      <>
-                        <ul className='max-h-80 space-y-2 overflow-y-auto pr-1'>
-                          {cartItems.map((item) => (
-                            <li
-                              key={item.id}
-                              className='group rounded-xl border border-border/50 bg-surface/60 p-3 transition-colors hover:bg-card-hover'
-                            >
-                              <div className='flex items-start justify-between gap-3'>
-                                <div className='min-w-0'>
-                                  <p className='truncate text-sm font-medium text-foreground'>
-                                    {item.name}
-                                  </p>
-                                  <p className='mt-0.5 text-xs font-semibold text-brand'>
-                                    {formatPrice(
-                                      convert(
-                                        typeof item.price === 'number'
-                                          ? item.price
-                                          : parseFloat(String(item.price))
-                                      ),
-                                      currency
-                                    )}
-                                  </p>
-                                </div>
-                                <button
-                                  onClick={() => removeFromCart(item.id)}
-                                  className='rounded-md p-1 text-foreground/40 transition-colors hover:bg-destructive/10 hover:text-destructive'
-                                  aria-label='Remove item'
-                                >
-                                  <X className='h-3.5 w-3.5' />
-                                </button>
-                              </div>
-                              <div className='mt-2 inline-flex items-center gap-1 rounded-full border border-border/60 bg-card p-0.5'>
-                                <button
-                                  onClick={() =>
-                                    updateQuantity(item.id, item.quantity - 1)
-                                  }
-                                  disabled={item.quantity <= 1}
-                                  className='grid h-6 w-6 place-items-center rounded-full transition-colors hover:bg-surface-2 disabled:opacity-40'
-                                  aria-label='Decrease quantity'
-                                >
-                                  <Minus className='h-3 w-3' />
-                                </button>
-                                <span className='min-w-6 text-center text-xs font-semibold'>
-                                  {item.quantity}
-                                </span>
-                                <button
-                                  onClick={() =>
-                                    updateQuantity(item.id, item.quantity + 1)
-                                  }
-                                  className='grid h-6 w-6 place-items-center rounded-full transition-colors hover:bg-surface-2'
-                                  aria-label='Increase quantity'
-                                >
-                                  <Plus className='h-3 w-3' />
-                                </button>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-
-                        <div className='mt-3 space-y-2 border-t border-border/60 pt-3'>
-                          <div className='flex items-center justify-between text-sm'>
-                            <span className='text-foreground/60'>Subtotal</span>
-                            <span className='font-semibold text-foreground'>
-                              {getTotalPrice()}
-                            </span>
-                          </div>
-                          <Link
-                            href='/checkout'
-                            onClick={() => setIsCartDropdownOpen(false)}
-                            className='block'
-                          >
-                            <Button
-                              className='w-full text-brand-foreground'
-                              style={{ background: 'var(--gradient-brand)' }}
-                            >
-                              Checkout
-                            </Button>
-                          </Link>
-                          <Link href='/cart' className='block'>
-                            <Button variant='outline' className='w-full'>
-                              View Cart
-                            </Button>
-                          </Link>
-                        </div>
-                      </>
-                    ))}
-
-                  {/* Wishlist Content */}
-                  {activeTab === 'wishlist' &&
-                    (wishlistItems.length === 0 ? (
-                      <EmptyState
-                        icon={<Heart className='h-6 w-6' />}
-                        title='No saved items'
-                        subtitle='Save your favorites for later'
-                      />
-                    ) : (
-                      <>
-                        <ul className='max-h-80 space-y-2 overflow-y-auto pr-1'>
-                          {wishlistItems.map((item) => (
-                            <li
-                              key={item.id}
-                              className='rounded-xl border border-border/50 bg-surface/60 p-3'
-                            >
-                              <div className='flex items-start justify-between gap-3'>
-                                <div className='min-w-0'>
-                                  <p className='truncate text-sm font-medium text-foreground'>
-                                    {item.name}
-                                  </p>
-                                  <p className='mt-0.5 text-xs font-semibold text-brand'>
-                                    {formatPrice(
-                                      convert(
-                                        typeof item.price === 'number'
-                                          ? item.price
-                                          : parseFloat(String(item.price))
-                                      ),
-                                      currency
-                                    )}
-                                  </p>
-                                </div>
-                                <button
-                                  onClick={() => removeFromWishlist(item.id)}
-                                  className='rounded-md p-1 text-foreground/40 transition-colors hover:bg-destructive/10 hover:text-destructive'
-                                  aria-label='Remove from wishlist'
-                                >
-                                  <X className='h-3.5 w-3.5' />
-                                </button>
-                              </div>
-                              <button
-                                onClick={() => {
-                                  addWishlistToCart(item);
-                                  removeFromWishlist(item.id);
-                                }}
-                                className='mt-2 w-full rounded-lg bg-surface-2 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-card-hover'
-                              >
-                                Add to Cart
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                        <Link
-                          href='/wishlist'
-                          onClick={() => setIsCartDropdownOpen(false)}
-                          className='mt-3 block text-center text-xs font-medium text-brand hover:underline'
-                        >
-                          View all {wishlistItems.length} wishlist items →
-                        </Link>
-                      </>
-                    ))}
-                </div>
+                  <div
+                    ref={dropdownRef}
+                    id='cart-dropdown'
+                    role='dialog'
+                    aria-label='Cart and wishlist'
+                    className='hidden md:block absolute right-0 top-full z-50 mt-3 w-[380px] origin-top-right animate-in fade-in slide-in-from-top-2 rounded-2xl border border-border/70 bg-card/95 p-3 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.35)] backdrop-blur-xl'
+                  >
+                    {cartDropdownContent}
+                  </div>
+                </>
               )}
             </div>
 
