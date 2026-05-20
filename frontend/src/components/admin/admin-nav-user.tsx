@@ -43,7 +43,7 @@ export function AdminNavUser({
   const roleLabel = user.role === 'admin' ? 'Administrator' : 'Moderator';
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button
           type='button'
@@ -76,7 +76,8 @@ export function AdminNavUser({
       <DropdownMenuContent
         align='end'
         side='top'
-        className='w-56 rounded-xl bg-brand'
+        sideOffset={8}
+        className='z-[100] w-56 rounded-xl bg-brand'
       >
         <div className='px-2 py-2'>
           <p className='truncate font-semibold text-foreground text-sm'>
