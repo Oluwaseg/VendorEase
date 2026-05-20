@@ -1,26 +1,17 @@
 'use client';
 
 import { ProductFilters, type FilterState } from '@/components/product-filters';
+import { ProductCard } from '@/components/products/product-card';
 import { Button } from '@/components/ui/button';
-import { useCartContext } from '@/contexts/cart-context';
-import { useCurrency } from '@/contexts/currency-context';
-import { useWishlist } from '@/contexts/wishlist-context';
 import { useProducts } from '@/hooks/use-product';
-import { formatPrice } from '@/lib/format-price';
 import type { Product } from '@/types/product';
-import { ArrowRight, Heart, ShoppingCart, Star, Zap } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export default function ShopPageClient() {
-  const { addToCart } = useCartContext();
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  const [addedItems, setAddedItems] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(12);
-  const { currency, convert } = useCurrency();
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<FilterState>(() => {
     const flashSaleActive = searchParams.get('flashSaleActive') === 'true';
@@ -61,153 +52,6 @@ export default function ShopPageClient() {
     setFilters(newFilters);
     setPage(1);
   };
-
-  const handleAddToCart = (product: Product) => {
-    addToCart({
-      id: product._id,
-      name: product.name,
-      price: product.basePrice,
-      quantity: 1,
-    });
-    setAddedItems((prev) => [...prev, product._id]);
-    setTimeout(() => {
-      setAddedItems((prev) => prev.filter((id) => id !== product._id));
-    }, 2000);
-  };
-
-  const handleWishlist = (product: Product) => {
-    if (isInWishlist(product._id)) {
-      removeFromWishlist(product._id);
-    } else {
-      addToWishlist({
-        id: product._id,
-        name: product.name,
-        price: product.basePrice,
-        rating: product.averageRating ?? 0,
-      });
-    }
-  };
-
-  function RatingStars({
-    rating,
-    reviewCount = 0,
-  }: {
-    rating: number;
-    reviewCount?: number;
-  }) {
-    return (
-      <div className='space-y-1'>
-        <div className='flex items-center gap-1.5'>
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={14}
-              className={
-                i < Math.round(rating)
-                  ? 'fill-accent text-accent'
-                  : 'text-foreground/20'
-              }
-            />
-          ))}
-          <span className='text-xs font-medium text-foreground'>
-            {rating.toFixed(1)}
-          </span>
-        </div>
-        {reviewCount > 0 && (
-          <span className='text-xs text-foreground/60'>
-            {reviewCount} {reviewCount === 1 ? 'review' : 'reviews'}
-          </span>
-        )}
-      </div>
-    );
-  }
-
-  function ProductCard({ product }: { product: Product }) {
-    const isAdded = addedItems.includes(product._id);
-    const inWishlist = isInWishlist(product._id);
-    const hasFlashSale =
-      product.flashSale && product.flashSale.isActive ? true : false;
-    const salePrice =
-      hasFlashSale && product.flashSale
-        ? product.flashSale.discountType === 'percentage'
-          ? product.basePrice * (1 - product.flashSale.discountValue / 100)
-          : product.basePrice - product.flashSale.discountValue
-        : product.basePrice;
-
-    return (
-      <Link href={`/shop/${product.slug}`}>
-        <div className='group cursor-pointer'>
-          <div className='relative overflow-hidden rounded-lg bg-secondary/50 aspect-square mb-4'>
-            <Image
-              src={product.images?.[0]?.url ?? '/placeholder.png'}
-              alt={product.name}
-              fill
-              className='object-cover group-hover:scale-110 transition-transform duration-500'
-            />
-            {hasFlashSale && (
-              <div className='absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-accent text-accent-foreground text-xs font-bold flashsale'>
-                <Zap size={14} className='fill-current' />
-                Flash Sale
-              </div>
-            )}
-            {product.isBestSeller && !hasFlashSale && (
-              <div className='absolute top-3 left-3 px-2.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold'>
-                Best Seller
-              </div>
-            )}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                handleWishlist(product);
-              }}
-              className='absolute top-3 right-3 p-2.5 rounded-full bg-white/90 hover:bg-white transition-colors shadow-sm'
-            >
-              <Heart
-                size={18}
-                className={
-                  inWishlist ? 'fill-red-500 text-red-500' : 'text-foreground'
-                }
-              />
-            </button>
-          </div>
-          <div className='space-y-2'>
-            <h3 className='font-semibold text-foreground text-sm group-hover:text-primary transition-colors line-clamp-2'>
-              {product.name}
-            </h3>
-            <RatingStars
-              rating={product.averageRating ?? 0}
-              reviewCount={product.reviewCount ?? 0}
-            />
-            <div className='flex items-center justify-between pt-1'>
-              <div className='flex flex-col gap-1'>
-                <p className='text-lg font-bold text-primary'>
-                  {formatPrice(convert(salePrice), currency)}
-                </p>
-                {hasFlashSale && (
-                  <p className='text-xs text-foreground/50 line-through'>
-                    {formatPrice(convert(product.basePrice), currency)}
-                  </p>
-                )}
-              </div>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleAddToCart(product);
-                }}
-                className={`p-2 rounded-lg transition-all ${
-                  isAdded
-                    ? 'bg-green-100 text-green-600'
-                    : 'bg-primary/10 text-primary hover:bg-primary/20'
-                }`}
-              >
-                <ShoppingCart size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </Link>
-    );
-  }
 
   return (
     <main>
@@ -303,7 +147,11 @@ export default function ShopPageClient() {
               ) : (
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'>
                   {products.map((product) => (
-                    <ProductCard key={product._id} product={product} />
+                    <ProductCard
+                      key={product._id}
+                      product={product}
+                      className='rounded-xl'
+                    />
                   ))}
                 </div>
               )}
