@@ -20,7 +20,7 @@ export default function AdminPaymentsPage() {
   };
 
   return (
-    <main className='min-h-screen bg-background'>
+    <div>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
         {/* Header */}
         <div className='bg-gradient-to-r from-primary/10 to-accent/10 border-b border-border/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-12 mb-12'>
@@ -196,6 +196,6 @@ export default function AdminPaymentsPage() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

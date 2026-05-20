@@ -311,7 +311,7 @@ export default function AdminSupportPage() {
   }, [chats, chatsError, loadingChats, selectedChatId]);
 
   return (
-    <main className='min-h-screen bg-background'>
+    <div className='min-h-0'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         {/* Header */}
         <div className='mb-10'>
@@ -624,6 +624,6 @@ export default function AdminSupportPage() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }

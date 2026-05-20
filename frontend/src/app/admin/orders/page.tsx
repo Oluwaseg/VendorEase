@@ -1,6 +1,6 @@
 'use client';
 
-import { OrdersTable } from '@/components/orders-table';
+import { OrdersTable } from '@/components/orders/orders-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -57,7 +57,7 @@ export default function AdminOrdersPage() {
   }, [filteredOrders]);
 
   return (
-    <main className='min-h-screen bg-background'>
+    <div>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12'>
         {/* Header */}
         <div className='mb-8'>
@@ -252,6 +252,6 @@ export default function AdminOrdersPage() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

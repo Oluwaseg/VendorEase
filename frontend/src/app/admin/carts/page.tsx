@@ -20,16 +20,16 @@ export default function AdminCartsPage() {
 
   if (isLoading) {
     return (
-      <main className='min-h-screen bg-background flex items-center justify-center'>
+      <div className='flex flex-1 items-center justify-center py-24'>
         <Spinner className='w-8 h-8' />
-      </main>
+      </div>
     );
   }
 
   const cartCount = carts?.length ?? 0;
 
   return (
-    <main className='min-h-screen bg-background'>
+    <div>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
         {/* Header */}
         <div className='bg-gradient-to-r from-primary/10 to-accent/10 border-b border-border/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-12 mb-12'>
@@ -148,6 +148,6 @@ export default function AdminCartsPage() {
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

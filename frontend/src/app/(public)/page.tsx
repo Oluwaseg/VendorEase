@@ -1,14 +1,11 @@
-import { AnimatedShowcase } from '@/components/animated-showcase';
-import CTA from '@/components/cta';
-import { FaqSection } from '@/components/faq-section';
+import CTA from '@/components/public/cta';
 import {
   BestSellerProducts,
   FlashSaleProducts,
-} from '@/components/featured-products';
-import { Hero, type CarouselSlide } from '@/components/hero';
-import { NotifySection } from '@/components/notify-section';
-import { ParallaxGallery } from '@/components/parallax-gallery';
-import { ShopByCategory } from '@/components/shop-by-category';
+} from '@/components/public/featured-products';
+import { Hero, type CarouselSlide } from '@/components/public/hero';
+import { ParallaxGallery } from '@/components/public/parallax-gallery';
+import { ShopByCategory } from '@/components/public/shop-by-category';
 
 const heroSlides: CarouselSlide[] = [
   {
@@ -53,9 +50,6 @@ export default function Page() {
       <BestSellerProducts />
       <CTA />
       <ParallaxGallery />
-      <AnimatedShowcase />
-      <NotifySection />
-      <FaqSection />
     </main>
   );
 }

@@ -13,15 +13,15 @@ export default function AdminDashboardPage() {
 
   if (isLoading) {
     return (
-      <main className='min-h-screen bg-background flex items-center justify-center'>
+      <div className='flex flex-1 items-center justify-center py-24'>
         <Spinner className='w-8 h-8' />
-      </main>
+      </div>
     );
   }
 
   if (error || !dashboard) {
     return (
-      <main className='min-h-screen bg-background flex items-center justify-center'>
+      <div className='flex flex-1 items-center justify-center py-24'>
         <div className='text-center'>
           <p className='text-foreground/60 font-medium'>
             Failed to load dashboard
@@ -30,7 +30,7 @@ export default function AdminDashboardPage() {
             Please try refreshing the page
           </p>
         </div>
-      </main>
+      </div>
     );
   }
 
@@ -70,7 +70,7 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <main className='min-h-screen bg-background'>
+    <div className='space-y-8'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
         {/* Header */}
         <div className='mb-12'>
@@ -429,6 +429,6 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

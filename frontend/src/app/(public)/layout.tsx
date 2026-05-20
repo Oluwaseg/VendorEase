@@ -1,5 +1,5 @@
-import { Footer } from '@/components/footer';
-import { NavbarWrapper } from '@/components/navbar-wrapper';
+import { Footer } from '@/components/common/footer';
+import { Navbar } from '@/components/common/navbar';
 import type { Metadata } from 'next';
 import React from 'react';
 
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className='font-display antialiased'>
-        <NavbarWrapper />
+        <Navbar />
         {children}
         <Footer />
       </body>

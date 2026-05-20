@@ -1,7 +1,7 @@
 'use client';
 import ChatWidget from '@/components/chat-widget';
-import { Footer } from '@/components/footer';
-import { NavbarWrapper } from '@/components/navbar-wrapper';
+import { Footer } from '@/components/common/footer';
+import { Navbar } from '@/components/common/navbar';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <NavbarWrapper />
+      <Navbar />
       {children}
       <ChatWidget />
       <Footer />

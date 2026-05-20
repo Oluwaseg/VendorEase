@@ -1,17 +1,15 @@
 'use client';
 
-import { Footer } from '@/components/footer';
-import { NavbarWrapper } from '@/components/navbar-wrapper';
+import { AdminShell } from '@/components/admin';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
-import { ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { user, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect non-admins away from admin pages
     if (
       !isLoading &&
       isAuthenticated &&
@@ -21,20 +19,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     }
   }, [isLoading, isAuthenticated, user, router]);
 
-  // Optional: show loader until auth resolves
   if (isLoading || !user) {
     return (
-      <div className='min-h-screen flex items-center justify-center'>
-        Loading admin dashboard...
+      <div className='flex min-h-svh items-center justify-center bg-background'>
+        <p className='text-muted-foreground'>Loading admin dashboard…</p>
       </div>
     );
   }
 
-  return (
-    <>
-      <NavbarWrapper />
-      {children}
-      <Footer />
-    </>
-  );
+  return <AdminShell>{children}</AdminShell>;
 }

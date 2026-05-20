@@ -1,6 +1,6 @@
 'use client';
 
-import { OrdersList } from '@/components/orders-list';
+import { OrdersList } from '@/components/orders/orders-list';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useMyOrders } from '@/hooks/use-order';

@@ -40,7 +40,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { CurrencySwitcher } from './currency-switcher';
+import { CurrencySwitcher } from '../currency-switcher';
 
 const NAV_ITEMS = [
   { label: 'Home', href: '/' },
@@ -49,7 +49,7 @@ const NAV_ITEMS = [
   { label: 'Contact', href: '/contact' },
 ];
 
-export function StoreNavbar() {
+export function Navbar() {
   /* ────────────────────────────────────────────────────────────────────────
    *  LOGIC — PRESERVED EXACTLY
    * ──────────────────────────────────────────────────────────────────────── */

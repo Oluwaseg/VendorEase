@@ -60,7 +60,7 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <main className='min-h-screen bg-background'>
+    <div>
       {/* Header */}
       <div className='bg-gradient-to-r from-primary/10 to-accent/10 border-b border-border/50'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
@@ -417,6 +417,6 @@ export default function AdminProductsPage() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }

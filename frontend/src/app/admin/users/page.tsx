@@ -124,7 +124,7 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <main className='min-h-screen bg-background p-4 md:p-8'>
+    <div className='p-0 md:p-0'>
       <div className='max-w-6xl mx-auto'>
         {/* Header */}
         <div className='mb-8'>
@@ -568,6 +568,6 @@ export default function AdminUsersPage() {
           </DialogContent>
         </Dialog>
       </div>
-    </main>
+    </div>
   );
 }

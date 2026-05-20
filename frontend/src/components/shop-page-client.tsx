@@ -1,7 +1,11 @@
 'use client';
 
-import { ProductFilters, type FilterState } from '@/components/product-filters';
-import { ProductCard, ProductGridSection } from '@/components/products';
+import {
+  FilterState,
+  ProductCard,
+  ProductFilters,
+  ProductGridSection,
+} from '@/components/products';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/use-product';
 import type { Product } from '@/types/product';
@@ -124,7 +128,11 @@ export default function ShopPageClient() {
                   </div>
                 }
                 renderItem={(product) => (
-                  <ProductCard key={product._id} product={product} className='rounded-xl' />
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    className='rounded-xl'
+                  />
                 )}
               />
 
