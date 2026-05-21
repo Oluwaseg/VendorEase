@@ -19,8 +19,8 @@ import {
   type HeroTextPosition,
 } from '@/types/hero-position';
 import { Product } from '@/types/product';
-import { CldUploadWidget } from 'next-cloudinary';
 import { Image, Plus, X } from 'lucide-react';
+import { CldUploadWidget } from 'next-cloudinary';
 import { useEffect, useMemo, useState } from 'react';
 
 type CollectionFormData = CreateCollectionData;
@@ -45,9 +45,7 @@ function normalizeProductIds(
   if (!productIds?.length) {
     return [];
   }
-  return productIds.map((item) =>
-    typeof item === 'string' ? item : item._id
-  );
+  return productIds.map((item) => (typeof item === 'string' ? item : item._id));
 }
 
 export function CollectionForm({
@@ -175,8 +173,8 @@ export function CollectionForm({
             placeholder='e.g. Shop summer picks, Explore deals'
           />
           <p className='text-xs text-muted-foreground'>
-            Label for the hero and collection page button. Defaults to &quot;Shop
-            now&quot; if empty.
+            Label for the hero and collection page button. Defaults to
+            &quot;Shop now&quot; if empty.
           </p>
         </div>
       </div>
@@ -196,9 +194,14 @@ export function CollectionForm({
             folder: CLOUDINARY_FOLDER_COLLECTIONS,
             multiple: false,
           }}
-          onSuccess={(result: { info?: { secure_url?: string; public_id?: string } }) => {
+          onSuccess={(result) => {
             const info = result.info;
-            if (!info?.secure_url || !info?.public_id) return;
+            if (
+              typeof info === 'string' ||
+              !info?.secure_url ||
+              !info?.public_id
+            )
+              return;
             const newImage: CollectionImage = {
               url: info.secure_url,
               publicId: info.public_id,
@@ -241,7 +244,9 @@ export function CollectionForm({
         <h3 className='text-lg font-bold text-foreground'>Homepage hero</h3>
         <div className='flex items-center justify-between rounded-lg border border-border p-4'>
           <div>
-            <p className='font-semibold text-sm'>Feature on homepage carousel</p>
+            <p className='font-semibold text-sm'>
+              Feature on homepage carousel
+            </p>
             <p className='text-xs text-muted-foreground mt-1'>
               Requires a cover image. Shown in the hero when active.
             </p>
@@ -383,4 +388,4 @@ export function CollectionForm({
       </Button>
     </form>
   );
-};
+}
