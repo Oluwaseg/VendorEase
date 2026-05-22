@@ -7,7 +7,7 @@ RUN npm install -g pnpm
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files from backend
 COPY backend/package.json backend/pnpm-lock.yaml ./
 
 # Install dependencies
@@ -29,7 +29,7 @@ RUN npm install -g pnpm
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files from backend
 COPY backend/package.json backend/pnpm-lock.yaml ./
 
 # Install only production dependencies
