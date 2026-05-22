@@ -1,65 +1,323 @@
-<html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Your items are waiting</title>
+    <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
+      @font-face {
+        font-family: 'Clash Display';
+        src: url('https://api.fontshare.com/v2/css?f[]=clash-display@700,600&display=swap');
+      }
+
+      body,
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          'Manrope',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        background-color: #f9fafb;
+        color: #12171a;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        width: 100% !important;
+      }
+      table {
+        border-collapse: collapse !important;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        display: block;
+      }
+
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        background-color: #f9fafb;
+        padding: 40px 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e1e4e8;
+      }
+
+      .header {
+        padding: 32px 40px;
+        text-align: center;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .logo {
+        max-width: 40px;
+        margin: 0 auto 12px;
+      }
+      .brand-name {
+        font-family: 'Clash Display', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #12171a;
+        letter-spacing: -0.02em;
+      }
+
+      .hero {
+        padding: 48px 40px;
+        text-align: center;
+        background: linear-gradient(135deg, #1f74bf, #12171a);
+        color: #ffffff;
+      }
+      .hero h1 {
+        font-family: 'Clash Display', sans-serif;
+        font-size: 32px;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        letter-spacing: -0.03em;
+      }
+      .hero p {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.9);
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .content {
+        padding: 40px;
+      }
+      .greeting {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .intro-text {
+        color: #4b5563;
+        margin-bottom: 32px;
+      }
+
+      .cart-table {
+        width: 100%;
+        margin-bottom: 32px;
+      }
+      .cart-header {
+        text-align: left;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #9ca3af;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .item-row td {
+        padding: 20px 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .item-name {
+        font-weight: 600;
+        color: #12171a;
+      }
+      .item-qty {
+        color: #6b7280;
+        font-size: 14px;
+      }
+      .item-price {
+        font-weight: 700;
+        color: #12171a;
+        text-align: right;
+      }
+
+      .total-section {
+        background-color: #f9fafb;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 32px;
+      }
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .total-label {
+        font-size: 14px;
+        color: #6b7280;
+      }
+      .total-amount {
+        font-family: 'Clash Display', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: #1f74bf;
+      }
+
+      .cta-container {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .button {
+        background-color: #1f74bf;
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 18px 40px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 16px;
+        display: inline-block;
+        box-shadow: 0 10px 20px rgba(31, 116, 191, 0.2);
+        transition: transform 0.2s;
+      }
+
+      .footer {
+        padding: 40px;
+        text-align: center;
+        font-size: 13px;
+        color: #9ca3af;
+        border-top: 1px solid #f3f4f6;
+      }
+      .footer p {
+        margin-bottom: 8px;
+      }
+
+      @media screen and (max-width: 600px) {
+        .container {
+          border-radius: 0;
+          border: none;
+        }
+        .hero h1 {
+          font-size: 28px;
+        }
+        .content,
+        .header,
+        .footer {
+          padding: 30px 20px;
+        }
+        .button {
+          width: 100%;
+          box-sizing: border-box;
+        }
+      }
+    </style>
+  </head>
   <body>
-    <h1>Don't lose your items!</h1>
-    <p>Hi {{name}},</p>
-    <p>
-      We noticed you left some items in your cart at VendorEase. They are still
-      waiting for you.
-    </p>
-    <table
-      cellpadding='0'
-      cellspacing='0'
-      style='width:100%; border-collapse: collapse;'
-    >
-      <thead>
+    <div class='wrapper'>
+      <!--[if mso]>
+        <table role="presentation" width="600" align="center" style="width:600px;">
         <tr>
-          <th
-            align='left'
-            style='padding: 8px; border-bottom: 1px solid #ddd;'
-          >Product</th>
-          <th
-            align='center'
-            style='padding: 8px; border-bottom: 1px solid #ddd;'
-          >Qty</th>
-          <th
-            align='right'
-            style='padding: 8px; border-bottom: 1px solid #ddd;'
-          >Price</th>
+        <td>
+        <![endif]-->
+      <div class='container'>
+        <div class='header'>
+          <img
+            src='https://res.cloudinary.com/djc5o8g94/image/upload/v1735699430/Sos/nsrtetcca9bfnfx7xx8x.png'
+            alt='VendorEase'
+            class='logo'
+          />
+          <div class='brand-name'>VendorEase</div>
+        </div>
+
+        <div class='hero'>
+          <h1>Don't let them get away!</h1>
+          <p>We've saved the items in your cart so you can pick up right where
+            you left off.</p>
+        </div>
+
+        <div class='content'>
+          <p class='greeting'>Hi {{name}},</p>
+          <p class='intro-text'>We noticed you left some great finds behind. Our
+            items move fast, so we wanted to give you a quick heads-up before
+            they're gone!</p>
+
+          <table class='cart-table'>
+            <thead>
+              <tr>
+                <th class='cart-header' style='text-align: left;'>Product</th>
+                <th class='cart-header' style='text-align: center;'>Qty</th>
+                <th class='cart-header' style='text-align: right;'>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each items}}
+                <tr class='item-row'>
+                  <td class='item-name'>{{name}}</td>
+                  <td
+                    class='item-qty'
+                    style='text-align: center;'
+                  >{{quantity}}</td>
+                  <td class='item-price'>₦{{price}}</td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+
+          <div class='total-section'>
+            <table width='100%'>
+              <tr>
+                <td class='total-label'>Your Cart Total</td>
+                <td
+                  class='total-amount'
+                  style='text-align: right;'
+                >₦{{total}}</td>
+              </tr>
+            </table>
+          </div>
+
+          <div class='cta-container'>
+            <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{cartUrl}}" style="height:56px;v-text-anchor:middle;width:260px;" arcsize="25%" stroke="f" fillcolor="#1f74bf">
+                        <w:anchorlock/>
+                        <center style="color:#ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">Complete Your Order</center>
+                    </v:roundrect>
+                    <![endif]-->
+            <a href='{{cartUrl}}' class='button'>Complete Your Order</a>
+          </div>
+
+          <p style='text-align: center; color: #6b7280; font-size: 14px;'>Need
+            any help? Just reply to this email and our team will be happy to
+            assist you.</p>
+        </div>
+
+        <div class='footer'>
+          <p>&copy; {{currentYear}} VendorEase. All rights reserved.</p>
+          <p>123 Commerce Way, Retail District, New York, NY 10001</p>
+          <p style='margin-top: 16px; font-size: 11px; opacity: 0.7;'>You
+            received this because you left items in your VendorEase cart. If you
+            didn't mean to, you can safely ignore this.</p>
+        </div>
+      </div>
+      <!--[if mso]>
+        </td>
         </tr>
-      </thead>
-      <tbody>
-        {{#each items}}
-          <tr>
-            <td
-              style='padding: 8px; border-bottom: 1px solid #f0f0f0;'
-            >{{name}}</td>
-            <td
-              align='center'
-              style='padding: 8px; border-bottom: 1px solid #f0f0f0;'
-            >{{quantity}}</td>
-            <td
-              align='right'
-              style='padding: 8px; border-bottom: 1px solid #f0f0f0;'
-            >₦{{price}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    <p style='margin-top: 16px;'>
-      <strong>Cart total:</strong>
-      ₦{{total}}
-    </p>
-    <p>
-      <a
-        href='{{cartUrl}}'
-        style='display: inline-block; padding: 12px 20px; background: #2563eb; color: white; text-decoration: none; border-radius: 5px;'
-      >
-        Return to your cart
-      </a>
-    </p>
-    <p>If you need help, just reply to this email.</p>
-    <p>Thanks,<br />The VendorEase team</p>
-    <hr />
-    <p style='font-size: 12px; color: #666;'>© {{currentYear}} VendorEase</p>
+        </table>
+        <![endif]-->
+    </div>
   </body>
 </html>

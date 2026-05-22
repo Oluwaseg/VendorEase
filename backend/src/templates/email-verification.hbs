@@ -2,95 +2,413 @@
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>Verify Your Email</title>
+    <title>Verify Your Email - VendorEase</title>
+    <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
     <style>
+      /* Modern Fonts - Fallbacks included for email clients */
+      @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+
+      /* Reset Styles */
+      body,
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin: 0;
+        padding: 0;
+      }
+
+      .ExternalClass {
+        width: 100%;
+      }
+      .ExternalClass,
+      .ExternalClass p,
+      .ExternalClass span,
+      .ExternalClass font,
+      .ExternalClass td,
+      .ExternalClass div {
+        line-height: 100%;
+      }
+      #outlook a {
+        padding: 0;
+      }
+      table {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+      img {
+        -ms-interpolation-mode: bicubic;
+      }
       body {
-        font-family: Arial, sans-serif;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        margin: 0;
+        padding: 0;
+        width: 100% !important;
+      }
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+      }
+      table {
+        border-collapse: collapse !important;
+      }
+
+      body {
+        font-family:
+          'Manrope',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        background-color: #f9fafb;
+        color: #12171a;
         line-height: 1.6;
-        color: #333;
+        -webkit-font-smoothing: antialiased;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      table {
+        border-collapse: separate;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        width: 100%;
+      }
+
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        display: block;
+      }
+
+      /* Container & Layout */
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        background-color: #f9fafb;
+        padding-bottom: 40px;
+      }
+
+      .container {
         max-width: 600px;
         margin: 0 auto;
-        padding: 20px;
-        background-color: #f4f4f4;
-      }
-      .container {
         background-color: #ffffff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e1e4e8;
       }
+
+      /* Header */
       .header {
-        text-align: center;
-        margin-bottom: 30px;
+        padding: 30px 40px;
+        text-align: left;
+        border-bottom: 1px solid #f3f4f6;
       }
-      .logo {
-        font-size: 24px;
-        font-weight: bold;
-        color: #007bff;
-        margin-bottom: 10px;
-      }
-      .content {
-        margin-bottom: 30px;
-      }
-      .button {
+
+      .logo-container {
         display: inline-block;
-        padding: 12px 30px;
-        background-color: #007bff;
-        color: #ffffff;
+        vertical-align: middle;
+      }
+
+      .logo {
+        max-width: 32px;
+        max-height: 32px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .brand-name {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 20px;
+        font-weight: 800;
+        color: #12171a;
+        margin-left: 10px;
+        letter-spacing: -0.02em;
+      }
+
+      /* Content */
+      .content {
+        padding: 0 40px 40px;
+        text-align: center;
+      }
+
+      .illustration-box {
+        background: linear-gradient(
+          135deg,
+          rgba(31, 116, 191, 0.05),
+          rgba(210, 154, 0, 0.05)
+        );
+        border-radius: 24px;
+        padding: 40px;
+        margin-bottom: 32px;
+        display: inline-block;
+        width: 70%;
+        border: 1px solid rgba(31, 116, 191, 0.1);
+      }
+
+      h2 {
+        font-size: 28px;
+        font-weight: 800;
+        color: #12171a;
+        margin-bottom: 16px;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+      }
+
+      p {
+        font-size: 16px;
+        color: #4b5563;
+        margin-bottom: 24px;
+      }
+
+      .user-name {
+        font-weight: 600;
+        color: #12171a;
+      }
+
+      /* Button */
+      .btn-container {
+        margin: 32px 0;
+      }
+
+      .button {
+        background-color: #1f74bf;
+        background: linear-gradient(135deg, #1f74bf, #3a8cd9);
+        color: #ffffff !important;
         text-decoration: none;
-        border-radius: 5px;
-        margin: 20px 0;
-        text-align: center;
+        padding: 18px 36px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 16px;
+        display: inline-block;
+        box-shadow: 0 10px 20px rgba(31, 116, 191, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
-      .button:hover {
-        background-color: #0056b3;
+
+      /* Link Box */
+      .link-section {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid #e1e4e8;
+        text-align: left;
       }
-      .footer {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
+
+      .link-label {
         font-size: 12px;
-        color: #666;
-        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #9ca3af;
+        margin-bottom: 8px;
+        display: block;
       }
+
       .token {
-        background-color: #f8f9fa;
-        padding: 10px;
-        border-radius: 4px;
-        font-family: monospace;
+        background-color: #f5f7f9;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-family:
+          'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        font-size: 13px;
+        color: #1f74bf;
         word-break: break-all;
-        margin: 10px 0;
+        border: 1px dashed #cbd5e1;
+      }
+
+      /* Footer */
+      .footer {
+        padding: 30px 40px;
+        text-align: center;
+        font-size: 13px;
+        color: #9ca3af;
+      }
+
+      .footer p {
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+
+      .social-links {
+        margin-top: 20px;
+      }
+
+      .social-link {
+        display: inline-block;
+        margin: 0 10px;
+        color: #9ca3af;
+        text-decoration: none;
+      }
+
+      /* Mobile Adjustments */
+      @media screen and (max-width: 600px) {
+        .container {
+          width: 100% !important;
+          max-width: 100% !important;
+          border-radius: 0 !important;
+          border-left: none !important;
+          border-right: none !important;
+        }
+        .header {
+          padding: 30px 20px 10px !important;
+        }
+        .content {
+          padding: 0 20px 30px !important;
+        }
+        .illustration-box {
+          width: 100% !important;
+          padding: 30px 10px !important;
+          box-sizing: border-box !important;
+        }
+        h2 {
+          font-size: 24px !important;
+        }
+        .button {
+          width: 100% !important;
+          padding: 16px 0 !important;
+          box-sizing: border-box !important;
+        }
+        .footer {
+          padding: 20px !important;
+        }
       }
     </style>
   </head>
   <body>
-    <div class='container'>
-      <div class='header'>
-        <div class='logo'>VendorEase</div>
-      </div>
+    <div class='wrapper'>
+      <!--[if mso]>
+        <table role="presentation" width="600" align="center" style="width:600px;">
+        <tr>
+        <td>
+        <![endif]-->
+      <table
+        role='presentation'
+        width='100%'
+        cellspacing='0'
+        cellpadding='0'
+        style='max-width: 600px; margin: 0 auto;'
+      >
+        <tr>
+          <td align='center' style='padding: 40px 0;'>
+            <div class='container'>
+              <!-- Header -->
+              <div class='header'>
+                <div class='logo-container'>
+                  <img
+                    src='https://res.cloudinary.com/djc5o8g94/image/upload/v1735699430/Sos/nsrtetcca9bfnfx7xx8x.png'
+                    alt='Logo'
+                    class='logo'
+                  />
+                  <span class='brand-name'>VendorEase</span>
+                </div>
+              </div>
 
-      <div class='content'>
-        <h2>Verify Your Email Address</h2>
-        <p>Hi {{name}},</p>
-        <p>Thank you for registering with VendorEase! Please verify your email
-          address by clicking the button below:</p>
+              <!-- Content -->
+              <div class='content' style='padding-top: 40px;'>
+                <div class='illustration-box'>
+                  <!-- Modern Verified Icon -->
+                  <svg
+                    width='80'
+                    height='80'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <circle
+                      cx='12'
+                      cy='12'
+                      r='10'
+                      fill='#1f74bf'
+                      fill-opacity='0.1'
+                    />
+                    <path
+                      d='M8 12L11 15L16 9'
+                      stroke='#1f74bf'
+                      stroke-width='2.5'
+                      stroke-linecap='round'
+                      stroke-linejoin='round'
+                    />
+                    <path
+                      d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z'
+                      stroke='#d29a00'
+                      stroke-width='0.5'
+                      stroke-dasharray='2 2'
+                    />
+                  </svg>
+                </div>
 
-        <div style='text-align: center;'>
-          <a href='{{verificationUrl}}' class='button'>Verify Email Address</a>
-        </div>
+                <h2>Confirm your account</h2>
+                <p>Hi <span class='user-name'>{{name}}</span>,</p>
+                <p>Welcome to
+                  <strong>VendorEase</strong>! We're thrilled to have you join
+                  our shopping community. You're just one step away from
+                  unlocking a world of premium products and exclusive deals.</p>
+                <p>Please confirm your email address to activate your account
+                  and start your shopping journey with us.</p>
 
-        <p>Or copy and paste this link into your browser:</p>
-        <div class='token'>{{verificationUrl}}</div>
+                <div class='btn-container'>
+                  <!--[if mso]>
+                                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{verificationUrl}}" style="height:54px;v-text-anchor:middle;width:260px;" arcsize="26%" stroke="f" fillcolor="#1f74bf">
+                                    <w:anchorlock/>
+                                    <center>
+                                <![endif]-->
+                  <a href='{{verificationUrl}}' class='button'>Confirm My
+                    Account</a>
+                  <!--[if mso]>
+                                    </center>
+                                </v:roundrect>
+                                <![endif]-->
+                </div>
 
-        <p>This verification link will expire in 24 hours.</p>
+                <p style='font-size: 14px; color: #6b7280;'>For your security,
+                  this link will expire in 24 hours. If you didn't sign up for a
+                  VendorEase account, please ignore this email.</p>
 
-        <p>If you didn't create an account with us, please ignore this email.</p>
-      </div>
+                <!-- Alternative Link Section -->
+                <div class='link-section'>
+                  <span class='link-label'>Direct Link</span>
+                  <div class='token'>{{verificationUrl}}</div>
+                </div>
+              </div>
 
-      <div class='footer'>
-        <p>© {{currentYear}} VendorEase. All rights reserved.</p>
-        <p>This is an automated email, please do not reply.</p>
-      </div>
+              <!-- Footer -->
+              <div class='footer'>
+                <p>&copy; {{currentYear}} VendorEase. All rights reserved.</p>
+                <p>You received this email because you created an account on
+                  VendorEase. If you have any questions, our support team is
+                  always here to help.</p>
+                <p>123 Commerce Way, Retail District, New York, NY 10001</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <!--[if mso]>
+        </td>
+        </tr>
+        </table>
+        <![endif]-->
     </div>
   </body>
 </html>

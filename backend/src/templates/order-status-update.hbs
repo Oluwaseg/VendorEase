@@ -3,123 +3,261 @@
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <title>Your Order Status Updated</title>
+    <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
     <style>
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background-color: #f5f5f5;
+      @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
+      @font-face {
+        font-family: 'Clash Display';
+        src: url('https://api.fontshare.com/v2/css?f[]=clash-display@700,600&display=swap');
+      }
+
+      body,
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
         margin: 0;
         padding: 0;
       }
+      body {
+        font-family:
+          'Manrope',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        background-color: #f9fafb;
+        color: #12171a;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        width: 100% !important;
+      }
+      table {
+        border-collapse: collapse !important;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        display: block;
+      }
+
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        background-color: #f9fafb;
+        padding: 40px 0;
+      }
       .container {
         max-width: 600px;
-        margin: 24px auto;
-        background: #ffffff;
-        border-radius: 8px;
-        padding: 24px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e1e4e8;
       }
+
       .header {
+        padding: 32px 40px;
         text-align: center;
-        margin-bottom: 20px;
+        border-bottom: 1px solid #f3f4f6;
       }
       .logo {
-        font-size: 22px;
+        max-width: 32px;
+        margin: 0 auto 12px;
+      }
+      .brand-name {
+        font-family: 'Clash Display', sans-serif;
+        font-size: 18px;
         font-weight: 700;
-        color: #111827;
-        margin-bottom: 4px;
+        color: #12171a;
+      }
+
+      .content {
+        padding: 48px 40px;
+        text-align: center;
       }
       .badge {
         display: inline-block;
-        padding: 4px 10px;
+        padding: 6px 14px;
         border-radius: 999px;
         background-color: #eff6ff;
-        color: #1d4ed8;
+        color: #1f74bf;
         font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
+        font-weight: 700;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+
+      h1 {
+        font-family: 'Clash Display', sans-serif;
+        font-size: 32px;
+        line-height: 1.2;
+        color: #12171a;
+        margin-bottom: 16px;
+        letter-spacing: -0.03em;
+      }
+      .intro {
+        color: #6b7280;
+        font-size: 16px;
+        margin-bottom: 40px;
+      }
+
+      .status-card {
+        background-color: #f9fafb;
+        border-radius: 24px;
+        padding: 32px;
+        margin-bottom: 40px;
+        border: 1px solid #f3f4f6;
+        text-align: left;
+      }
+      .order-id-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #9ca3af;
         margin-bottom: 8px;
       }
-      .muted {
-        color: #6b7280;
-        font-size: 13px;
+      .order-id-value {
+        font-family: monospace;
+        font-size: 18px;
+        font-weight: 700;
+        color: #12171a;
+        margin-bottom: 24px;
+        display: block;
       }
-      .status-row {
-        margin-top: 12px;
-        font-size: 14px;
+
+      .status-item {
+        margin-bottom: 20px;
       }
       .status-label {
-        font-weight: 600;
-        color: #111827;
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 6px;
+        display: block;
       }
       .status-value {
+        font-weight: 700;
+        color: #12171a;
+        font-size: 16px;
+        padding: 8px 16px;
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e1e4e8;
         display: inline-block;
-        margin-left: 6px;
-        padding: 2px 8px;
-        border-radius: 999px;
+      }
+
+      .info-box {
         background-color: #f3f4f6;
-        font-size: 12px;
+        border-radius: 16px;
+        padding: 20px;
+        color: #4b5563;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 32px;
       }
+
       .footer {
-        margin-top: 24px;
-        font-size: 12px;
-        color: #6b7280;
+        padding: 40px;
         text-align: center;
+        font-size: 13px;
+        color: #9ca3af;
+        border-top: 1px solid #f3f4f6;
       }
-      .code {
-        font-family:
-          Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-        background: #111827;
-        color: #f9fafb;
-        padding: 6px 10px;
-        border-radius: 6px;
-        font-size: 11px;
-        letter-spacing: 0.08em;
-        display: inline-block;
-        margin-top: 4px;
+
+      @media screen and (max-width: 600px) {
+        .container {
+          border-radius: 0;
+          border: none;
+        }
+        .content,
+        .header,
+        .footer {
+          padding: 30px 20px;
+        }
+        .status-card {
+          padding: 24px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class='container'>
-      <div class='header'>
-        <div class='logo'>VendorEase</div>
-        <div class='badge'>Order Update</div>
-      </div>
+    <div class='wrapper'>
+      <div class='container'>
+        <div class='header'>
+          <img
+            src='https://res.cloudinary.com/djc5o8g94/image/upload/v1735699430/Sos/nsrtetcca9bfnfx7xx8x.png'
+            alt='VendorEase'
+            class='logo'
+          />
+          <div class='brand-name'>VendorEase</div>
+        </div>
 
-      <p class='muted'>Hi {{name}},</p>
-      <p class='muted'>
-        The status of your order has been updated. Here are the latest details:
-      </p>
+        <div class='content'>
+          <div class='badge'>Order Update</div>
+          <h1>Good news, {{name}}!</h1>
+          <p class='intro'>Your order status has been updated. We're working
+            hard to get your items to you as quickly as possible.</p>
 
-      <p class='muted'>
-        Order ID:
-        <span class='code'>{{orderId}}</span>
-      </p>
+          <div class='status-card'>
+            <span class='order-id-label'>Order Reference</span>
+            <span class='order-id-value'>{{orderId}}</span>
 
-      <div class='status-row'>
-        <span class='status-label'>Payment status:</span>
-        <span class='status-value'>{{paymentStatus}}</span>
-      </div>
+            <table width='100%'>
+              <tr>
+                <td style='padding-bottom: 20px;'>
+                  <span class='status-label'>Payment Status</span>
+                  <span class='status-value'>{{paymentStatus}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class='status-label'>Shipping Status</span>
+                  <span
+                    class='status-value'
+                    style='color: #1f74bf;'
+                  >{{shippingStatus}}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
 
-      <div class='status-row'>
-        <span class='status-label'>Shipping status:</span>
-        <span class='status-value'>{{shippingStatus}}</span>
-      </div>
+          <div class='info-box'>
+            If your order is marked as
+            <strong>"Shipped"</strong>, it's currently in transit. For
+            <strong>"Delivered"</strong>
+            orders, please check your designated delivery location.
+          </div>
 
-      <p class='muted' style='margin-top: 16px;'>
-        If your order is marked as "shipped", it will be on its way to you soon.
-        When it is marked "delivered", that means it has reached your address.
-      </p>
+          <p style='color: #9ca3af; font-size: 14px;'>Questions? Our support
+            team is always here to help. Just reply to this email with your
+            order ID.</p>
+        </div>
 
-      <div class='footer'>
-        <p>
-          If you have any questions about this order, please contact our support
-          team and include your order ID.<br />
-          ©
-          {{currentYear}}
-          VendorEase. All rights reserved.
-        </p>
+        <div class='footer'>
+          <p>&copy; {{currentYear}} VendorEase. All rights reserved.</p>
+          <p>123 Commerce Way, Retail District, New York, NY 10001</p>
+        </div>
       </div>
     </div>
   </body>

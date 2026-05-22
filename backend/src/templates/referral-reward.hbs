@@ -1,90 +1,303 @@
-<html>
+<html lang='en'>
   <head>
     <meta charset='UTF-8' />
-    <title>Your Referral Reward</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Your Referral Reward - VendorEase</title>
+    <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
     <style>
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background-color: #f5f5f5;
+      @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+
+      body,
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
         margin: 0;
         padding: 0;
       }
+      .ExternalClass {
+        width: 100%;
+      }
+      .ExternalClass,
+      .ExternalClass p,
+      .ExternalClass span,
+      .ExternalClass font,
+      .ExternalClass td,
+      .ExternalClass div {
+        line-height: 100%;
+      }
+      #outlook a {
+        padding: 0;
+      }
+      table {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        border-collapse: collapse !important;
+      }
+      img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        display: block;
+      }
+
+      body {
+        font-family:
+          'Manrope',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        background-color: #f9fafb;
+        color: #12171a;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        width: 100% !important;
+      }
+
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        background-color: #f9fafb;
+        padding-bottom: 40px;
+      }
       .container {
         max-width: 600px;
-        margin: 24px auto;
-        background: #ffffff;
-        border-radius: 8px;
-        padding: 24px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e1e4e8;
       }
+
+      .header {
+        padding: 30px 40px;
+        text-align: left;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .logo-container {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .logo {
+        max-width: 32px;
+        max-height: 32px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .brand-name {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 20px;
+        font-weight: 800;
+        color: #12171a;
+        margin-left: 10px;
+        letter-spacing: -0.02em;
+      }
+
+      .content {
+        padding: 0 40px 40px;
+        text-align: center;
+      }
+
       .badge {
         display: inline-block;
-        padding: 4px 10px;
+        padding: 6px 14px;
         border-radius: 999px;
-        background-color: #eef4ff;
-        color: #3758f9;
+        background-color: rgba(31, 116, 191, 0.1);
+        color: #1f74bf;
         font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.03em;
+        font-weight: 700;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
-        margin-bottom: 12px;
+        margin-bottom: 24px;
       }
-      .code {
-        font-family:
-          'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-          monospace;
-        background: #111827;
-        color: #f9fafb;
-        padding: 12px 16px;
-        border-radius: 6px;
+
+      .celebration-box {
+        background: linear-gradient(
+          135deg,
+          rgba(31, 116, 191, 0.05),
+          rgba(210, 154, 0, 0.05)
+        );
+        border-radius: 24px;
+        padding: 40px 20px;
+        margin-bottom: 32px;
+        border: 1px solid rgba(31, 116, 191, 0.1);
+      }
+
+      h2 {
+        font-size: 28px;
+        font-weight: 800;
+        color: #12171a;
+        margin-bottom: 16px;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+      }
+      p {
         font-size: 16px;
-        letter-spacing: 0.12em;
-        text-align: center;
-        margin: 16px 0;
+        color: #4b5563;
+        margin-bottom: 20px;
       }
-      .footer {
-        margin-top: 24px;
+
+      .coupon-container {
+        margin: 32px 0;
+        padding: 24px;
+        background-color: #12171a;
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .coupon-label {
+        color: #9ca3af;
         font-size: 12px;
-        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+      }
+      .coupon-code {
+        font-family: 'SFMono-Regular', Consolas, monospace;
+        color: #ffffff;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        margin: 10px 0;
+      }
+      .coupon-value {
+        color: #d29a00;
+        font-weight: 700;
+        font-size: 18px;
+      }
+
+      .footer {
+        padding: 30px 40px;
+        text-align: center;
+        font-size: 13px;
+        color: #9ca3af;
+        border-top: 1px solid #f3f4f6;
+      }
+
+      @media screen and (max-width: 600px) {
+        .container {
+          width: 100% !important;
+          border-radius: 0 !important;
+          border: none !important;
+        }
+        .header,
+        .content {
+          padding-left: 20px !important;
+          padding-right: 20px !important;
+        }
+        .celebration-box {
+          padding: 30px 15px !important;
+        }
+        h2 {
+          font-size: 24px !important;
+        }
+        .coupon-code {
+          font-size: 24px !important;
+        }
       }
     </style>
   </head>
   <body>
-    <div class='container'>
-      <div class='badge'>Referral Reward</div>
-      <h2>Hi {{name}}, you earned a coupon! 🎉</h2>
-      <p>
-        Thanks for inviting your friends to VendorEase. You&apos;ve reached a
-        referral milestone with
-        <strong>{{referralCount}}</strong>
-        completed referral(s).
-      </p>
+    <div class='wrapper'>
+      <!--[if mso]>
+        <table role="presentation" width="600" align="center" style="width:600px;">
+        <tr>
+        <td>
+        <![endif]-->
+      <table
+        role='presentation'
+        width='100%'
+        cellspacing='0'
+        cellpadding='0'
+        style='max-width: 600px; margin: 0 auto;'
+      >
+        <tr>
+          <td align='center' style='padding: 40px 0;'>
+            <div class='container'>
+              <div class='header'>
+                <div class='logo-container'>
+                  <img
+                    src='https://res.cloudinary.com/djc5o8g94/image/upload/v1735699430/Sos/nsrtetcca9bfnfx7xx8x.png'
+                    alt='Logo'
+                    class='logo'
+                  />
+                  <span class='brand-name'>VendorEase</span>
+                </div>
+              </div>
 
-      <p>
-        Here is your reward coupon worth
-        <strong>{{discountPercent}}% off</strong>
-        on your next order:
-      </p>
+              <div class='content' style='padding-top: 40px;'>
+                <div class='badge'>Referral Milestone</div>
 
-      <div class='code'>{{couponCode}}</div>
+                <div class='celebration-box'>
+                  <span
+                    style='font-size: 48px; display: block; margin-bottom: 10px;'
+                  >🎉</span>
+                  <h2>You've earned a reward!</h2>
+                  <p>Amazing work,
+                    <strong>{{name}}</strong>! Your friends have joined the
+                    VendorEase community, and you've hit a major milestone with
+                    <strong>{{referralCount}}</strong>
+                    successful referrals.</p>
+                </div>
 
-      <p>
-        This coupon is
-        <strong>single-use</strong>, linked to your account, and valid until
-        <strong>{{expiresAt}}</strong>.
-      </p>
+                <p>As a token of our appreciation, here is an exclusive reward
+                  for your next shopping spree:</p>
 
-      <p>
-        Just apply this code at checkout on your next purchase. No need to claim
-        anything else.
-      </p>
+                <div class='coupon-container'>
+                  <div class='coupon-label'>Your Exclusive Coupon</div>
+                  <div class='coupon-code'>{{couponCode}}</div>
+                  <div class='coupon-value'>{{discountPercent}}% OFF YOUR NEXT
+                    ORDER</div>
+                </div>
 
-      <p class='footer'>
-        If you didn&apos;t expect this email, you can safely ignore it.<br />
-        &copy;
-        {{currentYear}}
-        VendorEase. All rights reserved.
-      </p>
+                <p style='font-size: 14px; color: #6b7280;'>
+                  This is a
+                  <strong>single-use</strong>
+                  code linked to your account. Make sure to use it before it
+                  expires on
+                  <strong>{{expiresAt}}</strong>.
+                </p>
+
+                <p style='margin-top: 30px;'>Simply apply this code at checkout
+                  to claim your savings. Happy shopping!</p>
+              </div>
+
+              <div class='footer'>
+                <p>&copy; {{currentYear}} VendorEase. All rights reserved.</p>
+                <p>123 Commerce Way, Retail District, New York, NY 10001</p>
+                <p style='margin-top: 10px; font-size: 11px;'>If you weren't
+                  expecting this reward, please contact our support team.</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <!--[if mso]>
+        </td>
+        </tr>
+        </table>
+        <![endif]-->
     </div>
   </body>
 </html>
