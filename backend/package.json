@@ -20,6 +20,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.28.0",
   "dependencies": {
+    "@logtail/node": "^0.5.8",
+    "@logtail/winston": "^0.5.8",
     "@types/joi": "^17.2.3",
     "axios": "^1.13.6",
     "bcryptjs": "^3.0.3",

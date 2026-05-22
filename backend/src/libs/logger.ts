@@ -1,5 +1,15 @@
+import { Logtail } from '@logtail/node';
+import { LogtailTransport } from '@logtail/winston';
 import crypto from 'crypto';
 import { createLogger, format, transports } from 'winston';
+
+const logtailTransports: any[] = [];
+
+// Only initialize Logtail in production
+if (process.env.NODE_ENV === 'production' && process.env.LOGTAIL_TOKEN) {
+  const logtail = new Logtail(process.env.LOGTAIL_TOKEN);
+  logtailTransports.push(new LogtailTransport(logtail));
+}
 
 const logger = createLogger({
   level: process.env.LOG_LEVEL || 'info',
@@ -10,7 +20,7 @@ const logger = createLogger({
       return `[${timestamp}] [${id}] ${level}: ${message} ${Object.keys(meta).length ? JSON.stringify(meta) : ''}`;
     })
   ),
-  transports: [new transports.Console()],
+  transports: [new transports.Console(), ...logtailTransports],
 });
 
 // Audit logger for admin actions
@@ -20,6 +30,7 @@ const auditLogger = createLogger({
   transports: [
     new transports.File({ filename: 'logs/audit.log' }),
     new transports.Console(),
+    ...logtailTransports,
   ],
 });
 
