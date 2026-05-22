@@ -4,6 +4,7 @@ import handlebars from 'handlebars';
 import nodemailer, { Transporter } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import path from 'path';
+import { Resend } from 'resend';
 import logger from '../libs/logger';
 
 interface EmailOptions {
@@ -14,12 +15,13 @@ interface EmailOptions {
 }
 
 class EmailService {
-  private transporter: Transporter;
+  private transporter: Transporter | null = null;
+  private resendClient: Resend | null = null;
   private emailQueue: Queue.Queue | null = null;
   private useQueue = false;
+  private useResend = false;
 
   constructor() {
-    // Configure transporter based on environment
     const isDevelopment = process.env.NODE_ENV === 'development';
 
     if (isDevelopment) {
@@ -29,17 +31,13 @@ class EmailService {
         port: Number(process.env.MAILHOG_PORT || 1025),
         secure: false,
       } as SMTPTransport.Options);
+    } else if (process.env.RESEND_API_KEY) {
+      this.resendClient = new Resend(process.env.RESEND_API_KEY);
+      this.useResend = true;
     } else {
-      // Production SMTP configuration
-      this.transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
+      logger.error(
+        'No email provider configured. In production set RESEND_API_KEY, or run in development with MailHog.'
+      );
     }
 
     // Initialize email queue only if Redis is configured
@@ -72,16 +70,19 @@ class EmailService {
       logger.info('Redis not configured, emails will be sent synchronously');
     }
 
-    // Verify connection
-    this.transporter.verify((error) => {
-      if (error) {
-        logger.error(`Email service connection error: ${error.message}`);
-      } else {
-        logger.info(
-          `Email service ready (${isDevelopment ? 'MailHog' : 'SMTP'})`
-        );
-      }
-    });
+    if (this.transporter) {
+      this.transporter.verify((error) => {
+        if (error) {
+          logger.error(`Email service connection error: ${error.message}`);
+        } else {
+          logger.info(`Email service ready (MailHog)`);
+        }
+      });
+    } else if (this.useResend) {
+      logger.info('Email service ready (Resend)');
+    } else {
+      logger.error('Email service disabled: no provider configured');
+    }
   }
 
   private async sendEmailDirect(
@@ -90,12 +91,24 @@ class EmailService {
     html: string
   ): Promise<void> {
     try {
-      await this.transporter.sendMail({
-        from: process.env.EMAIL_FROM || 'VendorEase <noreply@yourdomain.com>',
-        to,
-        subject,
-        html,
-      });
+      if (this.useResend && this.resendClient) {
+        await this.resendClient.emails.send({
+          from: process.env.EMAIL_FROM || 'VendorEase <noreply@yourdomain.com>',
+          to,
+          subject,
+          html,
+        });
+      } else if (this.transporter) {
+        await this.transporter.sendMail({
+          from: process.env.EMAIL_FROM || 'VendorEase <noreply@yourdomain.com>',
+          to,
+          subject,
+          html,
+        });
+      } else {
+        throw new Error('No email provider configured');
+      }
+
       logger.info(`Email sent to ${to}`);
     } catch (error: any) {
       logger.error(`Failed to send email to ${to}: ${error.message}`);

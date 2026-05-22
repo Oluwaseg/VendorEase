@@ -156,14 +156,14 @@ Required keys include:
 - `JWT_COOKIE_NAME`
 - `CORS_ORIGIN`
 - `EMAIL_FROM`
-- `SMTP_HOST`
-- `SMTP_PORT`
-- `SMTP_USER`
-- `SMTP_PASS`
 - `GOOGLE_CLIENT_ID`
 - `GOOGLE_CLIENT_SECRET`
 - `PAYSTACK_PUBLIC_KEY`
 - `PAYSTACK_SECRET_KEY`
+
+Production-only required key:
+
+- `RESEND_API_KEY`
 
 Optional keys:
 

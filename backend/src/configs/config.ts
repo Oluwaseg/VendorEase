@@ -10,10 +10,7 @@ interface Config {
   FRONTEND_URL: string;
   CORS_ORIGIN: string;
   EMAIL_FROM: string;
-  SMTP_HOST: string;
-  SMTP_PORT: number;
-  SMTP_USER: string;
-  SMTP_PASS: string;
+  RESEND_API_KEY?: string;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
   PAYSTACK_PUBLIC_KEY: string;
@@ -25,10 +22,6 @@ const requiredEnvVars = [
   'JWT_SECRET',
   'FRONTEND_URL',
   'EMAIL_FROM',
-  'SMTP_HOST',
-  'SMTP_PORT',
-  'SMTP_USER',
-  'SMTP_PASS',
   'GOOGLE_CLIENT_ID',
   'GOOGLE_CLIENT_SECRET',
   'PAYSTACK_PUBLIC_KEY',
@@ -57,10 +50,10 @@ export const validateConfig = (): Config => {
     process.env.CORS_ORIGIN ||
     process.env.FRONTEND_URL ||
     'http://localhost:3000';
+  config.RESEND_API_KEY = process.env.RESEND_API_KEY;
 
-  // Validate SMTP_PORT is a number
-  if (isNaN(config.SMTP_PORT!)) {
-    logger.error('SMTP_PORT must be a valid number');
+  if (config.NODE_ENV !== 'development' && !config.RESEND_API_KEY) {
+    logger.error('RESEND_API_KEY is required in production');
     process.exit(1);
   }
 
