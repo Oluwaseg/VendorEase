@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useCategories, useDeleteCategory } from "@/hooks/use-category";
-import { Category } from "@/types/category";
-import { CategoryCard } from "./category-card";
-import { EmptyState } from "./empty-state";
+import { useCategories, useDeleteCategory } from '@/hooks/use-category';
+import { Category } from '@/types/category';
+import { CategoryCard } from './category-card';
+import { EmptyState } from './empty-state';
 
 interface CategoryGridProps {
   onEditClick: (category: Category) => void;
@@ -15,12 +15,12 @@ export function CategoryGrid({ onEditClick }: CategoryGridProps) {
 
   if (isLoading) {
     return (
-      <div className="px-6 md:px-12 lg:px-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12'>
+        <div className='space-y-4'>
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="h-48 bg-gradient-to-br from-card/50 to-card/30 rounded-xl animate-pulse"
+              className='h-56 md:h-48 bg-muted rounded-xl animate-pulse'
             />
           ))}
         </div>
@@ -33,8 +33,8 @@ export function CategoryGrid({ onEditClick }: CategoryGridProps) {
   }
 
   return (
-    <div className="px-6 md:px-12 lg:px-16 pb-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12'>
+      <div className='space-y-3'>
         {categories.map((category) => (
           <CategoryCard
             key={category._id}

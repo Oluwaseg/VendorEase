@@ -177,6 +177,11 @@
   }
 }
 
+/* Cloudinary upload widget must sit above Radix/shadcn modals (z-50) */
+.cloudinary-overlay {
+  z-index: 10000 !important;
+}
+
 @keyframes marqueeVertical {
   from {
     transform: translateY(0%);

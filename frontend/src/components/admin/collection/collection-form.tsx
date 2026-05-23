@@ -19,7 +19,7 @@ import {
   type HeroTextPosition,
 } from '@/types/hero-position';
 import { Product } from '@/types/product';
-import { Image, Plus, X } from 'lucide-react';
+import { Image, X } from 'lucide-react';
 import { CldUploadWidget } from 'next-cloudinary';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -124,33 +124,65 @@ export function CollectionForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-6'>
-      <div className='space-y-4 pb-6 border-b border-border'>
-        <h3 className='text-lg font-bold text-foreground'>Basic details</h3>
-        <div className='space-y-2'>
-          <Label htmlFor='collection-name'>Name *</Label>
+    <form onSubmit={handleSubmit} className='space-y-8'>
+      <div className='space-y-5 pb-8 border-b border-border'>
+        <div className='flex items-center gap-2 mb-2'>
+          <div
+            className='w-1 h-6 rounded-full'
+            style={{ backgroundColor: 'var(--brand)' }}
+          ></div>
+          <h3 className='text-lg font-bold text-foreground'>Basic Details</h3>
+        </div>
+        <div className='space-y-3'>
+          <Label
+            htmlFor='collection-name'
+            className='font-semibold text-foreground'
+          >
+            Collection name *
+          </Label>
           <Input
             id='collection-name'
             value={form.name}
             onChange={(e) => handleNameChange(e.target.value)}
             required
-            placeholder='Summer Essentials'
+            placeholder='e.g., Summer Essentials, New Arrivals'
+            className='border-border focus:border-border'
+            style={{ '--tw-ring-color': 'var(--ring)' } as React.CSSProperties}
           />
         </div>
-        <div className='space-y-2'>
-          <Label htmlFor='collection-slug'>Slug *</Label>
-          <Input
-            id='collection-slug'
-            value={form.slug}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, slug: e.target.value }))
-            }
-            required
-            placeholder='summer-essentials'
-          />
+        <div className='space-y-3'>
+          <Label
+            htmlFor='collection-slug'
+            className='font-semibold text-foreground'
+          >
+            URL slug *
+          </Label>
+          <div className='relative'>
+            <span className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
+              /
+            </span>
+            <Input
+              id='collection-slug'
+              value={form.slug}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, slug: e.target.value }))
+              }
+              required
+              placeholder='summer-essentials'
+              className='border-border focus:border-border pl-8'
+              style={
+                { '--tw-ring-color': 'var(--ring)' } as React.CSSProperties
+              }
+            />
+          </div>
         </div>
-        <div className='space-y-2'>
-          <Label htmlFor='collection-description'>Description</Label>
+        <div className='space-y-3'>
+          <Label
+            htmlFor='collection-description'
+            className='font-semibold text-foreground'
+          >
+            Description
+          </Label>
           <Textarea
             id='collection-description'
             value={form.description ?? ''}
@@ -158,11 +190,18 @@ export function CollectionForm({
               setForm((prev) => ({ ...prev, description: e.target.value }))
             }
             rows={3}
-            placeholder='Short copy shown on the homepage hero and collection page'
+            placeholder='Write a short, compelling description that will appear on the homepage hero and collection page'
+            className='border-border focus:border-border resize-none'
+            style={{ '--tw-ring-color': 'var(--ring)' } as React.CSSProperties}
           />
         </div>
-        <div className='space-y-2'>
-          <Label htmlFor='collection-cta'>CTA button text</Label>
+        <div className='space-y-3'>
+          <Label
+            htmlFor='collection-cta'
+            className='font-semibold text-foreground'
+          >
+            Call-to-action text
+          </Label>
           <Input
             id='collection-cta'
             value={form.ctaText ?? ''}
@@ -170,23 +209,27 @@ export function CollectionForm({
               setForm((prev) => ({ ...prev, ctaText: e.target.value }))
             }
             maxLength={60}
-            placeholder='e.g. Shop summer picks, Explore deals'
+            placeholder='e.g., Shop now, Explore collection'
+            className='border-border focus:border-border'
+            style={{ '--tw-ring-color': 'var(--ring)' } as React.CSSProperties}
           />
           <p className='text-xs text-muted-foreground'>
-            Label for the hero and collection page button. Defaults to
-            &quot;Shop now&quot; if empty.
+            Leave blank to use the default "Shop now" button text
           </p>
         </div>
       </div>
 
-      <div className='space-y-4 pb-6 border-b border-border'>
-        <div className='flex items-center gap-2'>
-          <Image size={20} className='text-primary' />
-          <h3 className='text-lg font-bold text-foreground'>Cover image</h3>
+      <div className='space-y-5 pb-8 border-b border-border'>
+        <div className='flex items-center gap-2 mb-2'>
+          <div
+            className='w-1 h-6 rounded-full'
+            style={{ backgroundColor: 'var(--accent)' }}
+          ></div>
+          <h3 className='text-lg font-bold text-foreground'>Cover Image</h3>
         </div>
         <p className='text-sm text-muted-foreground'>
-          Uploaded to Cloudinary folder:{' '}
-          <code className='text-xs'>{CLOUDINARY_FOLDER_COLLECTIONS}</code>
+          Upload a high-quality image (recommended 1920×1080px) to be featured
+          in the hero carousel
         </p>
         <CldUploadWidget
           signatureEndpoint='/api/cloudinary/signature'
@@ -213,42 +256,62 @@ export function CollectionForm({
             <Button
               type='button'
               onClick={() => open()}
-              className='w-full bg-primary hover:bg-primary/90 text-primary-foreground'
+              className='w-full font-semibold py-2.5 hover:opacity-90'
+              style={{
+                backgroundColor: 'var(--brand)',
+                color: 'var(--brand-foreground)',
+              }}
             >
-              <Plus size={20} />
-              Upload cover image
+              <Image size={18} />
+              <span>Upload or change cover image</span>
             </Button>
           )}
         </CldUploadWidget>
         {form.image?.url ? (
-          <div className='relative rounded-lg overflow-hidden border border-border'>
+          <div
+            className='relative rounded-lg overflow-hidden border border-border'
+            style={{ backgroundColor: 'var(--surface-2)' }}
+          >
             <img
               src={form.image.url}
               alt='Collection cover'
-              className='w-full h-40 object-cover'
+              className='w-full h-48 object-cover'
             />
             <Button
               type='button'
               size='sm'
               variant='destructive'
-              className='absolute top-2 right-2'
+              className='absolute top-3 right-3 shadow-md'
               onClick={() => setForm((prev) => ({ ...prev, image: undefined }))}
             >
+              <X size={14} />
               Remove
             </Button>
           </div>
         ) : null}
       </div>
 
-      <div className='space-y-4 pb-6 border-b border-border'>
-        <h3 className='text-lg font-bold text-foreground'>Homepage hero</h3>
-        <div className='flex items-center justify-between rounded-lg border border-border p-4'>
+      <div className='space-y-5 pb-8 border-b border-border'>
+        <div className='flex items-center gap-2 mb-4'>
+          <div
+            className='w-1 h-6 rounded-full'
+            style={{ backgroundColor: 'var(--brand)' }}
+          ></div>
+          <h3 className='text-lg font-bold text-foreground'>
+            Homepage Settings
+          </h3>
+        </div>
+        <div
+          className='flex items-center justify-between rounded-lg border border-border p-4'
+          style={{ backgroundColor: 'var(--surface)' }}
+        >
           <div>
-            <p className='font-semibold text-sm'>
+            <p className='font-semibold text-sm text-foreground'>
               Feature on homepage carousel
             </p>
             <p className='text-xs text-muted-foreground mt-1'>
-              Requires a cover image. Shown in the hero when active.
+              When enabled, this collection will appear in the rotating hero
+              carousel
             </p>
           </div>
           <Switch
@@ -260,58 +323,91 @@ export function CollectionForm({
         </div>
         {form.featuredOnHomepage ? (
           <>
-            <div className='space-y-2'>
-              <Label htmlFor='hero-order'>Hero order</Label>
-              <Input
-                id='hero-order'
-                type='number'
-                min={0}
-                value={form.heroOrder ?? 0}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    heroOrder: Number(e.target.value) || 0,
-                  }))
-                }
-              />
-              <p className='text-xs text-muted-foreground'>
-                Lower numbers appear first in the carousel.
-              </p>
-            </div>
-            <div className='space-y-2'>
-              <Label htmlFor='hero-position'>Hero text position</Label>
-              <select
-                id='hero-position'
-                value={form.position ?? DEFAULT_HERO_TEXT_POSITION}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    position: e.target.value as HeroTextPosition,
-                  }))
-                }
-                className='w-full rounded-lg border border-border bg-background px-3 py-2 text-sm'
-              >
-                {HERO_TEXT_POSITIONS.map((pos) => (
-                  <option key={pos} value={pos}>
-                    {HERO_TEXT_POSITION_LABELS[pos]}
-                  </option>
-                ))}
-              </select>
-              <p className='text-xs text-muted-foreground'>
-                Where the title, subtitle, and CTA appear on the slide image.
-              </p>
+            <div
+              className='space-y-3 rounded-lg p-4 border'
+              style={{
+                backgroundColor:
+                  'color-mix(in oklch, var(--accent) 8%, transparent)',
+                borderColor:
+                  'color-mix(in oklch, var(--accent) 30%, transparent)',
+              }}
+            >
+              <div>
+                <Label
+                  htmlFor='hero-order'
+                  className='font-semibold text-foreground'
+                >
+                  Carousel order
+                </Label>
+                <Input
+                  id='hero-order'
+                  type='number'
+                  min={0}
+                  value={form.heroOrder ?? 0}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      heroOrder: Number(e.target.value) || 0,
+                    }))
+                  }
+                  className='mt-2 border-border focus:border-border'
+                  style={
+                    { '--tw-ring-color': 'var(--ring)' } as React.CSSProperties
+                  }
+                />
+                <p className='text-xs text-muted-foreground mt-2'>
+                  Lower numbers appear first. (0 = first position, 1 = second,
+                  etc.)
+                </p>
+              </div>
+              <div>
+                <Label
+                  htmlFor='hero-position'
+                  className='font-semibold text-foreground'
+                >
+                  Text position on image
+                </Label>
+                <select
+                  id='hero-position'
+                  value={form.position ?? DEFAULT_HERO_TEXT_POSITION}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      position: e.target.value as HeroTextPosition,
+                    }))
+                  }
+                  className='w-full mt-2 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-border'
+                  style={
+                    { '--tw-ring-color': 'var(--ring)' } as React.CSSProperties
+                  }
+                >
+                  {HERO_TEXT_POSITIONS.map((pos) => (
+                    <option key={pos} value={pos}>
+                      {HERO_TEXT_POSITION_LABELS[pos]}
+                    </option>
+                  ))}
+                </select>
+                <p className='text-xs text-muted-foreground mt-2'>
+                  Choose where the title, description, and CTA button will
+                  appear
+                </p>
+              </div>
             </div>
           </>
         ) : null}
-        <div className='flex items-center justify-between rounded-lg border border-border p-4'>
+        <div
+          className='flex items-center justify-between rounded-lg border border-border p-4'
+          style={{ backgroundColor: 'var(--surface)' }}
+        >
           <div>
-            <p className='font-semibold text-sm'>Active</p>
+            <p className='font-semibold text-sm text-foreground'>Visibility</p>
             <p className='text-xs text-muted-foreground mt-1'>
-              Inactive collections are hidden from the storefront.
+              Inactive collections are hidden from the storefront
             </p>
           </div>
           <Switch
             checked={form.isActive ?? true}
+            className='data-[state=checked]:bg-brand'
             onCheckedChange={(checked) =>
               setForm((prev) => ({ ...prev, isActive: checked }))
             }
@@ -319,55 +415,95 @@ export function CollectionForm({
         </div>
       </div>
 
-      <div className='space-y-4'>
-        <h3 className='text-lg font-bold text-foreground'>Products</h3>
+      <div className='space-y-5'>
+        <div className='flex items-center gap-2 mb-4'>
+          <div
+            className='w-1 h-6 rounded-full'
+            style={{ backgroundColor: 'var(--accent)' }}
+          ></div>
+          <h3 className='text-lg font-bold text-foreground'>Products</h3>
+        </div>
         <p className='text-sm text-muted-foreground'>
-          Select products included in this collection ({form.productIds.length}{' '}
-          selected).
+          Add up to 12 products to showcase in this collection (
+          {form.productIds.length} selected).
         </p>
         {selectedProducts.length > 0 ? (
-          <div className='flex flex-wrap gap-2'>
+          <div
+            className='flex flex-wrap gap-2 p-3 rounded-lg border border-border'
+            style={{ backgroundColor: 'var(--surface)' }}
+          >
             {selectedProducts.map((product: Product) => (
               <span
                 key={product._id}
-                className='inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-xs font-medium'
+                className='inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium'
+                style={{
+                  backgroundColor:
+                    'color-mix(in oklch, var(--brand) 15%, transparent)',
+                  borderColor:
+                    'color-mix(in oklch, var(--brand) 30%, transparent)',
+                  color: 'var(--brand)',
+                }}
               >
                 {product.name}
                 <button
                   type='button'
                   onClick={() => toggleProduct(product._id)}
-                  className='text-muted-foreground hover:text-foreground'
+                  className='transition-opacity hover:opacity-70'
+                  style={{ color: 'var(--brand)', opacity: 0.7 }}
                   aria-label={`Remove ${product.name}`}
                 >
-                  <X size={12} />
+                  <X size={14} />
                 </button>
               </span>
             ))}
           </div>
         ) : null}
-        <div className='max-h-48 overflow-y-auto rounded-lg border border-border divide-y'>
+        <div
+          className='max-h-64 overflow-y-auto rounded-lg border border-border divide-y divide-border'
+          style={{ backgroundColor: 'var(--surface)' }}
+        >
           {products.length === 0 ? (
-            <p className='p-4 text-sm text-muted-foreground'>
-              No products available.
-            </p>
+            <div className='p-8 text-center'>
+              <p className='text-sm text-muted-foreground'>
+                No products available yet.
+              </p>
+            </div>
           ) : (
             products.map((product) => {
               const checked = form.productIds.includes(product._id);
               return (
                 <label
                   key={product._id}
-                  className='flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-muted/50'
+                  className='flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors'
+                  style={
+                    {
+                      '--hover-bg':
+                        'color-mix(in oklch, var(--brand) 5%, transparent)',
+                    } as React.CSSProperties
+                  }
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      'color-mix(in oklch, var(--brand) 5%, transparent)')
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = 'transparent')
+                  }
                 >
                   <input
                     type='checkbox'
                     checked={checked}
                     onChange={() => toggleProduct(product._id)}
-                    className='rounded border-border'
+                    className='rounded border-border cursor-pointer'
+                    style={{ accentColor: 'var(--brand)' }}
                   />
-                  <span className='text-sm truncate'>{product.name}</span>
-                  <span className='text-xs text-muted-foreground ml-auto'>
-                    {product.sku}
-                  </span>
+                  <div className='flex-1 min-w-0'>
+                    <span className='text-sm font-medium text-foreground truncate block'>
+                      {product.name}
+                    </span>
+                    <span className='text-xs text-muted-foreground'>
+                      {product.sku}
+                    </span>
+                  </div>
                 </label>
               );
             })
@@ -378,10 +514,16 @@ export function CollectionForm({
       <Button
         type='submit'
         disabled={isLoading}
-        className='w-full bg-primary hover:bg-primary/90'
+        className='w-full font-semibold py-2.5 mt-8 hover:opacity-90'
+        style={{
+          backgroundColor: 'var(--brand)',
+          color: 'var(--brand-foreground)',
+        }}
       >
         {isLoading
-          ? 'Saving…'
+          ? mode === 'create'
+            ? 'Creating…'
+            : 'Updating…'
           : mode === 'create'
             ? 'Create collection'
             : 'Update collection'}

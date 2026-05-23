@@ -17,7 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useCreateCategory, useUpdateCategory } from '@/hooks/use-category';
 import { CLOUDINARY_FOLDER_CATEGORIES } from '@/lib/cloudinary-folders';
 import { Category } from '@/types/category';
-import { Plus, X } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { CldUploadWidget } from 'next-cloudinary';
 import { useEffect, useState } from 'react';
 
@@ -28,6 +28,14 @@ interface CategoryModalProps {
 }
 
 import type { CategoryImage } from '@/types/category';
+
+function isCloudinaryTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+  return Boolean(
+    target.closest('[class*="cloudinary"]') ||
+    target.closest('iframe[src*="cloudinary"]')
+  );
+}
 
 type CategoryForm = {
   name: string;
@@ -118,8 +126,20 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-background border border-border/50 rounded-2xl shadow-lg'>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => !isOpen && onClose()}
+      modal={false}
+    >
+      <DialogContent
+        className='w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-background border border-border/50 rounded-2xl shadow-lg'
+        onPointerDownOutside={(e) => {
+          if (isCloudinaryTarget(e.target)) e.preventDefault();
+        }}
+        onInteractOutside={(e) => {
+          if (isCloudinaryTarget(e.target)) e.preventDefault();
+        }}
+      >
         <DialogHeader className='sticky top-0 bg-background z-10 pb-4 border-b border-brand/20'>
           <DialogTitle className='text-2xl font-bold text-brand'>
             {isEdit ? 'Edit Category' : 'Create New Category'}
@@ -133,74 +153,66 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
 
         <form onSubmit={handleSubmit} className='space-y-6 py-6 px-0'>
           {/* Image Upload Section */}
-          <div className='space-y-3'>
-            <div className='px-6'>
-              <Label
-                htmlFor='image'
-                className='text-base font-semibold text-foreground'
-              >
-                Category Image
+          <div className='space-y-4 px-6'>
+            <div>
+              <Label className='text-base font-semibold text-foreground'>
+                Category image
               </Label>
               <p className='text-sm text-muted-foreground mt-1'>
-                Upload a thumbnail image to represent your category (optional)
+                Uploaded to Cloudinary folder:{' '}
+                <code className='text-xs'>{CLOUDINARY_FOLDER_CATEGORIES}</code>
               </p>
             </div>
-
-            <div className='px-6'>
-              <CldUploadWidget
-                signatureEndpoint='/api/cloudinary/signature'
-                options={{
-                  folder: CLOUDINARY_FOLDER_CATEGORIES,
-                  multiple: false,
-                }}
-                onSuccess={(result) => {
-                  const info = result.info;
-                  if (
-                    typeof info === 'string' ||
-                    !info?.secure_url ||
-                    !info?.public_id
-                  )
-                    return;
-                  const newImage = {
-                    url: info.secure_url,
-                    publicId: info.public_id,
-                  };
-                  setForm((prev) => ({ ...prev, image: newImage }));
-                }}
-              >
-                {({ open }) => (
-                  <Button
-                    type='button'
-                    onClick={() => open()}
-                    className='w-full bg-brand hover:bg-brand/90 text-brand-foreground font-medium py-2 h-auto'
-                  >
-                    <Plus size={18} className='mr-2' />
-                    {form.image ? 'Change Image' : 'Upload Image'}
-                  </Button>
-                )}
-              </CldUploadWidget>
-            </div>
-
+            <CldUploadWidget
+              signatureEndpoint='/api/cloudinary/signature'
+              options={{
+                folder: CLOUDINARY_FOLDER_CATEGORIES,
+                multiple: false,
+              }}
+              onSuccess={(result) => {
+                const info = result.info;
+                if (
+                  typeof info === 'string' ||
+                  !info?.secure_url ||
+                  !info?.public_id
+                )
+                  return;
+                const newImage: CategoryImage = {
+                  url: info.secure_url,
+                  publicId: info.public_id,
+                };
+                setForm((prev) => ({ ...prev, image: newImage }));
+              }}
+            >
+              {({ open }) => (
+                <Button
+                  type='button'
+                  onClick={() => open()}
+                  className='w-full bg-brand hover:bg-brand/90 text-brand-foreground'
+                >
+                  <Plus size={20} />
+                  {form.image ? 'Change image' : 'Upload image'}
+                </Button>
+              )}
+            </CldUploadWidget>
             {form.image?.url ? (
-              <div className='px-6'>
-                <div className='relative rounded-xl overflow-hidden border border-border bg-card/50 group'>
-                  <img
-                    src={form.image.url}
-                    alt='Category preview'
-                    className='w-full h-48 object-cover'
-                  />
-                  <Button
-                    type='button'
-                    size='sm'
-                    variant='destructive'
-                    className='absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity'
-                    onClick={() =>
-                      setForm((prev) => ({ ...prev, image: undefined }))
-                    }
-                  >
-                    <X className='w-4 h-4' />
-                  </Button>
-                </div>
+              <div className='relative rounded-lg overflow-hidden border border-border'>
+                <img
+                  src={form.image.url}
+                  alt='Category preview'
+                  className='w-full h-40 object-cover'
+                />
+                <Button
+                  type='button'
+                  size='sm'
+                  variant='destructive'
+                  className='absolute top-2 right-2'
+                  onClick={() =>
+                    setForm((prev) => ({ ...prev, image: undefined }))
+                  }
+                >
+                  Remove
+                </Button>
               </div>
             ) : null}
           </div>
