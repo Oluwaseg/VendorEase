@@ -102,7 +102,7 @@ function CategoryCard({ category, colorClass }: CategoryCardProps) {
         <div className='h-56 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden'>
           <img
             src={
-              category.image ||
+              (category.image && category.image.url) ||
               'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400'
             }
             alt={category.name}

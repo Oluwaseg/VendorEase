@@ -5,6 +5,7 @@ export interface CreateCategoryData {
   name: string;
   slug: string;
   description?: string;
+  image?: { url?: string; publicId?: string };
   isPublished?: boolean;
 }
 
@@ -12,6 +13,7 @@ export interface UpdateCategoryData {
   name?: string;
   slug?: string;
   description?: string;
+  image?: { url?: string; publicId?: string } | null;
   isPublished?: boolean;
 }
 
@@ -30,6 +32,7 @@ class CategoryService {
       name: data.name,
       slug: data.slug,
       description: data.description,
+      image: data.image,
       isPublished: data.isPublished !== undefined ? data.isPublished : true,
     });
 

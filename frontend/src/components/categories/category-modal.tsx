@@ -2,12 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateCategory, useUpdateCategory } from "@/hooks/use-category";
+import { CLOUDINARY_FOLDER_CATEGORIES } from '@/lib/cloudinary-folders';
 import { Category } from "@/types/category";
+import { Plus, X } from 'lucide-react';
+import { CldUploadWidget } from 'next-cloudinary';
 import { useEffect, useState } from "react";
 
 interface CategoryModalProps {
@@ -35,6 +38,7 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
     name: "",
     slug: "",
     description: "",
+    image: undefined,
     isPublished: true,
   });
 
@@ -44,6 +48,7 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
         name: category.name,
         slug: category.slug,
         description: category.description ?? "",
+        image: category.image,
         isPublished: category.isPublished,
       });
     } else {
@@ -51,6 +56,7 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
         name: "",
         slug: "",
         description: "",
+        image: undefined,
         isPublished: true,
       });
     }
@@ -116,6 +122,51 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 py-4">
+          {/* Image upload */}
+          <div className="space-y-2">
+            <Label htmlFor="image" className="text-sm font-semibold">
+              Image (optional)
+            </Label>
+            <p className="text-xs text-muted-foreground">
+              Upload a category image for UI (Cloudinary)
+            </p>
+            <CldUploadWidget
+              signatureEndpoint="/api/cloudinary/signature"
+              options={{ folder: CLOUDINARY_FOLDER_CATEGORIES, multiple: false }}
+              onSuccess={(result) => {
+                const info = result.info;
+                if (typeof info === 'string' || !info?.secure_url || !info?.public_id) return;
+                const newImage = { url: info.secure_url, publicId: info.public_id };
+                setForm((prev) => ({ ...prev, image: newImage }));
+              }}
+            >
+              {({ open }) => (
+                <Button
+                  type="button"
+                  onClick={() => open()}
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  <Plus size={20} />
+                  Upload image
+                </Button>
+              )}
+            </CldUploadWidget>
+
+            {form.image?.url ? (
+              <div className="relative rounded-lg overflow-hidden border border-border mt-2">
+                <img src={form.image.url} alt="Category" className="w-full h-40 object-cover" />
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  className="absolute top-2 right-2"
+                  onClick={() => setForm((prev) => ({ ...prev, image: undefined }))}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : null}
+
           {/* Category Name */}
           <div className="space-y-2">
             <Label htmlFor="name" className="text-sm font-semibold">
