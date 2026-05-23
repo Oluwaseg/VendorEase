@@ -148,7 +148,7 @@ export function ProductForm(props: ProductFormProps) {
           </label>
 
           <input
-            className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground placeholder:text-foreground/40 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+            className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground placeholder:text-foreground/40 focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
             placeholder='e.g., Premium Wireless Headphones'
             value={form.name ?? ''}
             onChange={(e) => update('name', e.target.value)}
@@ -163,7 +163,7 @@ export function ProductForm(props: ProductFormProps) {
             </label>
 
             <input
-              className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground placeholder:text-foreground/40 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+              className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground placeholder:text-foreground/40 focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
               placeholder='e.g., SKU-001'
               value={form.sku ?? ''}
               onChange={(e) => update('sku', e.target.value)}
@@ -177,7 +177,7 @@ export function ProductForm(props: ProductFormProps) {
             </label>
 
             <input
-              className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground placeholder:text-foreground/40 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+              className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground placeholder:text-foreground/40 focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
               placeholder='e.g., Sony'
               value={form.brand ?? ''}
               onChange={(e) => update('brand', e.target.value)}
@@ -191,7 +191,7 @@ export function ProductForm(props: ProductFormProps) {
           </label>
 
           <textarea
-            className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground placeholder:text-foreground/40 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-none'
+            className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground placeholder:text-foreground/40 focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all resize-none'
             placeholder='Product description and details...'
             rows={4}
             value={form.description ?? ''}
@@ -199,6 +199,7 @@ export function ProductForm(props: ProductFormProps) {
           />
         </div>
       </div>
+
       {/* Pricing & Stock */}
       <div className='space-y-4 pb-6 border-b border-border'>
         <h3 className='text-lg font-bold text-foreground'>Pricing & Stock</h3>
@@ -212,7 +213,7 @@ export function ProductForm(props: ProductFormProps) {
             <input
               type='number'
               step='0.01'
-              className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground placeholder:text-foreground/40 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+              className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground placeholder:text-foreground/40 focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
               placeholder='0.00'
               value={form.basePrice ?? 0}
               onChange={(e) => update('basePrice', Number(e.target.value))}
@@ -226,7 +227,7 @@ export function ProductForm(props: ProductFormProps) {
 
             <input
               type='number'
-              className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground placeholder:text-foreground/40 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+              className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground placeholder:text-foreground/40 focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
               placeholder='0'
               value={form.stock ?? 0}
               onChange={(e) => update('stock', Number(e.target.value))}
@@ -234,6 +235,7 @@ export function ProductForm(props: ProductFormProps) {
           </div>
         </div>
       </div>
+
       {/* Categories */}
       <div className='space-y-4 pb-6 border-b border-border'>
         <h3 className='text-lg font-bold text-foreground'>Categories</h3>
@@ -244,7 +246,7 @@ export function ProductForm(props: ProductFormProps) {
             </label>
 
             <select
-              className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+              className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
               value={form.category ?? ''}
               onChange={(e) => {
                 update('category', e.target.value);
@@ -274,7 +276,7 @@ export function ProductForm(props: ProductFormProps) {
             </label>
 
             <select
-              className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+              className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
               value={form.subcategory ?? ''}
               onChange={(e) => update('subcategory', e.target.value)}
               disabled={!form.category || subcategoriesLoading}
@@ -304,10 +306,11 @@ export function ProductForm(props: ProductFormProps) {
           </div>
         </div>
       </div>
+
       {/* Product Images */}
       <div className='space-y-4 pb-6 border-b border-border'>
         <div className='flex items-center gap-2'>
-          <Image size={20} className='text-primary' />
+          <Image size={20} className='text-brand' />
           <h3 className='text-lg font-bold text-foreground'>Product Images</h3>
         </div>
         <CldUploadWidget
@@ -328,7 +331,7 @@ export function ProductForm(props: ProductFormProps) {
             <Button
               type='button'
               onClick={() => open()}
-              className='w-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2.5 border-2 border-primary rounded-lg flex items-center justify-center gap-2'
+              className='w-full bg-brand hover:bg-brand/90 text-brand-foreground px-4 py-2.5 border border-brand rounded-[0.5rem] flex items-center justify-center gap-2'
             >
               <Plus size={20} />
               Upload Image
@@ -341,12 +344,12 @@ export function ProductForm(props: ProductFormProps) {
             {form.images.map((img, idx) => (
               <div
                 key={idx}
-                className='relative group border-2 border-border rounded-lg overflow-hidden bg-muted p-2'
+                className='relative group border border-border rounded-[0.5rem] overflow-hidden bg-surface-2 p-2'
               >
                 <img
                   src={img.url}
                   alt={`Product ${idx + 1}`}
-                  className='w-full h-24 object-cover rounded'
+                  className='w-full h-24 object-cover rounded-[0.375rem]'
                 />
 
                 {/* Remove button */}
@@ -354,7 +357,7 @@ export function ProductForm(props: ProductFormProps) {
                   <button
                     type='button'
                     onClick={() => handleRemoveImage(idx)}
-                    className='text-xs px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600'
+                    className='text-xs px-2 py-1 rounded-[0.375rem] bg-danger text-white hover:bg-danger/90'
                   >
                     Remove
                   </button>
@@ -364,13 +367,14 @@ export function ProductForm(props: ProductFormProps) {
           </div>
         )}
       </div>
+
       {/* Tags */}
       <div className='space-y-4 pb-6 border-b border-border'>
         <h3 className='text-lg font-bold text-foreground'>Tags</h3>{' '}
         <div className='flex gap-2'>
           <input
             type='text'
-            className='flex-1 px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground placeholder:text-foreground/40 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+            className='flex-1 px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground placeholder:text-foreground/40 focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
             placeholder='Add a tag...'
             value={newTag}
             onChange={(e) => setNewTag(e.target.value)}
@@ -395,13 +399,13 @@ export function ProductForm(props: ProductFormProps) {
             {form.tags.map((tag) => (
               <div
                 key={tag}
-                className='bg-primary/10 text-primary px-3 py-1.5 rounded-full flex items-center gap-2 text-sm font-medium'
+                className='bg-brand/10 text-brand px-3 py-1.5 rounded-full flex items-center gap-2 text-sm font-medium'
               >
                 {tag}
                 <button
                   type='button'
                   onClick={() => handleRemoveTag(tag)}
-                  className='hover:text-primary/60 transition-colors'
+                  className='hover:text-brand/60 transition-colors'
                 >
                   <X size={16} />
                 </button>
@@ -410,6 +414,7 @@ export function ProductForm(props: ProductFormProps) {
           </div>
         )}
       </div>
+
       {/* Flash Sale */}
       <div className='space-y-4 pb-6 border-b border-border'>
         <div className='flex items-center justify-between'>
@@ -448,7 +453,7 @@ export function ProductForm(props: ProductFormProps) {
         </div>
 
         {showFlashSale && form.flashSale && (
-          <div className='space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20'>
+          <div className='space-y-4 p-4 bg-accent/5 rounded-[0.5rem] border border-accent/20'>
             <div className='grid sm:grid-cols-2 gap-4'>
               <div>
                 <label className='block text-sm font-semibold text-foreground mb-2'>
@@ -456,7 +461,7 @@ export function ProductForm(props: ProductFormProps) {
                 </label>
 
                 <select
-                  className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+                  className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
                   value={form.flashSale.discountType}
                   onChange={(e) =>
                     handleUpdateFlashSale('discountType', e.target.value)
@@ -478,7 +483,7 @@ export function ProductForm(props: ProductFormProps) {
                     form.flashSale.discountType === 'percentage' ? '1' : '0.01'
                   }
                   min='0'
-                  className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+                  className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
                   placeholder='0'
                   value={form.flashSale.discountValue}
                   onChange={(e) =>
@@ -499,7 +504,7 @@ export function ProductForm(props: ProductFormProps) {
 
                 <input
                   type='datetime-local'
-                  className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+                  className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
                   value={formatDateTimeLocal(form.flashSale.startsAt)}
                   onChange={(e) =>
                     handleUpdateFlashSale(
@@ -517,7 +522,7 @@ export function ProductForm(props: ProductFormProps) {
 
                 <input
                   type='datetime-local'
-                  className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+                  className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
                   value={formatDateTimeLocal(form.flashSale.endsAt)}
                   onChange={(e) =>
                     handleUpdateFlashSale(
@@ -529,7 +534,7 @@ export function ProductForm(props: ProductFormProps) {
               </div>
             </div>
 
-            <label className='flex items-center gap-3 cursor-pointer p-3 border-2 border-border rounded-lg hover:bg-muted/50 transition-colors'>
+            <label className='flex items-center gap-3 cursor-pointer p-3 border border-border rounded-[0.5rem] hover:bg-surface/50 transition-colors'>
               <input
                 type='checkbox'
                 className='w-5 h-5 accent-accent rounded cursor-pointer'
@@ -546,70 +551,79 @@ export function ProductForm(props: ProductFormProps) {
           </div>
         )}
       </div>
+
       {/* Visibility & Status */}
       <div className='space-y-4 pb-6 border-b border-border'>
         <h3 className='text-lg font-bold text-foreground'>
           Visibility & Status
         </h3>
 
-        <div className='grid sm:grid-cols-2 gap-4'>
-          <div>
-            <label className='block text-sm font-semibold text-foreground mb-2'>
-              Visibility
-            </label>
-
-            <select
-              className='w-full px-4 py-2.5 border-2 border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
-              value={form.visibility ?? 'private'}
-              onChange={(e) => update('visibility', e.target.value as any)}
-            >
-              <option value='public'>Public</option>
-              <option value='private'>Private</option>
-              <option value='archived'>Archived</option>
-            </select>
-          </div>
-
-          <div className='flex items-end'>
-            <label className='flex items-center gap-3 cursor-pointer w-full px-4 py-2.5 border-2 border-border rounded-lg hover:bg-muted/50 transition-colors'>
-              <input
-                type='checkbox'
-                className='w-5 h-5 accent-primary rounded cursor-pointer'
-                checked={form.isPublished ?? false}
-                onChange={(e) => update('isPublished', e.target.checked)}
-              />
-
+        <div className='space-y-3'>
+          <label className='flex items-center gap-3 cursor-pointer p-3 border border-border rounded-[0.5rem] hover:bg-surface/50 transition-colors'>
+            <input
+              type='checkbox'
+              className='w-5 h-5 accent-brand rounded cursor-pointer'
+              checked={form.isPublished ?? false}
+              onChange={(e) => update('isPublished', e.target.checked)}
+            />
+            <div>
               <span className='text-sm font-semibold text-foreground'>
-                Published
+                Publish Product
               </span>
-            </label>
-          </div>
+              <p className='text-xs text-foreground/50'>
+                Make this product visible to customers
+              </p>
+            </div>
+          </label>
+
+          <label className='flex items-center gap-3 cursor-pointer p-3 border border-border rounded-[0.5rem] hover:bg-surface/50 transition-colors'>
+            <input
+              type='checkbox'
+              className='w-5 h-5 accent-brand rounded cursor-pointer'
+              checked={form.isBestSeller ?? false}
+              onChange={(e) => update('isBestSeller', e.target.checked)}
+            />
+            <div>
+              <span className='text-sm font-semibold text-foreground'>
+                Best Seller
+              </span>
+              <p className='text-xs text-foreground/50'>
+                Mark this as a best-selling product
+              </p>
+            </div>
+          </label>
         </div>
 
-        <label className='flex items-center gap-3 cursor-pointer p-4 border-2 border-border rounded-lg hover:bg-muted/50 transition-colors'>
-          <input
-            type='checkbox'
-            className='w-5 h-5 accent-accent rounded cursor-pointer'
-            checked={form.isBestSeller ?? false}
-            onChange={(e) => update('isBestSeller', e.target.checked)}
-          />
+        <div>
+          <label className='block text-sm font-semibold text-foreground mb-2'>
+            Visibility
+          </label>
 
-          <span className='text-sm font-semibold text-foreground'>
-            Mark as Best Seller
-          </span>
-        </label>
+          <select
+            className='w-full px-4 py-2.5 border border-border rounded-[0.5rem] bg-card text-foreground focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
+            value={form.visibility ?? 'private'}
+            onChange={(e) => update('visibility', e.target.value as any)}
+          >
+            <option value='private'>Private (visible to admins only)</option>
+            <option value='public'>Public (visible to all)</option>
+          </select>
+        </div>
       </div>
-      {/* Submit Button */}
+
+      {/* Submit Buttons */}
       <div className='flex gap-3 pt-4'>
         <Button
           type='submit'
           disabled={isLoading}
-          className='flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-lg transition-all'
+          className='flex-1 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold py-2.5 rounded-[0.5rem]'
         >
-          {isLoading
-            ? 'Saving...'
-            : mode === 'create'
-              ? 'Create Product'
-              : 'Update Product'}
+          {isLoading ? (
+            <div className='w-5 h-5 border-2 border-brand-foreground/30 border-t-brand-foreground rounded-full animate-spin' />
+          ) : mode === 'create' ? (
+            'Create Product'
+          ) : (
+            'Update Product'
+          )}
         </Button>
       </div>
     </form>
