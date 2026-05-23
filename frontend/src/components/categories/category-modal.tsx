@@ -1,31 +1,41 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { useCreateCategory, useUpdateCategory } from "@/hooks/use-category";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { useCreateCategory, useUpdateCategory } from '@/hooks/use-category';
 import { CLOUDINARY_FOLDER_CATEGORIES } from '@/lib/cloudinary-folders';
-import { Category } from "@/types/category";
+import { Category } from '@/types/category';
 import { Plus, X } from 'lucide-react';
 import { CldUploadWidget } from 'next-cloudinary';
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface CategoryModalProps {
   open: boolean;
   onClose: () => void;
   category?: Category | null;
 }
+
+import type { CategoryImage } from '@/types/category';
+
+type CategoryForm = {
+  name: string;
+  slug: string;
+  description: string;
+  image?: CategoryImage;
+  isPublished: boolean;
+};
 
 export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
   const isEdit = !!category;
@@ -34,10 +44,10 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
   const updateCategory = useUpdateCategory();
   const isLoading = createCategory.isPending || updateCategory.isPending;
 
-  const [form, setForm] = useState({
-    name: "",
-    slug: "",
-    description: "",
+  const [form, setForm] = useState<CategoryForm>({
+    name: '',
+    slug: '',
+    description: '',
     image: undefined,
     isPublished: true,
   });
@@ -47,15 +57,15 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
       setForm({
         name: category.name,
         slug: category.slug,
-        description: category.description ?? "",
+        description: category.description ?? '',
         image: category.image,
         isPublished: category.isPublished,
       });
     } else {
       setForm({
-        name: "",
-        slug: "",
-        description: "",
+        name: '',
+        slug: '',
+        description: '',
         image: undefined,
         isPublished: true,
       });
@@ -65,15 +75,15 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
   const generateSlug = (value: string) =>
     value
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
 
-    if (name === "name") {
+    if (name === 'name') {
       setForm((prev) => ({
         ...prev,
         name: value,
@@ -100,7 +110,7 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
     if (isEdit && category) {
       updateCategory.mutate(
         { id: category._id, data: form },
-        { onSuccess: onClose },
+        { onSuccess: onClose }
       );
     } else {
       createCategory.mutate(form, { onSuccess: onClose });
@@ -109,144 +119,193 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-background border border-border/50">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            {isEdit ? "Edit Category" : "Create New Category"}
+      <DialogContent className='w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-background border border-border/50 rounded-2xl shadow-lg'>
+        <DialogHeader className='sticky top-0 bg-background z-10 pb-4 border-b border-brand/20'>
+          <DialogTitle className='text-2xl font-bold text-brand'>
+            {isEdit ? 'Edit Category' : 'Create New Category'}
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription className='text-sm text-muted-foreground mt-2'>
             {isEdit
-              ? "Update the category details below"
-              : "Fill in the category information to get started"}
+              ? 'Update the category details and customize its appearance'
+              : 'Set up a new category with all the details customers need to know'}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
-          {/* Image upload */}
-          <div className="space-y-2">
-            <Label htmlFor="image" className="text-sm font-semibold">
-              Image (optional)
-            </Label>
-            <p className="text-xs text-muted-foreground">
-              Upload a category image for UI (Cloudinary)
-            </p>
-            <CldUploadWidget
-              signatureEndpoint="/api/cloudinary/signature"
-              options={{ folder: CLOUDINARY_FOLDER_CATEGORIES, multiple: false }}
-              onSuccess={(result) => {
-                const info = result.info;
-                if (typeof info === 'string' || !info?.secure_url || !info?.public_id) return;
-                const newImage = { url: info.secure_url, publicId: info.public_id };
-                setForm((prev) => ({ ...prev, image: newImage }));
-              }}
-            >
-              {({ open }) => (
-                <Button
-                  type="button"
-                  onClick={() => open()}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                >
-                  <Plus size={20} />
-                  Upload image
-                </Button>
-              )}
-            </CldUploadWidget>
-
-            {form.image?.url ? (
-              <div className="relative rounded-lg overflow-hidden border border-border mt-2">
-                <img src={form.image.url} alt="Category" className="w-full h-40 object-cover" />
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="destructive"
-                  className="absolute top-2 right-2"
-                  onClick={() => setForm((prev) => ({ ...prev, image: undefined }))}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            ) : null}
-
-          {/* Category Name */}
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-semibold">
-              Category Name *
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              placeholder="e.g., Electronics, Fashion, Books"
-              value={form.name}
-              onChange={handleChange}
-              required
-              className="border-border/50 bg-card/50 focus:border-primary focus:bg-card transition-colors"
-            />
-          </div>
-
-          {/* Slug */}
-          <div className="space-y-2">
-            <Label htmlFor="slug" className="text-sm font-semibold">
-              Slug *
-            </Label>
-            <Input
-              id="slug"
-              name="slug"
-              placeholder="auto-generated from name"
-              value={form.slug}
-              onChange={handleChange}
-              required
-              className="border-border/50 bg-card/50 focus:border-primary focus:bg-card transition-colors text-muted-foreground"
-            />
-            <p className="text-xs text-muted-foreground">
-              Auto-generated from the category name
-            </p>
-          </div>
-
-          {/* Description */}
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-semibold">
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              name="description"
-              placeholder="Add a detailed description for this category (optional)"
-              value={form.description}
-              onChange={handleChange}
-              rows={4}
-              className="border-border/50 bg-card/50 focus:border-primary focus:bg-card transition-colors resize-none"
-            />
-          </div>
-
-          {/* Published Status */}
-          <div className="flex items-center justify-between p-4 bg-card/30 border border-border/40 rounded-lg">
-            <div>
-              <p className="font-semibold text-sm">Publish Category</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Make this category visible to users
+        <form onSubmit={handleSubmit} className='space-y-6 py-6 px-0'>
+          {/* Image Upload Section */}
+          <div className='space-y-3'>
+            <div className='px-6'>
+              <Label
+                htmlFor='image'
+                className='text-base font-semibold text-foreground'
+              >
+                Category Image
+              </Label>
+              <p className='text-sm text-muted-foreground mt-1'>
+                Upload a thumbnail image to represent your category (optional)
               </p>
             </div>
-            <Switch checked={form.isPublished} onCheckedChange={handleSwitch} />
+
+            <div className='px-6'>
+              <CldUploadWidget
+                signatureEndpoint='/api/cloudinary/signature'
+                options={{
+                  folder: CLOUDINARY_FOLDER_CATEGORIES,
+                  multiple: false,
+                }}
+                onSuccess={(result) => {
+                  const info = result.info;
+                  if (
+                    typeof info === 'string' ||
+                    !info?.secure_url ||
+                    !info?.public_id
+                  )
+                    return;
+                  const newImage = {
+                    url: info.secure_url,
+                    publicId: info.public_id,
+                  };
+                  setForm((prev) => ({ ...prev, image: newImage }));
+                }}
+              >
+                {({ open }) => (
+                  <Button
+                    type='button'
+                    onClick={() => open()}
+                    className='w-full bg-brand hover:bg-brand/90 text-brand-foreground font-medium py-2 h-auto'
+                  >
+                    <Plus size={18} className='mr-2' />
+                    {form.image ? 'Change Image' : 'Upload Image'}
+                  </Button>
+                )}
+              </CldUploadWidget>
+            </div>
+
+            {form.image?.url ? (
+              <div className='px-6'>
+                <div className='relative rounded-xl overflow-hidden border border-border bg-card/50 group'>
+                  <img
+                    src={form.image.url}
+                    alt='Category preview'
+                    className='w-full h-48 object-cover'
+                  />
+                  <Button
+                    type='button'
+                    size='sm'
+                    variant='destructive'
+                    className='absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity'
+                    onClick={() =>
+                      setForm((prev) => ({ ...prev, image: undefined }))
+                    }
+                  >
+                    <X className='w-4 h-4' />
+                  </Button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          {/* Divider */}
+          <div className='border-t border-border/30' />
+
+          {/* Form Fields Section */}
+          <div className='space-y-4 px-6'>
+            {/* Category Name */}
+            <div className='space-y-2'>
+              <Label
+                htmlFor='name'
+                className='text-sm font-semibold text-foreground'
+              >
+                Category Name <span className='text-destructive'>*</span>
+              </Label>
+              <Input
+                id='name'
+                name='name'
+                placeholder='e.g., Electronics, Fashion, Home & Garden'
+                value={form.name}
+                onChange={handleChange}
+                required
+                className='border-brand/30 bg-card/40 focus:border-brand focus:bg-card transition-colors h-10 text-sm'
+              />
+            </div>
+
+            {/* Slug */}
+            <div className='space-y-2'>
+              <Label
+                htmlFor='slug'
+                className='text-sm font-semibold text-foreground'
+              >
+                URL Slug <span className='text-destructive'>*</span>
+              </Label>
+              <Input
+                id='slug'
+                name='slug'
+                placeholder='auto-generated from name'
+                value={form.slug}
+                onChange={handleChange}
+                required
+                className='border-brand/30 bg-surface/50 focus:border-brand focus:bg-surface transition-colors h-10 text-sm text-muted-foreground'
+              />
+              <p className='text-xs text-muted-foreground'>
+                Automatically generated from the category name
+              </p>
+            </div>
+
+            {/* Description */}
+            <div className='space-y-2'>
+              <Label
+                htmlFor='description'
+                className='text-sm font-semibold text-foreground'
+              >
+                Description
+              </Label>
+              <Textarea
+                id='description'
+                name='description'
+                placeholder='Add a compelling description to help customers understand this category...'
+                value={form.description}
+                onChange={handleChange}
+                rows={3}
+                className='border-brand/30 bg-card/40 focus:border-brand focus:bg-card transition-colors resize-none text-sm'
+              />
+            </div>
+
+            {/* Publish Status */}
+            <div className='flex items-center justify-between p-4 bg-brand/5 border border-brand/20 rounded-xl'>
+              <div>
+                <p className='font-semibold text-sm text-foreground'>
+                  Publish Category
+                </p>
+                <p className='text-xs text-muted-foreground mt-1'>
+                  Make this category visible to customers
+                </p>
+              </div>
+              <Switch
+                checked={form.isPublished}
+                className='data-[state=checked]:bg-brand'
+                onCheckedChange={handleSwitch}
+              />
+            </div>
           </div>
         </form>
 
-        <DialogFooter className="flex gap-2 pt-4 border-t border-border/40">
+        <DialogFooter className='flex gap-2 pt-4 px-6 border-t border-brand/20 sticky bottom-0 bg-background'>
           <Button
-            type="button"
-            variant="outline"
+            type='button'
+            variant='outline'
             onClick={onClose}
             disabled={isLoading}
-            className="border-border/50"
+            className='border-brand/30 h-10'
           >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="gap-2 bg-primary hover:bg-primary/90"
+            className='gap-2 bg-brand hover:bg-brand/90 text-brand-foreground h-10 px-6'
           >
-            {isLoading && <Spinner className="w-4 h-4" />}
-            {isEdit ? "Update Category" : "Create Category"}
+            {isLoading && <Spinner className='w-4 h-4' />}
+            {isEdit ? 'Update Category' : 'Create Category'}
           </Button>
         </DialogFooter>
       </DialogContent>

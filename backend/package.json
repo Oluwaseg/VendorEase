@@ -13,6 +13,11 @@
     "seed:categories": "ts-node scripts/seed-categories.ts",
     "seed:products": "ts-node scripts/seed-products.ts",
     "seed:subcategories": "ts-node scripts/seed-subcategories.ts",
+    "seed:admin": "ts-node scripts/prod/seed-admin.ts",
+    "seed:categories:prod": "ts-node scripts/prod/seed-categories-prod.ts",
+    "seed:subcategories:prod": "ts-node scripts/prod/seed-subcategories-prod.ts",
+    "seed:collections:prod": "ts-node scripts/prod/seed-collections-prod.ts",
+    "seed:products:prod": "ts-node scripts/prod/seed-products-prod.ts",
     "drop:db": "ts-node scripts/drop-db.ts"
   },
   "keywords": [],
