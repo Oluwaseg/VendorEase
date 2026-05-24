@@ -50,15 +50,32 @@ export function AdminHeader({
   });
 
   return (
-    <header className='sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-border border-b bg-background/90 px-4 backdrop-blur-lg md:h-16 md:gap-4 md:px-6'>
+    <header
+      className='sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-border px-4 backdrop-blur-sm md:h-16 md:gap-4 md:px-6'
+      style={{
+        backgroundColor: 'var(--background)',
+        borderColor: 'var(--border)',
+      }}
+    >
       <div className='flex shrink-0 items-center gap-2'>
         <button
           type='button'
           onClick={onOpenMobileSidebar}
           aria-label='Open navigation'
-          className='inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-background lg:hidden hover:bg-muted'
+          className='inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border transition-colors lg:hidden'
+          style={{ '--hover-bg': 'var(--surface)' } as React.CSSProperties}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = 'var(--surface)')
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = 'transparent')
+          }
         >
-          <Menu className='size-[18px]' aria-hidden />
+          <Menu
+            className='size-[18px]'
+            aria-hidden
+            style={{ color: 'var(--foreground)' }}
+          />
         </button>
 
         {onToggleSidebarCollapsed ? (
@@ -66,7 +83,7 @@ export function AdminHeader({
             type='button'
             variant='outline'
             size='icon'
-            className='hidden size-10 shrink-0 lg:inline-flex'
+            className='hidden size-10 shrink-0 lg:inline-flex border-border'
             onClick={onToggleSidebarCollapsed}
             title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             aria-expanded={!sidebarCollapsed}
@@ -83,21 +100,31 @@ export function AdminHeader({
         ) : null}
       </div>
 
-      <div className='h-4 w-px shrink-0 bg-border' aria-hidden />
+      <div
+        className='h-4 w-px shrink-0'
+        style={{ backgroundColor: 'var(--border)' }}
+        aria-hidden
+      />
 
       <nav
         aria-label='Breadcrumb'
         className='min-w-0 flex flex-1 items-center gap-1.5 text-sm'
       >
         {crumbs.length === 0 ? (
-          <span className='font-medium text-muted-foreground'>Home</span>
+          <span
+            className='font-medium'
+            style={{ color: 'var(--muted-foreground)' }}
+          >
+            Home
+          </span>
         ) : (
           crumbs.flatMap(({ path, label, isLast }, i) => {
             const parts = [
               isLast ? (
                 <span
                   key={path}
-                  className='truncate font-medium text-foreground'
+                  className='truncate font-medium'
+                  style={{ color: 'var(--foreground)' }}
                 >
                   {label}
                 </span>
@@ -105,7 +132,14 @@ export function AdminHeader({
                 <Link
                   key={path}
                   href={path}
-                  className='truncate text-muted-foreground transition-colors hover:text-foreground'
+                  className='truncate transition-colors'
+                  style={{ color: 'var(--muted-foreground)' }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = 'var(--brand)')
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = 'var(--muted-foreground)')
+                  }
                 >
                   {label}
                 </Link>
@@ -115,7 +149,8 @@ export function AdminHeader({
               parts.push(
                 <ChevronRight
                   key={`${path}-sep`}
-                  className='size-4 shrink-0 text-muted-foreground/60'
+                  className='size-4 shrink-0'
+                  style={{ color: 'var(--muted-foreground)', opacity: 0.5 }}
                   aria-hidden
                 />
               );
@@ -128,7 +163,13 @@ export function AdminHeader({
       <div className='ml-auto hidden sm:block'>
         <Link
           href='/'
-          className='text-muted-foreground text-sm underline-offset-4 transition-colors hover:text-foreground hover:underline bg-accent py-2 px-3 rounded-3xl'
+          className='text-sm font-semibold py-2 px-4 rounded-lg transition-all'
+          style={{
+            backgroundColor: 'var(--accent)',
+            color: 'var(--accent-foreground)',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
         >
           View Store-Front
         </Link>

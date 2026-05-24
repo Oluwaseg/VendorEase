@@ -13,13 +13,11 @@ import {
   Clock,
   Copy,
   DollarSign,
-  Edit2,
   Loader2,
   Mail,
   MapPin,
   Package,
   Phone,
-  RotateCw,
   Shield,
   Truck,
   User,
@@ -52,50 +50,50 @@ const getStatusColors = (status: string) => {
     [key: string]: { bg: string; text: string; border: string };
   } = {
     delivered: {
-      bg: 'bg-emerald-500/10',
-      text: 'text-emerald-700 dark:text-emerald-400',
-      border: 'border-emerald-200 dark:border-emerald-800',
+      bg: 'bg-success/10',
+      text: 'text-success',
+      border: 'border-success/20',
     },
     shipped: {
-      bg: 'bg-blue-500/10',
-      text: 'text-blue-700 dark:text-blue-400',
-      border: 'border-blue-200 dark:border-blue-800',
+      bg: 'bg-brand/10',
+      text: 'text-brand',
+      border: 'border-brand/20',
     },
     processing: {
-      bg: 'bg-orange-500/10',
-      text: 'text-orange-700 dark:text-orange-400',
-      border: 'border-orange-200 dark:border-orange-800',
+      bg: 'bg-warning/10',
+      text: 'text-warning',
+      border: 'border-warning/20',
     },
     pending: {
-      bg: 'bg-yellow-500/10',
-      text: 'text-yellow-700 dark:text-yellow-400',
-      border: 'border-yellow-200 dark:border-yellow-800',
+      bg: 'bg-warning/10',
+      text: 'text-warning',
+      border: 'border-warning/20',
     },
     failed: {
-      bg: 'bg-red-500/10',
-      text: 'text-red-700 dark:text-red-400',
-      border: 'border-red-200 dark:border-red-800',
+      bg: 'bg-danger/10',
+      text: 'text-danger',
+      border: 'border-danger/20',
     },
     cancelled: {
-      bg: 'bg-red-500/10',
-      text: 'text-red-700 dark:text-red-400',
-      border: 'border-red-200 dark:border-red-800',
+      bg: 'bg-danger/10',
+      text: 'text-danger',
+      border: 'border-danger/20',
     },
     paid: {
-      bg: 'bg-emerald-500/10',
-      text: 'text-emerald-700 dark:text-emerald-400',
-      border: 'border-emerald-200 dark:border-emerald-800',
+      bg: 'bg-success/10',
+      text: 'text-success',
+      border: 'border-success/20',
     },
     payment_pending: {
-      bg: 'bg-amber-500/10',
-      text: 'text-amber-700 dark:text-amber-400',
-      border: 'border-amber-200 dark:border-amber-800',
+      bg: 'bg-warning/10',
+      text: 'text-warning',
+      border: 'border-warning/20',
     },
   };
   return (
     colorMap[normalizedStatus] || {
-      bg: 'bg-muted',
-      text: 'text-muted-foreground',
+      bg: 'bg-surface-2',
+      text: 'text-foreground/70',
       border: 'border-border',
     }
   );
@@ -106,21 +104,21 @@ const AdminOrderTimeline = ({ order }: { order: any }) => {
     order.shippingStatus?.toLowerCase().replace('_', ' ') || '';
 
   const statuses = [
-    { label: 'Order Placed', completed: true, color: 'emerald' },
+    { label: 'Order Placed', completed: true, color: 'success' },
     {
       label: 'Processing',
       completed: normalizedShippingStatus !== 'pending',
-      color: 'blue',
+      color: 'brand',
     },
     {
       label: 'Shipped',
       completed: ['shipped', 'delivered'].includes(normalizedShippingStatus),
-      color: 'purple',
+      color: 'brand',
     },
     {
       label: 'Delivered',
       completed: normalizedShippingStatus === 'delivered',
-      color: 'green',
+      color: 'success',
     },
   ];
 
@@ -132,7 +130,7 @@ const AdminOrderTimeline = ({ order }: { order: any }) => {
           {idx < statuses.length - 1 && (
             <div
               className={`absolute left-4 top-10 w-0.5 h-12 ${
-                status.completed ? 'bg-emerald-400' : 'bg-border'
+                status.completed ? 'bg-success' : 'bg-border'
               }`}
             />
           )}
@@ -142,8 +140,8 @@ const AdminOrderTimeline = ({ order }: { order: any }) => {
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
                 status.completed
-                  ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30'
-                  : 'bg-border text-muted-foreground'
+                  ? 'bg-success text-white shadow-md shadow-success/30'
+                  : 'bg-surface-2 text-foreground/50'
               }`}
             >
               {status.completed ? '✓' : idx + 1}
@@ -153,12 +151,12 @@ const AdminOrderTimeline = ({ order }: { order: any }) => {
           {/* Content */}
           <div className='pt-1'>
             <p
-              className={`font-semibold ${status.completed ? 'text-foreground' : 'text-muted-foreground'}`}
+              className={`font-semibold ${status.completed ? 'text-foreground' : 'text-foreground/50'}`}
             >
               {status.label}
             </p>
             {status.completed && status.label === 'Order Placed' && (
-              <p className='text-xs text-muted-foreground mt-1'>
+              <p className='text-xs text-foreground/60 mt-1'>
                 {format(new Date(order.createdAt), 'MMM dd, yyyy · h:mm a')}
               </p>
             )}
@@ -185,14 +183,14 @@ export default function AdminOrderDetailPage() {
   };
 
   return (
-    <div className='min-h-0'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12'>
+    <div className='min-h-screen bg-surface'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         {/* Back Button */}
         <Link href='/admin/orders' className='inline-block mb-8'>
           <Button
             variant='ghost'
             size='sm'
-            className='gap-2 text-muted-foreground hover:text-foreground'
+            className='gap-2 text-foreground/60 hover:text-foreground hover:bg-surface-2'
           >
             <ArrowLeft className='w-4 h-4' />
             Back to Orders
@@ -201,21 +199,19 @@ export default function AdminOrderDetailPage() {
 
         {isLoading && (
           <div className='flex flex-col items-center justify-center py-24'>
-            <Loader2 className='w-10 h-10 text-primary animate-spin mb-3' />
-            <p className='text-muted-foreground font-medium'>
+            <Loader2 className='w-10 h-10 text-brand animate-spin mb-3' />
+            <p className='text-foreground/60 font-medium'>
               Loading order details...
             </p>
           </div>
         )}
 
         {error && (
-          <div className='rounded-lg border border-destructive/20 bg-destructive/5 p-6 text-center'>
-            <p className='text-destructive font-semibold mb-1'>
+          <div className='rounded-[0.5rem] border border-danger/20 bg-danger/5 p-6 text-center'>
+            <p className='text-danger font-semibold mb-1'>
               Failed to load order
             </p>
-            <p className='text-sm text-muted-foreground mb-4'>
-              {error.message}
-            </p>
+            <p className='text-sm text-foreground/60 mb-4'>{error.message}</p>
             <Link href='/admin/orders'>
               <Button variant='outline' size='sm'>
                 Return to Orders
@@ -226,29 +222,32 @@ export default function AdminOrderDetailPage() {
 
         {!isLoading && !error && order && (
           <div className='space-y-6'>
-            {/* Header Card with Admin Badge */}
-            <Card className='border-border/40 bg-gradient-to-r from-primary/5 to-transparent backdrop-blur-sm overflow-hidden'>
+            {/* Header Card */}
+            <Card className='border-border bg-card shadow-sm'>
               <CardContent className='p-6 sm:p-8'>
                 <div className='flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6'>
                   <div>
                     <div className='flex items-center gap-2 mb-2'>
-                      <p className='text-xs font-semibold text-muted-foreground uppercase tracking-widest'>
+                      <p className='text-xs font-semibold text-foreground/60 uppercase tracking-widest'>
                         Order Number
                       </p>
-                      <Badge variant='outline' className='bg-blue-500/10 gap-1'>
+                      <Badge
+                        variant='outline'
+                        className='bg-brand/10 border-brand/20 text-brand gap-1'
+                      >
                         <Shield className='w-3 h-3' />
                         Admin View
                       </Badge>
                     </div>
                     <div className='flex items-center gap-3'>
-                      <h1 className='text-3xl sm:text-4xl font-bold text-foreground font-mono'>
+                      <h1 className='text-2xl sm:text-3xl font-bold text-foreground font-mono'>
                         #{order._id.slice(-8).toUpperCase()}
                       </h1>
                       <Button
                         variant='ghost'
                         size='sm'
                         onClick={() => copyToClipboard(order._id)}
-                        className='h-8 w-8 p-0'
+                        className='h-8 w-8 p-0 hover:bg-surface-2'
                       >
                         <Copy
                           className='w-4 h-4'
@@ -256,19 +255,19 @@ export default function AdminOrderDetailPage() {
                         />
                       </Button>
                     </div>
-                    <p className='text-sm text-muted-foreground mt-2'>
+                    <p className='text-sm text-foreground/60 mt-2'>
                       Placed {format(new Date(order.createdAt), 'MMMM d, yyyy')}{' '}
                       at {format(new Date(order.createdAt), 'h:mm a')}
                     </p>
                   </div>
                   <div className='flex flex-col gap-2 items-start sm:items-end'>
                     <Badge
-                      className={`${getStatusColors(order.paymentStatus).bg} ${getStatusColors(order.paymentStatus).text} border`}
+                      className={`${getStatusColors(order.paymentStatus).bg} ${getStatusColors(order.paymentStatus).text} border ${getStatusColors(order.paymentStatus).border}`}
                     >
                       💳 {order.paymentStatus?.replace('_', ' ')}
                     </Badge>
                     <Badge
-                      className={`${getStatusColors(order.shippingStatus).bg} ${getStatusColors(order.shippingStatus).text} border flex items-center gap-1.5`}
+                      className={`${getStatusColors(order.shippingStatus).bg} ${getStatusColors(order.shippingStatus).text} border ${getStatusColors(order.shippingStatus).border} flex items-center gap-1.5`}
                     >
                       {getStatusIcon(order.shippingStatus)}
                       <span>{order.shippingStatus?.replace('_', ' ')}</span>
@@ -283,10 +282,10 @@ export default function AdminOrderDetailPage() {
               {/* Left Column - Customer & Order Items */}
               <div className='lg:col-span-2 space-y-6'>
                 {/* Customer Information Card */}
-                <Card className='border-border/40 bg-card/50 backdrop-blur-sm'>
-                  <CardHeader className='border-b border-border/40'>
+                <Card className='border-border bg-card shadow-sm'>
+                  <CardHeader className='border-b border-border pb-4'>
                     <CardTitle className='flex items-center gap-2 text-lg'>
-                      <User className='w-5 h-5 text-primary' />
+                      <User className='w-5 h-5 text-brand' />
                       Customer Information
                     </CardTitle>
                   </CardHeader>
@@ -295,7 +294,7 @@ export default function AdminOrderDetailPage() {
                       {/* Customer Details */}
                       <div className='space-y-4'>
                         <div>
-                          <p className='text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1'>
+                          <p className='text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-1'>
                             Name
                           </p>
                           <p className='text-foreground font-semibold text-lg'>
@@ -303,9 +302,9 @@ export default function AdminOrderDetailPage() {
                           </p>
                         </div>
                         <div className='flex items-start gap-2'>
-                          <Mail className='w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0' />
-                          <div>
-                            <p className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                          <Mail className='w-4 h-4 text-foreground/40 mt-0.5 flex-shrink-0' />
+                          <div className='min-w-0'>
+                            <p className='text-xs font-semibold text-foreground/60 uppercase tracking-wider'>
                               Email
                             </p>
                             <p className='text-foreground text-sm break-all'>
@@ -315,9 +314,9 @@ export default function AdminOrderDetailPage() {
                         </div>
                         {order.user?.phone && (
                           <div className='flex items-start gap-2'>
-                            <Phone className='w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0' />
+                            <Phone className='w-4 h-4 text-foreground/40 mt-0.5 flex-shrink-0' />
                             <div>
-                              <p className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                              <p className='text-xs font-semibold text-foreground/60 uppercase tracking-wider'>
                                 Phone
                               </p>
                               <p className='text-foreground text-sm'>
@@ -329,9 +328,9 @@ export default function AdminOrderDetailPage() {
                       </div>
 
                       {/* User Verification Status */}
-                      <div className='space-y-3 p-4 rounded-lg border border-border/40 bg-muted/20'>
+                      <div className='space-y-3 p-4 rounded-[0.5rem] border border-border bg-surface-2'>
                         <div>
-                          <p className='text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2'>
+                          <p className='text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-2'>
                             Account Status
                           </p>
                           <div className='space-y-2'>
@@ -339,8 +338,8 @@ export default function AdminOrderDetailPage() {
                               <div
                                 className={`w-2 h-2 rounded-full ${
                                   order.user?.isActive
-                                    ? 'bg-emerald-500'
-                                    : 'bg-red-500'
+                                    ? 'bg-success'
+                                    : 'bg-danger'
                                 }`}
                               />
                               <span className='text-xs text-foreground'>
@@ -353,8 +352,8 @@ export default function AdminOrderDetailPage() {
                               <div
                                 className={`w-2 h-2 rounded-full ${
                                   order.user?.isEmailVerified
-                                    ? 'bg-emerald-500'
-                                    : 'bg-amber-500'
+                                    ? 'bg-success'
+                                    : 'bg-warning'
                                 }`}
                               />
                               <span className='text-xs text-foreground'>
@@ -365,8 +364,8 @@ export default function AdminOrderDetailPage() {
                             </div>
                           </div>
                         </div>
-                        <div className='pt-2 border-t border-border/40'>
-                          <p className='text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1'>
+                        <div className='pt-2 border-t border-border'>
+                          <p className='text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-1'>
                             Member Since
                           </p>
                           <p className='text-xs text-foreground'>
@@ -384,10 +383,10 @@ export default function AdminOrderDetailPage() {
                 </Card>
 
                 {/* Order Items */}
-                <Card className='border-border/40 bg-card/50 backdrop-blur-sm'>
-                  <CardHeader className='border-b border-border/40'>
+                <Card className='border-border bg-card shadow-sm'>
+                  <CardHeader className='border-b border-border pb-4'>
                     <CardTitle className='flex items-center gap-2 text-lg'>
-                      <Package className='w-5 h-5 text-primary' />
+                      <Package className='w-5 h-5 text-brand' />
                       Order Items ({order.items.length})
                     </CardTitle>
                   </CardHeader>
@@ -396,21 +395,21 @@ export default function AdminOrderDetailPage() {
                       {order.items.map((item: any, idx: number) => (
                         <div
                           key={idx}
-                          className='flex items-center justify-between p-4 rounded-lg border border-border/40 bg-card/30 hover:bg-card/50 transition-colors'
+                          className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-[0.5rem] border border-border bg-surface hover:bg-surface-2/50 transition-colors'
                         >
-                          <div className='min-w-0'>
+                          <div className='min-w-0 flex-1'>
                             <p className='font-semibold text-foreground'>
                               {item.name}
                             </p>
-                            <p className='text-xs text-muted-foreground mt-1'>
+                            <p className='text-xs text-foreground/60 mt-1'>
                               Product ID:{' '}
-                              <span className='font-mono text-xs'>
+                              <span className='font-mono'>
                                 {typeof item.product === 'string'
                                   ? item.product.slice(-6)
                                   : 'N/A'}
                               </span>
                             </p>
-                            <p className='text-xs text-muted-foreground mt-1'>
+                            <p className='text-xs text-foreground/60 mt-1'>
                               Qty:{' '}
                               <span className='font-medium'>
                                 {item.quantity}
@@ -428,36 +427,32 @@ export default function AdminOrderDetailPage() {
                     </div>
 
                     {/* Price Breakdown */}
-                    <div className='mt-6 pt-6 border-t border-border/40 space-y-3'>
+                    <div className='mt-6 pt-6 border-t border-border space-y-3'>
                       <div className='flex items-center justify-between'>
-                        <span className='text-muted-foreground'>Subtotal</span>
+                        <span className='text-foreground/60'>Subtotal</span>
                         <span className='font-semibold'>
                           ₦{(order.subtotal || order.total).toLocaleString()}
                         </span>
                       </div>
                       {order.discount > 0 && (
                         <div className='flex items-center justify-between'>
-                          <span className='text-muted-foreground'>
-                            Discount
-                          </span>
-                          <span className='font-semibold text-emerald-600'>
+                          <span className='text-foreground/60'>Discount</span>
+                          <span className='font-semibold text-success'>
                             -₦{order.discount.toLocaleString()}
                           </span>
                         </div>
                       )}
                       {order.shippingFee > 0 && (
                         <div className='flex items-center justify-between'>
-                          <span className='text-muted-foreground'>
-                            Shipping
-                          </span>
+                          <span className='text-foreground/60'>Shipping</span>
                           <span className='font-semibold'>
                             ₦{order.shippingFee.toLocaleString()}
                           </span>
                         </div>
                       )}
-                      <div className='flex items-center justify-between pt-4 border-t border-border/40 bg-primary/5 px-4 py-3 rounded-lg'>
+                      <div className='flex items-center justify-between pt-4 border-t border-border bg-brand/5 px-4 py-3 rounded-[0.5rem]'>
                         <span className='font-bold text-lg'>Total</span>
-                        <span className='text-2xl font-bold text-primary'>
+                        <span className='text-2xl font-bold text-brand'>
                           ₦{order.total.toLocaleString()}
                         </span>
                       </div>
@@ -466,158 +461,117 @@ export default function AdminOrderDetailPage() {
                 </Card>
 
                 {/* Shipping Address */}
-                <Card className='border-border/40 bg-card/50 backdrop-blur-sm'>
-                  <CardHeader className='border-b border-border/40'>
+                <Card className='border-border bg-card shadow-sm'>
+                  <CardHeader className='border-b border-border pb-4'>
                     <CardTitle className='flex items-center gap-2 text-lg'>
-                      <MapPin className='w-5 h-5 text-primary' />
+                      <MapPin className='w-5 h-5 text-brand' />
                       Shipping Address
                     </CardTitle>
                   </CardHeader>
                   <CardContent className='pt-6'>
-                    <div className='p-4 rounded-lg border border-border/40 bg-card/30'>
+                    <div className='p-4 rounded-[0.5rem] border border-border bg-surface-2'>
                       <p className='font-semibold text-foreground'>
                         {order.shipping.addressLine}
                       </p>
-                      <div className='mt-3 space-y-1 text-sm text-muted-foreground'>
+                      <div className='mt-3 space-y-1 text-sm text-foreground/60'>
                         <p>
                           {order.shipping.city}, {order.shipping.state}{' '}
                           {order.shipping.postalCode}
                         </p>
                         <p>{order.shipping.country}</p>
-                        <p className='mt-3 pt-3 border-t border-border/40'>
-                          <span className='text-xs font-semibold uppercase tracking-wider text-foreground'>
-                            Shipping Method:{' '}
-                          </span>
-                          <span className='capitalize font-medium text-foreground'>
-                            {order.shipping.method}
-                          </span>
-                        </p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Right Column - Status Management & Timeline */}
+              {/* Right Column - Status & Timeline */}
               <div className='space-y-6'>
-                {/* Status Management Card */}
-                <Card className='border-border/40 bg-card/50 backdrop-blur-sm'>
-                  <CardHeader className='border-b border-border/40'>
+                {/* Timeline Card */}
+                <Card className='border-border bg-card shadow-sm'>
+                  <CardHeader className='border-b border-border pb-4'>
                     <CardTitle className='flex items-center gap-2 text-lg'>
-                      <Edit2 className='w-5 h-5 text-primary' />
-                      Manage Status
+                      <Calendar className='w-5 h-5 text-brand' />
+                      Order Timeline
                     </CardTitle>
-                  </CardHeader>
-                  <CardContent className='pt-6 space-y-4'>
-                    <div>
-                      <label className='text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 block'>
-                        Shipping Status
-                      </label>
-                      <select
-                        className='w-full border border-border bg-background text-sm rounded-md px-3 py-2.5 font-medium transition-colors hover:border-border/60 focus:outline-none focus:ring-2 focus:ring-primary'
-                        value={order.shippingStatus ?? 'processing'}
-                        onChange={(e) =>
-                          updateStatus({
-                            id: order._id,
-                            status: e.target.value as any,
-                          })
-                        }
-                        disabled={isUpdatingStatus}
-                      >
-                        <option value='processing'>Processing</option>
-                        <option value='shipped'>Shipped</option>
-                        <option value='delivered'>Delivered</option>
-                        <option value='cancelled'>Cancelled</option>
-                      </select>
-                      {isUpdatingStatus && (
-                        <p className='text-xs text-muted-foreground mt-2 flex items-center gap-1'>
-                          <RotateCw className='w-3 h-3 animate-spin' />
-                          Updating status...
-                        </p>
-                      )}
-                    </div>
-
-                    <div className='p-3 rounded-lg bg-blue-500/5 border border-blue-500/20'>
-                      <p className='text-xs text-muted-foreground'>
-                        Current:{' '}
-                        <span className='font-semibold text-foreground'>
-                          {order.shippingStatus?.replace('_', ' ')}
-                        </span>
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Order Timeline */}
-                <Card className='border-border/40 bg-card/50 backdrop-blur-sm'>
-                  <CardHeader className='border-b border-border/40'>
-                    <CardTitle className='text-lg'>Delivery Status</CardTitle>
                   </CardHeader>
                   <CardContent className='pt-6'>
                     <AdminOrderTimeline order={order} />
                   </CardContent>
                 </Card>
 
-                {/* Order Summary */}
-                <Card className='border-border/40 bg-card/50 backdrop-blur-sm'>
-                  <CardHeader className='border-b border-border/40'>
-                    <CardTitle className='text-lg'>Order Summary</CardTitle>
+                {/* Payment Details Card */}
+                <Card className='border-border bg-card shadow-sm'>
+                  <CardHeader className='border-b border-border pb-4'>
+                    <CardTitle className='flex items-center gap-2 text-lg'>
+                      <DollarSign className='w-5 h-5 text-brand' />
+                      Payment Details
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className='pt-6 space-y-4'>
-                    <div className='flex items-center gap-3 p-3 rounded-lg bg-muted/30'>
-                      <Calendar className='w-4 h-4 text-muted-foreground flex-shrink-0' />
-                      <div className='min-w-0'>
-                        <p className='text-xs text-muted-foreground'>
-                          Order Date
-                        </p>
-                        <p className='font-semibold text-foreground text-sm'>
-                          {format(new Date(order.createdAt), 'MMM dd, yyyy')}
-                        </p>
+                    <div className='space-y-3'>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-foreground/60 text-sm'>
+                          Payment Method
+                        </span>
+                        <span className='font-semibold text-sm'>
+                          {/* {order.paymentMethod || 'Card'} */}
+                          Card
+                        </span>
                       </div>
-                    </div>
-
-                    <div className='flex items-center gap-3 p-3 rounded-lg bg-muted/30'>
-                      <Package className='w-4 h-4 text-muted-foreground flex-shrink-0' />
-                      <div className='min-w-0'>
-                        <p className='text-xs text-muted-foreground'>Items</p>
-                        <p className='font-semibold text-foreground text-sm'>
-                          {order.items.reduce(
-                            (sum: number, item: any) => sum + item.quantity,
-                            0
-                          )}{' '}
-                          item
-                          {order.items.reduce(
-                            (sum: number, item: any) => sum + item.quantity,
-                            0
-                          ) !== 1
-                            ? 's'
-                            : ''}
-                        </p>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-foreground/60 text-sm'>
+                          Status
+                        </span>
+                        <Badge
+                          className={`${getStatusColors(order.paymentStatus).bg} ${getStatusColors(order.paymentStatus).text} border ${getStatusColors(order.paymentStatus).border} text-xs`}
+                        >
+                          {order.paymentStatus?.replace('_', ' ')}
+                        </Badge>
                       </div>
-                    </div>
-
-                    <div className='flex items-center gap-3 p-3 rounded-lg bg-primary/5'>
-                      <DollarSign className='w-4 h-4 text-primary flex-shrink-0' />
-                      <div className='min-w-0'>
-                        <p className='text-xs text-muted-foreground'>
-                          Order Total
-                        </p>
-                        <p className='font-bold text-foreground text-lg'>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-foreground/60 text-sm'>
+                          Amount
+                        </span>
+                        <span className='font-bold text-brand'>
                           ₦{order.total.toLocaleString()}
-                        </p>
+                        </span>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
 
-                    <div className='flex items-center gap-3 p-3 rounded-lg border border-border/40 bg-card/30'>
-                      <Truck className='w-4 h-4 text-muted-foreground flex-shrink-0' />
-                      <div className='min-w-0'>
-                        <p className='text-xs text-muted-foreground'>
-                          Shipping Method
-                        </p>
-                        <p className='font-semibold text-foreground text-sm capitalize'>
-                          {order.shipping.method}
-                        </p>
+                {/* Shipping Status Card */}
+                <Card className='border-border bg-card shadow-sm'>
+                  <CardHeader className='border-b border-border pb-4'>
+                    <CardTitle className='flex items-center gap-2 text-lg'>
+                      <Truck className='w-5 h-5 text-brand' />
+                      Shipping Status
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className='pt-6 space-y-4'>
+                    <div className='space-y-3'>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-foreground/60 text-sm'>
+                          Status
+                        </span>
+                        <Badge
+                          className={`${getStatusColors(order.shippingStatus).bg} ${getStatusColors(order.shippingStatus).text} border ${getStatusColors(order.shippingStatus).border} text-xs flex items-center gap-1`}
+                        >
+                          {getStatusIcon(order.shippingStatus)}
+                          <span>{order.shippingStatus?.replace('_', ' ')}</span>
+                        </Badge>
                       </div>
+                      {/* {order.trackingNumber && (
+                        <div>
+                          <p className='text-foreground/60 text-xs font-semibold mb-1'>
+                            TRACKING NUMBER
+                          </p>
+                          <p className='font-mono text-sm font-semibold'>
+                            {order.trackingNumber}
+                          </p>
+                        </div>
+                      )} */}
                     </div>
                   </CardContent>
                 </Card>

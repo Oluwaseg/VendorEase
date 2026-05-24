@@ -40,7 +40,7 @@ export function AdminNavUser({
     return null;
   }
 
-  const roleLabel = user.role === 'admin' ? 'Administrator' : 'Moderator';
+  const roleLabel = user.role === 'admin' ? 'administrator' : 'moderator';
 
   return (
     <DropdownMenu modal={false}>
@@ -48,12 +48,21 @@ export function AdminNavUser({
         <button
           type='button'
           className={cn(
-            'flex w-full items-center gap-3 rounded-xl border border-border/80 bg-muted/40 px-2 py-2 text-left transition-colors hover:bg-muted/70',
+            'flex w-full items-center gap-3 rounded-lg border border-border px-3 py-2.5 text-left transition-all hover:border-brand/50',
             collapsed &&
-              'justify-center border-transparent bg-transparent px-0 py-2 hover:bg-muted/50'
+              'justify-center border-transparent px-0 py-2 hover:bg-surface'
           )}
+          style={{
+            backgroundColor: collapsed ? 'transparent' : 'var(--surface)',
+          }}
         >
-          <div className='flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/15 font-semibold text-primary text-xs'>
+          <div
+            className='flex size-10 shrink-0 items-center justify-center rounded-lg font-semibold text-xs'
+            style={{
+              backgroundColor: 'var(--brand)',
+              color: 'var(--brand-foreground)',
+            }}
+          >
             {initials(user.name || user.username || user.email)}
           </div>
           {!collapsed ? (
@@ -66,7 +75,7 @@ export function AdminNavUser({
                   {roleLabel}
                 </p>
               </div>
-              <ChevronUp className='size-4 shrink-0 text-muted-foreground opacity-70' />
+              <ChevronUp className='size-4 shrink-0 text-muted-foreground opacity-60' />
             </Fragment>
           ) : (
             <span className='sr-only'>Open account menu</span>
@@ -77,23 +86,23 @@ export function AdminNavUser({
         align='end'
         side='top'
         sideOffset={8}
-        className='z-[100] w-56 rounded-xl bg-brand'
+        className='z-[100] w-56 rounded-lg border-border'
+        style={{ backgroundColor: 'var(--card)' }}
       >
-        <div className='px-2 py-2'>
+        <div className='px-3 py-3'>
           <p className='truncate font-semibold text-foreground text-sm'>
             {user.name}
           </p>
           <p className='truncate text-muted-foreground text-xs'>{user.email}</p>
         </div>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator style={{ backgroundColor: 'var(--border)' }} />
 
         <DropdownMenuItem
-          variant='destructive'
-          className='cursor-pointer'
+          className='cursor-pointer gap-2 focus:bg-destructive/10'
           onClick={() => logout.mutate()}
         >
-          <LogOut className='size-4' />
-          Log out
+          <LogOut className='size-4' style={{ color: 'var(--danger)' }} />
+          <span style={{ color: 'var(--danger)' }}>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

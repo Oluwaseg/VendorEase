@@ -20,7 +20,7 @@ export default function AdminCartsPage() {
 
   if (isLoading) {
     return (
-      <div className='flex flex-1 items-center justify-center py-24'>
+      <div className='flex flex-1 items-center justify-center min-h-screen bg-surface'>
         <Spinner className='w-8 h-8' />
       </div>
     );
@@ -29,41 +29,45 @@ export default function AdminCartsPage() {
   const cartCount = carts?.length ?? 0;
 
   return (
-    <div>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
-        {/* Header */}
-        <div className='bg-gradient-to-r from-primary/10 to-accent/10 border-b border-border/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-12 mb-12'>
-          <div className='flex items-center justify-between gap-4'>
+    <div className='min-h-screen bg-surface'>
+      {/* Header */}
+      <div className='border-b border-border bg-card'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10'>
+          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6'>
             <div>
-              <h1 className='text-4xl lg:text-5xl font-bold text-foreground'>
+              <h1 className='text-3xl sm:text-4xl font-bold text-foreground'>
                 Abandoned Carts
               </h1>
-              <p className='text-foreground/60 mt-2'>
-                {cartCount} carts inactive for {days}+ days
+              <p className='text-foreground/60 mt-2 text-sm sm:text-base'>
+                {cartCount} cart{cartCount !== 1 ? 's' : ''} inactive for {days}
+                + day{days !== 1 ? 's' : ''}
               </p>
             </div>
             <Button
               onClick={() => sendReminders(days)}
               disabled={isSending || cartCount === 0}
-              className='bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 py-3 rounded-lg flex items-center gap-2 shadow-lg'
+              className='bg-brand hover:bg-brand/90 text-brand-foreground font-semibold px-6 py-3 rounded-[0.5rem] flex items-center gap-2 shadow-lg w-full sm:w-auto justify-center sm:justify-start disabled:opacity-50 disabled:cursor-not-allowed'
             >
               <Send size={20} />
               {isSending ? 'Sending...' : 'Send Reminders'}
             </Button>
           </div>
         </div>
+      </div>
 
-        {/* Filters */}
+      {/* Main Content */}
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+        {/* Filter Card */}
         <div className='mb-8'>
-          <div className='bg-card border border-border rounded-xl p-6'>
-            <label className='block mb-3'>
-              <span className='text-sm font-semibold text-foreground mb-2 block'>
+          <div className='bg-card border border-border rounded-[0.5rem] p-6'>
+            <label className='block'>
+              <span className='text-sm font-semibold text-foreground mb-3 block'>
                 Filter by inactivity (days):
               </span>
               <select
                 value={days}
                 onChange={(e) => setDays(parseInt(e.target.value))}
-                className='w-full max-w-xs px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20'
+                className='w-full max-w-xs px-4 py-2 border border-border rounded-[0.375rem] bg-surface-2 text-foreground focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
               >
                 <option value={1}>1+ days</option>
                 <option value={3}>3+ days</option>
@@ -75,15 +79,15 @@ export default function AdminCartsPage() {
           </div>
         </div>
 
-        {/* Carts List */}
-        <div className='rounded-2xl border border-border/50 overflow-hidden bg-card/30 backdrop-blur-sm shadow-lg'>
+        {/* Carts Table */}
+        <div className='rounded-[0.5rem] border border-border overflow-hidden bg-card shadow-sm'>
           {cartCount === 0 ? (
             <div className='p-12 text-center'>
               <ShoppingCart
                 size={48}
-                className='mx-auto text-foreground/30 mb-4'
+                className='mx-auto text-foreground/20 mb-4'
               />
-              <p className='text-foreground/60'>
+              <p className='text-foreground/60 text-sm sm:text-base'>
                 No abandoned carts found for the selected period.
               </p>
             </div>
@@ -91,24 +95,24 @@ export default function AdminCartsPage() {
             <div className='overflow-x-auto'>
               <table className='w-full'>
                 <thead>
-                  <tr className='border-b border-border/50 bg-muted/50'>
+                  <tr className='border-b border-border bg-surface-2'>
                     <th className='px-6 py-4 text-left'>
-                      <span className='text-sm font-bold text-foreground/70 uppercase tracking-wider'>
-                        User Email
+                      <span className='text-xs font-bold text-foreground/70 uppercase tracking-widest'>
+                        Customer Email
                       </span>
                     </th>
                     <th className='px-6 py-4 text-center'>
-                      <span className='text-sm font-bold text-foreground/70 uppercase tracking-wider'>
+                      <span className='text-xs font-bold text-foreground/70 uppercase tracking-widest'>
                         Items
                       </span>
                     </th>
                     <th className='px-6 py-4 text-right'>
-                      <span className='text-sm font-bold text-foreground/70 uppercase tracking-wider'>
-                        Cart Total
+                      <span className='text-xs font-bold text-foreground/70 uppercase tracking-widest'>
+                        Total Value
                       </span>
                     </th>
                     <th className='px-6 py-4 text-left'>
-                      <span className='text-sm font-bold text-foreground/70 uppercase tracking-wider'>
+                      <span className='text-xs font-bold text-foreground/70 uppercase tracking-widest'>
                         Last Updated
                       </span>
                     </th>
@@ -118,22 +122,22 @@ export default function AdminCartsPage() {
                   {carts?.map((cart, idx) => (
                     <tr
                       key={cart._id}
-                      className={`border-b border-border/30 hover:bg-primary/5 transition-colors ${
-                        idx % 2 === 0 ? 'bg-background/50' : 'bg-background'
+                      className={`border-b border-border hover:bg-surface-2/50 transition-colors ${
+                        idx % 2 === 0 ? 'bg-card' : 'bg-surface/50'
                       }`}
                     >
                       <td className='px-6 py-4'>
-                        <p className='font-semibold text-foreground text-sm'>
+                        <p className='font-semibold text-foreground text-sm truncate'>
                           {(cart.user as any)?.email || 'Unknown'}
                         </p>
                       </td>
                       <td className='px-6 py-4 text-center'>
-                        <span className='inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold bg-accent/10 text-accent'>
+                        <span className='inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-semibold bg-brand/10 text-brand'>
                           {cart.items.length}
                         </span>
                       </td>
                       <td className='px-6 py-4 text-right'>
-                        <span className='font-bold text-foreground'>
+                        <span className='font-bold text-foreground text-sm'>
                           {formatPrice(convert(cart.total), currency)}
                         </span>
                       </td>

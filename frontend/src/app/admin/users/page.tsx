@@ -31,6 +31,7 @@ import {
   Users,
 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export default function AdminUsersPage() {
@@ -124,19 +125,37 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className='p-0 md:p-0'>
-      <div className='max-w-6xl mx-auto'>
+    <div className='p-4 md:p-8'>
+      <div className='max-w-7xl mx-auto'>
         {/* Header */}
-        <div className='mb-8'>
+        <div
+          className='mb-8'
+          style={{
+            background:
+              'linear-gradient(to bottom right, var(--surface-2), var(--surface-3))',
+            padding: '2rem',
+            borderRadius: 'var(--radius)',
+            border: '1px solid var(--border)',
+          }}
+        >
           <div className='flex items-center gap-3 mb-2'>
-            <div className='p-2 bg-primary rounded-lg'>
-              <Users className='w-6 h-6 text-primary-foreground' />
+            <div
+              style={{
+                padding: '0.5rem',
+                backgroundColor: 'var(--brand)',
+                borderRadius: 'calc(var(--radius) - 0.25rem)',
+              }}
+            >
+              <Users
+                className='w-6 h-6'
+                style={{ color: 'var(--brand-foreground)' }}
+              />
             </div>
             <div>
-              <h1 className='text-3xl font-bold text-foreground'>
+              <h1 className='text-4xl font-bold text-foreground'>
                 User Management
               </h1>
-              <p className='text-muted-foreground mt-1'>
+              <p className='text-muted-foreground mt-2'>
                 {filteredUsers.length}{' '}
                 {filteredUsers.length === 1 ? 'user' : 'users'} found
               </p>
@@ -150,24 +169,37 @@ export default function AdminUsersPage() {
             placeholder='Search by name, email, or username...'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className='w-full h-11'
+            className='w-full h-12 border-border'
+            style={{ borderColor: 'var(--border)' }}
           />
         </div>
 
         {/* Main Content */}
-        <Card className='bg-card border-border'>
+        <Card
+          className='border-border'
+          style={{
+            backgroundColor: 'var(--card)',
+            borderColor: 'var(--border)',
+          }}
+        >
           <CardContent className='p-0'>
             {isLoading ? (
-              <div className='flex justify-center items-center py-16'>
+              <div className='flex justify-center items-center py-20'>
                 <div className='flex flex-col items-center gap-4'>
-                  <Spinner className='w-10 h-10 text-primary' />
+                  <Spinner
+                    className='w-10 h-10'
+                    style={{ color: 'var(--brand)' }}
+                  />
                   <p className='text-muted-foreground'>Loading users...</p>
                 </div>
               </div>
             ) : isError ? (
-              <div className='p-8 text-center'>
-                <AlertCircle className='w-10 h-10 text-destructive mx-auto mb-3' />
-                <p className='text-destructive font-medium'>
+              <div className='p-12 text-center'>
+                <AlertCircle
+                  className='w-10 h-10 mx-auto mb-3'
+                  style={{ color: 'var(--danger)' }}
+                />
+                <p className='font-medium' style={{ color: 'var(--danger)' }}>
                   Failed to load users.
                 </p>
               </div>
@@ -177,7 +209,10 @@ export default function AdminUsersPage() {
                 <div className='hidden lg:block overflow-x-auto'>
                   <table className='w-full'>
                     <thead>
-                      <tr className='border-b border-border bg-muted/50'>
+                      <tr
+                        className='border-b border-border'
+                        style={{ backgroundColor: 'var(--surface)' }}
+                      >
                         <th className='px-6 py-4 text-left text-xs font-semibold text-foreground uppercase tracking-wider'>
                           User
                         </th>
@@ -205,7 +240,20 @@ export default function AdminUsersPage() {
                       {filteredUsers.map((user) => (
                         <tr
                           key={user._id}
-                          className='hover:bg-muted/50 transition-colors'
+                          className='border-b border-border transition-colors'
+                          style={
+                            {
+                              '--hover-bg': 'var(--surface)',
+                            } as React.CSSProperties
+                          }
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              'var(--surface)')
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              'transparent')
+                          }
                         >
                           <td className='px-6 py-4'>
                             <div className='flex items-center gap-3'>
@@ -218,7 +266,13 @@ export default function AdminUsersPage() {
                                   className='rounded-full border border-border'
                                 />
                               ) : (
-                                <div className='w-10 h-10 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-primary-foreground'>
+                                <div
+                                  className='w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold'
+                                  style={{
+                                    backgroundColor: 'var(--brand)',
+                                    color: 'var(--brand-foreground)',
+                                  }}
+                                >
                                   {user.name[0]}
                                 </div>
                               )}
@@ -238,9 +292,12 @@ export default function AdminUsersPage() {
                           <td className='px-6 py-4'>
                             <Badge
                               variant={getRoleBadgeVariant(user.role)}
-                              className={
+                              style={
                                 user.role === 'admin'
-                                  ? 'bg-primary text-primary-foreground'
+                                  ? {
+                                      backgroundColor: 'var(--brand)',
+                                      color: 'var(--brand-foreground)',
+                                    }
                                   : undefined
                               }
                             >
@@ -253,10 +310,20 @@ export default function AdminUsersPage() {
                           <td className='px-6 py-4'>
                             <div className='flex items-center gap-2'>
                               <div
-                                className={`w-2 h-2 rounded-full ${user.isActive ? 'bg-accent' : 'bg-muted'}`}
+                                className='w-2 h-2 rounded-full'
+                                style={{
+                                  backgroundColor: user.isActive
+                                    ? 'var(--success)'
+                                    : 'var(--muted)',
+                                }}
                               ></div>
                               <span
-                                className={`text-sm font-medium ${user.isActive ? 'text-accent' : 'text-muted-foreground'}`}
+                                className='text-sm font-medium'
+                                style={{
+                                  color: user.isActive
+                                    ? 'var(--success)'
+                                    : 'var(--muted-foreground)',
+                                }}
                               >
                                 {user.isActive ? 'Active' : 'Inactive'}
                               </span>
@@ -265,9 +332,15 @@ export default function AdminUsersPage() {
                           <td className='px-6 py-4'>
                             <div className='flex items-center gap-2'>
                               {user.isEmailVerified ? (
-                                <CheckCircle className='w-4 h-4 text-accent' />
+                                <CheckCircle
+                                  className='w-4 h-4'
+                                  style={{ color: 'var(--success)' }}
+                                />
                               ) : (
-                                <AlertCircle className='w-4 h-4 text-destructive' />
+                                <AlertCircle
+                                  className='w-4 h-4'
+                                  style={{ color: 'var(--warning)' }}
+                                />
                               )}
                               <span className='text-sm text-foreground'>
                                 {user.isEmailVerified ? 'Verified' : 'Pending'}
@@ -280,35 +353,53 @@ export default function AdminUsersPage() {
                               : '-'}
                           </td>
                           <td className='px-6 py-4'>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  variant='ghost'
-                                  size='sm'
-                                  className='h-8 w-8 p-0 hover:bg-muted'
-                                >
-                                  <MoreVertical className='h-4 w-4 text-muted-foreground' />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align='end'>
-                                <DropdownMenuItem
-                                  onClick={() => handleEditOpen(user)}
-                                  className='cursor-pointer'
-                                >
-                                  <Edit2 className='w-4 h-4 mr-2' />
-                                  Edit User
-                                </DropdownMenuItem>
-                                {user.role !== 'admin' && (
-                                  <DropdownMenuItem
-                                    onClick={() => handleDelete(user)}
-                                    className='cursor-pointer text-destructive'
+                            <div className='flex items-center gap-2'>
+                              <Button
+                                size='sm'
+                                variant='outline'
+                                className='h-8 border-border text-xs'
+                                asChild
+                              >
+                                <Link href={`/admin/users/${user._id}`}>
+                                  View Details
+                                </Link>
+                              </Button>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant='ghost'
+                                    size='sm'
+                                    className='h-8 w-8 p-0'
+                                    style={
+                                      {
+                                        '--tw-ring-color': 'var(--ring)',
+                                      } as React.CSSProperties
+                                    }
                                   >
-                                    <Trash2 className='w-4 h-4 mr-2' />
-                                    Delete User
+                                    <MoreVertical className='h-4 w-4 text-muted-foreground' />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align='end'>
+                                  <DropdownMenuItem
+                                    onClick={() => handleEditOpen(user)}
+                                    className='cursor-pointer'
+                                  >
+                                    <Edit2 className='w-4 h-4 mr-2' />
+                                    Edit User
                                   </DropdownMenuItem>
-                                )}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                                  {user.role !== 'admin' && (
+                                    <DropdownMenuItem
+                                      onClick={() => handleDelete(user)}
+                                      className='cursor-pointer'
+                                      style={{ color: 'var(--danger)' }}
+                                    >
+                                      <Trash2 className='w-4 h-4 mr-2' />
+                                      Delete User
+                                    </DropdownMenuItem>
+                                  )}
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -321,7 +412,21 @@ export default function AdminUsersPage() {
                   {filteredUsers.map((user) => (
                     <div
                       key={user._id}
-                      className='bg-muted/40 border border-border rounded-lg p-4 hover:bg-muted/60 transition-colors'
+                      className='border border-border rounded-lg p-4 transition-colors'
+                      style={
+                        {
+                          backgroundColor: 'var(--surface)',
+                          '--hover-bg': 'var(--surface-2)',
+                        } as React.CSSProperties
+                      }
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor =
+                          'var(--surface-2)')
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor =
+                          'var(--surface)')
+                      }
                     >
                       <div className='flex items-start justify-between gap-4 mb-4'>
                         <div className='flex items-start gap-3 flex-1'>
@@ -352,11 +457,15 @@ export default function AdminUsersPage() {
                         </div>
                         <Badge
                           variant={getRoleBadgeVariant(user.role)}
-                          className={
+                          style={
                             user.role === 'admin'
-                              ? 'bg-primary text-primary-foreground flex-shrink-0'
+                              ? {
+                                  backgroundColor: 'var(--brand)',
+                                  color: 'var(--brand-foreground)',
+                                }
                               : undefined
                           }
+                          className='flex-shrink-0'
                         >
                           {user.role === 'admin' && (
                             <Shield className='w-3 h-3 mr-1' />
@@ -372,10 +481,20 @@ export default function AdminUsersPage() {
                           </p>
                           <div className='flex items-center gap-2'>
                             <div
-                              className={`w-2 h-2 rounded-full ${user.isActive ? 'bg-accent' : 'bg-muted'}`}
+                              className='w-2 h-2 rounded-full'
+                              style={{
+                                backgroundColor: user.isActive
+                                  ? 'var(--success)'
+                                  : 'var(--muted)',
+                              }}
                             ></div>
                             <span
-                              className={`text-sm font-medium ${user.isActive ? 'text-accent' : 'text-muted-foreground'}`}
+                              className='text-sm font-medium'
+                              style={{
+                                color: user.isActive
+                                  ? 'var(--success)'
+                                  : 'var(--muted-foreground)',
+                              }}
                             >
                               {user.isActive ? 'Active' : 'Inactive'}
                             </span>
@@ -387,9 +506,15 @@ export default function AdminUsersPage() {
                           </p>
                           <div className='flex items-center gap-2'>
                             {user.isEmailVerified ? (
-                              <CheckCircle className='w-4 h-4 text-accent' />
+                              <CheckCircle
+                                className='w-4 h-4'
+                                style={{ color: 'var(--success)' }}
+                              />
                             ) : (
-                              <AlertCircle className='w-4 h-4 text-destructive' />
+                              <AlertCircle
+                                className='w-4 h-4'
+                                style={{ color: 'var(--warning)' }}
+                              />
                             )}
                             <span className='text-sm text-foreground'>
                               {user.isEmailVerified ? 'Verified' : 'Pending'}
@@ -405,42 +530,63 @@ export default function AdminUsersPage() {
                           : '-'}
                       </div>
 
-                      <div className='flex gap-2'>
+                      <div className='flex flex-col gap-2'>
                         <Button
                           size='sm'
                           variant='outline'
-                          onClick={() => handleEditOpen(user)}
-                          className='flex-1'
+                          className='w-full'
+                          asChild
                         >
-                          <Edit2 className='w-4 h-4 mr-2' />
-                          Edit
+                          <Link href={`/admin/users/${user._id}`}>
+                            View Details
+                          </Link>
                         </Button>
-                        {user.role !== 'admin' && (
+                        <div className='flex gap-2'>
                           <Button
                             size='sm'
-                            variant='destructive'
-                            onClick={() => handleDelete(user)}
-                            disabled={deleteUserMutation.status === 'pending'}
+                            variant='outline'
+                            onClick={() => handleEditOpen(user)}
                             className='flex-1'
                           >
-                            <Trash2 className='w-4 h-4 mr-2' />
-                            Delete
+                            <Edit2 className='w-4 h-4 mr-2' />
+                            Edit
                           </Button>
-                        )}
-                        {user.role === 'admin' && (
-                          <div className='flex-1 flex items-center justify-center text-xs text-muted-foreground bg-muted rounded px-3 py-2'>
-                            Admin - Delete disabled
-                          </div>
-                        )}
+                          {user.role !== 'admin' && (
+                            <Button
+                              size='sm'
+                              onClick={() => handleDelete(user)}
+                              disabled={deleteUserMutation.status === 'pending'}
+                              className='flex-1'
+                              style={{
+                                backgroundColor: 'var(--danger)',
+                                color: 'var(--foreground)',
+                              }}
+                            >
+                              <Trash2 className='w-4 h-4 mr-2' />
+                              Delete
+                            </Button>
+                          )}
+                          {user.role === 'admin' && (
+                            <div
+                              className='flex-1 flex items-center justify-center text-xs text-muted-foreground rounded px-3 py-2'
+                              style={{ backgroundColor: 'var(--surface-2)' }}
+                            >
+                              Admin - Delete disabled
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </>
             ) : (
-              <div className='p-12 text-center'>
-                <Users className='w-12 h-12 text-muted mx-auto mb-4' />
-                <p className='text-muted-foreground'>No users found.</p>
+              <div className='p-16 text-center'>
+                <Users
+                  className='w-12 h-12 mx-auto mb-4'
+                  style={{ color: 'var(--muted-foreground)' }}
+                />
+                <p className='text-muted-foreground text-lg'>No users found.</p>
               </div>
             )}
           </CardContent>
@@ -448,13 +594,23 @@ export default function AdminUsersPage() {
 
         {/* Edit Dialog */}
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
-          <DialogContent className='max-w-md max-h-[90vh] flex flex-col'>
-            <DialogHeader>
-              <DialogTitle>Edit User</DialogTitle>
+          <DialogContent
+            className='max-w-md max-h-[90vh] flex flex-col border-border'
+            style={{ backgroundColor: 'var(--card)' }}
+          >
+            <DialogHeader
+              style={{
+                borderBottom: '1px solid var(--border)',
+                paddingBottom: '1rem',
+              }}
+            >
+              <DialogTitle className='text-2xl font-bold text-foreground'>
+                Edit User
+              </DialogTitle>
             </DialogHeader>
             <form
               onSubmit={handleEditSubmit}
-              className='space-y-4 overflow-y-auto flex-1 pr-4'
+              className='space-y-5 overflow-y-auto flex-1 pr-4 py-4'
             >
               <div>
                 <Label className='m-2' htmlFor='name'>
@@ -527,26 +683,17 @@ export default function AdminUsersPage() {
                 </Label>
                 <Switch
                   checked={!!editForm.isActive}
+                  className='data-[state=checked]:bg-brand cursor-pointer'
                   onCheckedChange={(val) => handleEditSwitch('isActive', val)}
                 />
               </div>
-              <div className='flex items-center justify-between p-3 bg-muted rounded'>
-                <Label className='m-2' htmlFor='isEmailVerified'>
-                  Email Verified
-                </Label>
-                <Switch
-                  checked={!!editForm.isEmailVerified}
-                  onCheckedChange={(val) =>
-                    handleEditSwitch('isEmailVerified', val)
-                  }
-                />
-              </div>
             </form>
-            <DialogFooter className='mt-4'>
+            <DialogFooter className='mt-6 border-t border-border pt-4'>
               <Button
                 type='button'
                 variant='outline'
                 onClick={() => setEditOpen(false)}
+                className='border-border'
               >
                 Cancel
               </Button>
@@ -554,10 +701,18 @@ export default function AdminUsersPage() {
                 type='submit'
                 disabled={editUserMutation.status === 'pending'}
                 onClick={handleEditSubmit}
+                style={{
+                  backgroundColor: 'var(--brand)',
+                  color: 'var(--brand-foreground)',
+                }}
+                className='hover:opacity-90'
               >
                 {editUserMutation.status === 'pending' ? (
                   <>
-                    <Spinner className='w-4 h-4 mr-2' />
+                    <Spinner
+                      className='w-4 h-4 mr-2'
+                      style={{ color: 'var(--brand-foreground)' }}
+                    />
                     Saving...
                   </>
                 ) : (
