@@ -2,6 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { HelpTooltip } from '@/components/ui/help-tooltip';
 import { Input } from '@/components/ui/input';
 import { useCategories } from '@/hooks/use-category';
 import {
@@ -408,9 +409,12 @@ export default function SubcategoriesPage() {
               <div className='overflow-y-auto flex-1 px-8 py-6 space-y-6'>
                 {/* Category Selection */}
                 <div className='space-y-3'>
-                  <label className='text-sm font-semibold text-foreground'>
-                    Category <span className='text-danger'>*</span>
-                  </label>
+                  <div className='flex items-center gap-1'>
+                    <label className='text-sm font-semibold text-foreground'>
+                      Category <span className='text-danger'>*</span>
+                    </label>
+                    <HelpTooltip content='Choose the parent category first. This controls where the subcategory appears in navigation.' />
+                  </div>
                   <select
                     name='category'
                     value={formData.category}
@@ -429,9 +433,12 @@ export default function SubcategoriesPage() {
 
                 {/* Name */}
                 <div className='space-y-3'>
-                  <label className='text-sm font-semibold text-foreground'>
-                    Subcategory Name <span className='text-danger'>*</span>
-                  </label>
+                  <div className='flex items-center gap-1'>
+                    <label className='text-sm font-semibold text-foreground'>
+                      Subcategory Name <span className='text-danger'>*</span>
+                    </label>
+                    <HelpTooltip content='Use a specific name customers understand quickly, for example: Wireless Headphones.' />
+                  </div>
                   <Input
                     name='name'
                     value={formData.name}
@@ -444,9 +451,12 @@ export default function SubcategoriesPage() {
 
                 {/* Slug */}
                 <div className='space-y-3'>
-                  <label className='text-sm font-semibold text-foreground'>
-                    URL Slug
-                  </label>
+                  <div className='flex items-center gap-1'>
+                    <label className='text-sm font-semibold text-foreground'>
+                      URL Slug
+                    </label>
+                    <HelpTooltip content='Slug is auto-generated from name for consistency and SEO-friendly links.' />
+                  </div>
                   <div className='flex items-center gap-0'>
                     <div className='px-4 h-11 bg-surface/50 border border-r-0 border-border/40 rounded-l-xl flex items-center'>
                       <span className='text-sm text-muted-foreground'>/</span>
@@ -467,9 +477,12 @@ export default function SubcategoriesPage() {
 
                 {/* Description */}
                 <div className='space-y-3'>
-                  <label className='text-sm font-semibold text-foreground'>
-                    Description
-                  </label>
+                  <div className='flex items-center gap-1'>
+                    <label className='text-sm font-semibold text-foreground'>
+                      Description
+                    </label>
+                    <HelpTooltip content='Optional short summary that helps admins and shoppers understand this subcategory.' />
+                  </div>
                   <textarea
                     name='description'
                     value={formData.description}

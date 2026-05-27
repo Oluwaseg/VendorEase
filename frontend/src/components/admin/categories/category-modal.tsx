@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { HelpTooltip } from '@/components/ui/help-tooltip';
 import { useCreateCategory, useUpdateCategory } from '@/hooks/use-category';
 import { CLOUDINARY_FOLDER_CATEGORIES } from '@/lib/cloudinary-folders';
 import { Category } from '@/types/category';
@@ -224,12 +225,15 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
           <div className='space-y-4 px-6'>
             {/* Category Name */}
             <div className='space-y-2'>
-              <Label
-                htmlFor='name'
-                className='text-sm font-semibold text-foreground'
-              >
-                Category Name <span className='text-destructive'>*</span>
-              </Label>
+              <div className='flex items-center gap-1'>
+                <Label
+                  htmlFor='name'
+                  className='text-sm font-semibold text-foreground'
+                >
+                  Category Name <span className='text-destructive'>*</span>
+                </Label>
+                <HelpTooltip content='Use a clear shopper-friendly name. This helps search and navigation.' />
+              </div>
               <Input
                 id='name'
                 name='name'
@@ -243,12 +247,15 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
 
             {/* Slug */}
             <div className='space-y-2'>
-              <Label
-                htmlFor='slug'
-                className='text-sm font-semibold text-foreground'
-              >
-                URL Slug <span className='text-destructive'>*</span>
-              </Label>
+              <div className='flex items-center gap-1'>
+                <Label
+                  htmlFor='slug'
+                  className='text-sm font-semibold text-foreground'
+                >
+                  URL Slug <span className='text-destructive'>*</span>
+                </Label>
+                <HelpTooltip content='Slug is part of the URL. Keep it short and unique, using lowercase words and dashes.' />
+              </div>
               <Input
                 id='slug'
                 name='slug'
@@ -265,12 +272,15 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
 
             {/* Description */}
             <div className='space-y-2'>
-              <Label
-                htmlFor='description'
-                className='text-sm font-semibold text-foreground'
-              >
-                Description
-              </Label>
+              <div className='flex items-center gap-1'>
+                <Label
+                  htmlFor='description'
+                  className='text-sm font-semibold text-foreground'
+                >
+                  Description
+                </Label>
+                <HelpTooltip content='Optional summary shown to users. Good descriptions improve trust and browsing.' />
+              </div>
               <Textarea
                 id='description'
                 name='description'
@@ -285,9 +295,12 @@ export function CategoryModal({ open, onClose, category }: CategoryModalProps) {
             {/* Publish Status */}
             <div className='flex items-center justify-between p-4 bg-brand/5 border border-brand/20 rounded-xl'>
               <div>
-                <p className='font-semibold text-sm text-foreground'>
-                  Publish Category
-                </p>
+                <div className='flex items-center gap-1'>
+                  <p className='font-semibold text-sm text-foreground'>
+                    Publish Category
+                  </p>
+                  <HelpTooltip content='Published categories are visible on the storefront. Unpublished categories stay admin-only.' />
+                </div>
                 <p className='text-xs text-muted-foreground mt-1'>
                   Make this category visible to customers
                 </p>

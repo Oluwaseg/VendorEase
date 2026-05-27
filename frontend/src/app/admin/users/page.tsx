@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { HelpTooltip } from '@/components/ui/help-tooltip';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
@@ -643,9 +644,10 @@ export default function AdminUsersPage() {
                 />
               </div>
               <div>
-                <Label className='m-2' htmlFor='role'>
-                  Role
-                </Label>
+                <div className='m-2 flex items-center gap-1'>
+                  <Label htmlFor='role'>Role</Label>
+                  <HelpTooltip content='Role controls admin permissions. Only assign admin/moderator when needed.' />
+                </div>
                 <select
                   name='role'
                   value={editForm.role || ''}
@@ -678,9 +680,10 @@ export default function AdminUsersPage() {
                 />
               </div>
               <div className='flex items-center justify-between p-3 bg-muted rounded'>
-                <Label className='m-2' htmlFor='isActive'>
-                  Active
-                </Label>
+                <div className='m-2 flex items-center gap-1'>
+                  <Label htmlFor='isActive'>Active</Label>
+                  <HelpTooltip content='Inactive users cannot sign in or access customer actions until reactivated.' />
+                </div>
                 <Switch
                   checked={!!editForm.isActive}
                   className='data-[state=checked]:bg-brand cursor-pointer'

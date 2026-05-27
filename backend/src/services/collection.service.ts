@@ -13,6 +13,13 @@ export interface CreateCollectionData {
   description?: string;
   ctaText?: string;
   position?: HeroTextPosition;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  showHeroTitle?: boolean;
+  showHeroSubtitle?: boolean;
+  showHeroCta?: boolean;
+  ctaButtonBgColor?: string;
+  ctaButtonTextColor?: string;
   image?: ICollectionImage;
   productIds: string[];
   isActive?: boolean;
@@ -26,6 +33,13 @@ export interface UpdateCollectionData {
   description?: string;
   ctaText?: string;
   position?: HeroTextPosition;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  showHeroTitle?: boolean;
+  showHeroSubtitle?: boolean;
+  showHeroCta?: boolean;
+  ctaButtonBgColor?: string | null;
+  ctaButtonTextColor?: string | null;
   image?: ICollectionImage | null;
   productIds?: string[];
   isActive?: boolean;
@@ -50,6 +64,14 @@ class CollectionService {
       description: data.description,
       ctaText: data.ctaText,
       position: data.position ?? DEFAULT_HERO_TEXT_POSITION,
+      heroTitle: data.heroTitle,
+      heroSubtitle: data.heroSubtitle,
+      showHeroTitle: data.showHeroTitle !== undefined ? data.showHeroTitle : true,
+      showHeroSubtitle:
+        data.showHeroSubtitle !== undefined ? data.showHeroSubtitle : true,
+      showHeroCta: data.showHeroCta !== undefined ? data.showHeroCta : true,
+      ctaButtonBgColor: data.ctaButtonBgColor,
+      ctaButtonTextColor: data.ctaButtonTextColor,
       image: data.image,
       productIds: data.productIds,
       isActive: data.isActive !== undefined ? data.isActive : true,

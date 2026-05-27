@@ -24,6 +24,11 @@ export interface CarouselSlide {
   buttonText: string;
   buttonHref: string;
   position?: TextPosition;
+  showTitle?: boolean;
+  showSubtitle?: boolean;
+  showButton?: boolean;
+  buttonBgColor?: string;
+  buttonTextColor?: string;
 }
 
 interface HeroCarouselProps {
@@ -67,7 +72,20 @@ export function Hero({ slides }: HeroCarouselProps) {
         plugins={[plugin.current]}
       >
         <CarouselContent className='m-0'>
-          {slides.map((slide) => (
+          {slides.map((slide) => {
+            const showTitle = slide.showTitle !== false;
+            const showSubtitle = slide.showSubtitle !== false;
+            const showButton = slide.showButton !== false;
+            const hasOverlay = showTitle || showSubtitle || showButton;
+            const buttonStyle =
+              slide.buttonBgColor || slide.buttonTextColor
+                ? {
+                    backgroundColor: slide.buttonBgColor,
+                    color: slide.buttonTextColor,
+                  }
+                : undefined;
+
+            return (
             <CarouselItem key={slide.id} className='p-0'>
               <div className='relative h-[500px] w-full lg:h-[500px]'>
                 <Image
@@ -79,8 +97,11 @@ export function Hero({ slides }: HeroCarouselProps) {
                   unoptimized
                 />
 
-                <div className='absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40' />
+                {hasOverlay ? (
+                  <div className='absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40' />
+                ) : null}
 
+                {hasOverlay ? (
                 <div
                   className={`absolute inset-0 flex px-6 py-12 ${
                     slide.position?.includes('top')
@@ -96,11 +117,7 @@ export function Hero({ slides }: HeroCarouselProps) {
                         : 'items-center'
                   }`}
                   style={{
-                    flexDirection:
-                      slide.position?.includes('top') ||
-                      slide.position?.includes('bottom')
-                        ? 'column'
-                        : 'column',
+                    flexDirection: 'column',
                     justifyContent: slide.position?.includes('top')
                       ? 'flex-start'
                       : slide.position?.includes('bottom')
@@ -117,24 +134,36 @@ export function Hero({ slides }: HeroCarouselProps) {
                           : 'text-center'
                     }`}
                   >
-                    <h1 className='text-balance font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] text-white/70'>
-                      {slide.title}
-                    </h1>
+                    {showTitle ? (
+                      <h1 className='text-balance font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] text-white/70'>
+                        {slide.title}
+                      </h1>
+                    ) : null}
 
-                    <h2 className='text-balance font-serif text-4xl sm:text-5xl lg:text-6xl font-light leading-tight text-white'>
-                      {slide.subtitle}
-                    </h2>
+                    {showSubtitle ? (
+                      <h2 className='text-balance font-serif text-4xl sm:text-5xl lg:text-6xl font-light leading-tight text-white'>
+                        {slide.subtitle}
+                      </h2>
+                    ) : null}
 
-                    <div className='pt-4'>
-                      <Button
-                        asChild
-                        className='rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground hover:bg-accent/90 transition-all'
-                      >
-                        <a href={slide.buttonHref}>{slide.buttonText}</a>
-                      </Button>
-                    </div>
+                    {showButton ? (
+                      <div className={showTitle || showSubtitle ? 'pt-4' : undefined}>
+                        <Button
+                          asChild
+                          style={buttonStyle}
+                          className={
+                            buttonStyle
+                              ? 'rounded-full px-10 py-4 text-base font-semibold transition-all hover:opacity-90'
+                              : 'rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground hover:bg-accent/90 transition-all'
+                          }
+                        >
+                          <a href={slide.buttonHref}>{slide.buttonText}</a>
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
+                ) : null}
 
                 {/* <div className='absolute bottom-6 left-6 right-6 flex items-center justify-between'>
                   <div className='text-sm font-medium text-white/80'>
@@ -155,7 +184,8 @@ export function Hero({ slides }: HeroCarouselProps) {
                 </div> */}
               </div>
             </CarouselItem>
-          ))}
+            );
+          })}
         </CarouselContent>
       </Carousel>
     </div>

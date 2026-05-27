@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { HelpTooltip } from '@/components/ui/help-tooltip';
 import { useCategories } from '@/hooks/use-category';
 import { useSubcategoriesWithCategory } from '@/hooks/use-subcategory';
 import {
@@ -140,7 +141,12 @@ export function ProductForm(props: ProductFormProps) {
     >
       {/* Basic Information */}
       <div className='space-y-4 pb-6 border-b border-border'>
-        <h3 className='text-lg font-bold text-foreground'>Basic Information</h3>
+        <div className='flex items-center gap-1'>
+          <h3 className='text-lg font-bold text-foreground'>
+            Basic Information
+          </h3>
+          <HelpTooltip content='Set the product identity details customers use to recognize and search this item.' />
+        </div>
 
         <div>
           <label className='block text-sm font-semibold text-foreground mb-2'>
@@ -202,7 +208,10 @@ export function ProductForm(props: ProductFormProps) {
 
       {/* Pricing & Stock */}
       <div className='space-y-4 pb-6 border-b border-border'>
-        <h3 className='text-lg font-bold text-foreground'>Pricing & Stock</h3>
+        <div className='flex items-center gap-1'>
+          <h3 className='text-lg font-bold text-foreground'>Pricing & Stock</h3>
+          <HelpTooltip content='Use base price and stock to control availability and buying experience in the store.' />
+        </div>
 
         <div className='grid sm:grid-cols-2 gap-4'>
           <div>
@@ -238,7 +247,10 @@ export function ProductForm(props: ProductFormProps) {
 
       {/* Categories */}
       <div className='space-y-4 pb-6 border-b border-border'>
-        <h3 className='text-lg font-bold text-foreground'>Categories</h3>
+        <div className='flex items-center gap-1'>
+          <h3 className='text-lg font-bold text-foreground'>Categories</h3>
+          <HelpTooltip content='Pick category first, then subcategory. Subcategory choices are filtered by your category selection.' />
+        </div>
         <div className='grid sm:grid-cols-2 gap-4'>
           <div>
             <label className='block text-sm font-semibold text-foreground mb-2'>
@@ -312,6 +324,7 @@ export function ProductForm(props: ProductFormProps) {
         <div className='flex items-center gap-2'>
           <Image size={20} className='text-brand' />
           <h3 className='text-lg font-bold text-foreground'>Product Images</h3>
+          <HelpTooltip content='Add clear images for product cards and details. The first image is usually the primary display image.' />
         </div>
         <CldUploadWidget
           signatureEndpoint='/api/cloudinary/signature'
@@ -421,6 +434,7 @@ export function ProductForm(props: ProductFormProps) {
           <div className='flex items-center gap-2'>
             <Tag size={20} className='text-accent' />
             <h3 className='text-lg font-bold text-foreground'>Flash Sale</h3>
+            <HelpTooltip content='Run a temporary discount by setting dates, discount type, and activating when ready.' />
           </div>
 
           <label className='flex items-center gap-2 cursor-pointer'>
@@ -554,9 +568,12 @@ export function ProductForm(props: ProductFormProps) {
 
       {/* Visibility & Status */}
       <div className='space-y-4 pb-6 border-b border-border'>
-        <h3 className='text-lg font-bold text-foreground'>
-          Visibility & Status
-        </h3>
+        <div className='flex items-center gap-1'>
+          <h3 className='text-lg font-bold text-foreground'>
+            Visibility & Status
+          </h3>
+          <HelpTooltip content='Publish controls storefront visibility. Best Seller adds merchandising emphasis.' />
+        </div>
 
         <div className='space-y-3'>
           <label className='flex items-center gap-3 cursor-pointer p-3 border border-border rounded-[0.5rem] hover:bg-surface/50 transition-colors'>

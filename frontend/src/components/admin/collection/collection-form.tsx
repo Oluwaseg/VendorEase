@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { HelpTooltip } from '@/components/ui/help-tooltip';
 import { useProducts } from '@/hooks/use-product';
 import { CLOUDINARY_FOLDER_COLLECTIONS } from '@/lib/cloudinary-folders';
 import {
@@ -63,6 +64,13 @@ export function CollectionForm({
     description: '',
     ctaText: '',
     position: DEFAULT_HERO_TEXT_POSITION,
+    heroTitle: '',
+    heroSubtitle: '',
+    showHeroTitle: true,
+    showHeroSubtitle: true,
+    showHeroCta: true,
+    ctaButtonBgColor: '',
+    ctaButtonTextColor: '',
     image: undefined,
     productIds: [],
     isActive: true,
@@ -78,6 +86,13 @@ export function CollectionForm({
         description: initialData.description ?? '',
         ctaText: initialData.ctaText ?? '',
         position: initialData.position ?? DEFAULT_HERO_TEXT_POSITION,
+        heroTitle: initialData.heroTitle ?? '',
+        heroSubtitle: initialData.heroSubtitle ?? '',
+        showHeroTitle: initialData.showHeroTitle ?? true,
+        showHeroSubtitle: initialData.showHeroSubtitle ?? true,
+        showHeroCta: initialData.showHeroCta ?? true,
+        ctaButtonBgColor: initialData.ctaButtonBgColor ?? '',
+        ctaButtonTextColor: initialData.ctaButtonTextColor ?? '',
         image: initialData.image,
         productIds: normalizeProductIds(initialData.productIds),
         isActive: initialData.isActive,
@@ -118,6 +133,10 @@ export function CollectionForm({
       ...form,
       description: form.description?.trim() || undefined,
       ctaText: form.ctaText?.trim() || undefined,
+      heroTitle: form.heroTitle?.trim() || undefined,
+      heroSubtitle: form.heroSubtitle?.trim() || undefined,
+      ctaButtonBgColor: form.ctaButtonBgColor?.trim() || undefined,
+      ctaButtonTextColor: form.ctaButtonTextColor?.trim() || undefined,
       image: form.image,
       heroOrder: form.featuredOnHomepage ? (form.heroOrder ?? 0) : 0,
     });
@@ -177,12 +196,15 @@ export function CollectionForm({
           </div>
         </div>
         <div className='space-y-3'>
-          <Label
-            htmlFor='collection-description'
-            className='font-semibold text-foreground'
-          >
-            Description
-          </Label>
+          <div className='flex items-center gap-1'>
+            <Label
+              htmlFor='collection-description'
+              className='font-semibold text-foreground'
+            >
+              Description
+            </Label>
+            <HelpTooltip content='This description appears on the collection page and can also be used as hero subtitle when no custom hero subtitle is set.' />
+          </div>
           <Textarea
             id='collection-description'
             value={form.description ?? ''}
@@ -190,18 +212,21 @@ export function CollectionForm({
               setForm((prev) => ({ ...prev, description: e.target.value }))
             }
             rows={3}
-            placeholder='Write a short, compelling description that will appear on the homepage hero and collection page'
+            placeholder='Short description for the collection page (also used as hero subtitle unless you override it below)'
             className='border-border focus:border-border resize-none'
             style={{ '--tw-ring-color': 'var(--ring)' } as React.CSSProperties}
           />
         </div>
         <div className='space-y-3'>
-          <Label
-            htmlFor='collection-cta'
-            className='font-semibold text-foreground'
-          >
-            Call-to-action text
-          </Label>
+          <div className='flex items-center gap-1'>
+            <Label
+              htmlFor='collection-cta'
+              className='font-semibold text-foreground'
+            >
+              Call-to-action text
+            </Label>
+            <HelpTooltip content='Button text for hero and collection page CTA. Keep it short for small screens.' />
+          </div>
           <Input
             id='collection-cta'
             value={form.ctaText ?? ''}
@@ -333,12 +358,15 @@ export function CollectionForm({
               }}
             >
               <div>
-                <Label
-                  htmlFor='hero-order'
-                  className='font-semibold text-foreground'
-                >
-                  Carousel order
-                </Label>
+                <div className='flex items-center gap-1'>
+                  <Label
+                    htmlFor='hero-order'
+                    className='font-semibold text-foreground'
+                  >
+                    Carousel order
+                  </Label>
+                  <HelpTooltip content='Smaller numbers appear first in the homepage hero carousel.' />
+                </div>
                 <Input
                   id='hero-order'
                   type='number'
@@ -361,12 +389,15 @@ export function CollectionForm({
                 </p>
               </div>
               <div>
-                <Label
-                  htmlFor='hero-position'
-                  className='font-semibold text-foreground'
-                >
-                  Text position on image
-                </Label>
+                <div className='flex items-center gap-1'>
+                  <Label
+                    htmlFor='hero-position'
+                    className='font-semibold text-foreground'
+                  >
+                    Text position on image
+                  </Label>
+                  <HelpTooltip content='Use Top/Bottom/Left/Right when you need single-axis alignment. Use corner options for exact placement.' />
+                </div>
                 <select
                   id='hero-position'
                   value={form.position ?? DEFAULT_HERO_TEXT_POSITION}
@@ -391,6 +422,192 @@ export function CollectionForm({
                   Choose where the title, description, and CTA button will
                   appear
                 </p>
+              </div>
+
+              <div className='space-y-4 pt-2 border-t border-border/60'>
+                <div className='flex items-center gap-1'>
+                  <p className='text-sm font-semibold text-foreground'>
+                    Hero overlay
+                  </p>
+                  <HelpTooltip content='Turn title/subtitle/button on or off depending on what text already exists in your uploaded image.' />
+                </div>
+                <p className='text-xs text-muted-foreground -mt-2'>
+                  Turn off text when your image already includes copy. Leave
+                  hero fields blank to use the collection name and description.
+                </p>
+
+                <div
+                  className='flex items-center justify-between rounded-lg border border-border p-3'
+                  style={{ backgroundColor: 'var(--surface)' }}
+                >
+                  <Label htmlFor='show-hero-title' className='text-sm font-medium'>
+                    Show title on hero
+                  </Label>
+                  <Switch
+                    id='show-hero-title'
+                    checked={form.showHeroTitle ?? true}
+                    onCheckedChange={(checked) =>
+                      setForm((prev) => ({ ...prev, showHeroTitle: checked }))
+                    }
+                  />
+                </div>
+                {(form.showHeroTitle ?? true) ? (
+                  <div className='space-y-2'>
+                    <Label htmlFor='hero-title' className='text-sm font-medium'>
+                      Hero title (optional)
+                    </Label>
+                    <Input
+                      id='hero-title'
+                      value={form.heroTitle ?? ''}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, heroTitle: e.target.value }))
+                      }
+                      maxLength={120}
+                      placeholder={`Defaults to "${form.name || 'collection name'}"`}
+                      className='border-border focus:border-border'
+                    />
+                  </div>
+                ) : null}
+
+                <div
+                  className='flex items-center justify-between rounded-lg border border-border p-3'
+                  style={{ backgroundColor: 'var(--surface)' }}
+                >
+                  <Label
+                    htmlFor='show-hero-subtitle'
+                    className='text-sm font-medium'
+                  >
+                    Show subtitle on hero
+                  </Label>
+                  <Switch
+                    id='show-hero-subtitle'
+                    checked={form.showHeroSubtitle ?? true}
+                    onCheckedChange={(checked) =>
+                      setForm((prev) => ({ ...prev, showHeroSubtitle: checked }))
+                    }
+                  />
+                </div>
+                {(form.showHeroSubtitle ?? true) ? (
+                  <div className='space-y-2'>
+                    <Label
+                      htmlFor='hero-subtitle'
+                      className='text-sm font-medium'
+                    >
+                      Hero subtitle (optional)
+                    </Label>
+                    <Input
+                      id='hero-subtitle'
+                      value={form.heroSubtitle ?? ''}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          heroSubtitle: e.target.value,
+                        }))
+                      }
+                      maxLength={200}
+                      placeholder='Defaults to collection description'
+                      className='border-border focus:border-border'
+                    />
+                  </div>
+                ) : null}
+
+                <div
+                  className='flex items-center justify-between rounded-lg border border-border p-3'
+                  style={{ backgroundColor: 'var(--surface)' }}
+                >
+                  <Label htmlFor='show-hero-cta' className='text-sm font-medium'>
+                    Show CTA button on hero
+                  </Label>
+                  <Switch
+                    id='show-hero-cta'
+                    checked={form.showHeroCta ?? true}
+                    onCheckedChange={(checked) =>
+                      setForm((prev) => ({ ...prev, showHeroCta: checked }))
+                    }
+                  />
+                </div>
+
+                {(form.showHeroCta ?? true) ? (
+                  <div className='grid gap-4 sm:grid-cols-2'>
+                    <div className='space-y-2'>
+                      <Label
+                        htmlFor='cta-button-bg'
+                        className='text-sm font-medium'
+                      >
+                        Button background
+                      </Label>
+                      <div className='flex gap-2'>
+                        <Input
+                          id='cta-button-bg'
+                          type='color'
+                          value={
+                            form.ctaButtonBgColor?.match(/^#[0-9A-Fa-f]{6}$/i)
+                              ? form.ctaButtonBgColor
+                              : '#e85d04'
+                          }
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              ctaButtonBgColor: e.target.value,
+                            }))
+                          }
+                          className='h-10 w-14 cursor-pointer border-border p-1'
+                        />
+                        <Input
+                          value={form.ctaButtonBgColor ?? ''}
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              ctaButtonBgColor: e.target.value,
+                            }))
+                          }
+                          placeholder='#e85d04 (optional)'
+                          className='border-border focus:border-border font-mono text-sm'
+                        />
+                      </div>
+                    </div>
+                    <div className='space-y-2'>
+                      <Label
+                        htmlFor='cta-button-text'
+                        className='text-sm font-medium'
+                      >
+                        Button text color
+                      </Label>
+                      <div className='flex gap-2'>
+                        <Input
+                          id='cta-button-text'
+                          type='color'
+                          value={
+                            form.ctaButtonTextColor?.match(/^#[0-9A-Fa-f]{6}$/i)
+                              ? form.ctaButtonTextColor
+                              : '#ffffff'
+                          }
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              ctaButtonTextColor: e.target.value,
+                            }))
+                          }
+                          className='h-10 w-14 cursor-pointer border-border p-1'
+                        />
+                        <Input
+                          value={form.ctaButtonTextColor ?? ''}
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              ctaButtonTextColor: e.target.value,
+                            }))
+                          }
+                          placeholder='#ffffff (optional)'
+                          className='border-border focus:border-border font-mono text-sm'
+                        />
+                      </div>
+                      <p className='text-xs text-muted-foreground'>
+                        Leave colors empty to use the site default accent button
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
           </>

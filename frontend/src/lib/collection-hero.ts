@@ -34,12 +34,19 @@ export function collectionToHeroSlide(collection: Collection): CarouselSlide | n
     id: collection._id,
     image: collection.image.url,
     alt: collection.name,
-    title: collection.name,
+    title: collection.heroTitle?.trim() || collection.name,
     subtitle:
-      collection.description?.trim() || 'Explore our curated selection',
+      collection.heroSubtitle?.trim() ||
+      collection.description?.trim() ||
+      'Explore our curated selection',
     buttonText: getCollectionCtaText(collection),
     buttonHref: `/collections/${collection.slug}`,
     position: getCollectionHeroPosition(collection),
+    showTitle: collection.showHeroTitle !== false,
+    showSubtitle: collection.showHeroSubtitle !== false,
+    showButton: collection.showHeroCta !== false,
+    buttonBgColor: collection.ctaButtonBgColor,
+    buttonTextColor: collection.ctaButtonTextColor,
   };
 }
 
