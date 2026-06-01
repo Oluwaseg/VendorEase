@@ -1,5 +1,4 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
 
 # Run a quick TypeScript build to catch compilation errors before committing
 cd backend || exit 0

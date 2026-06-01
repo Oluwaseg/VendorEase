@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "dev:nodemon": "nodemon --watch src --ext ts,js --exec ts-node src/server.ts",
-    "prepare": "husky install .husky || true",
+    "prepare": "cd .. && husky install || true",
     "build": "tsc -p .",
     "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",

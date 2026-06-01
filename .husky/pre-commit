@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run backend TypeScript build to catch compilation errors before committing
+echo "Running backend build check..."
+cd backend || exit 1
+pnpm build || exit 1
+echo "Build check passed!"
