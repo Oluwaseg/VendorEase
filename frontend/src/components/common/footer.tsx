@@ -1,128 +1,197 @@
+'use client';
+
 import { logo } from '@/assets';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   ArrowRight,
   Github,
   Instagram,
   Linkedin,
   Mail,
+  MapPin,
+  Phone,
+  Sparkles,
   Twitter,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+const footerLinks = [
+  {
+    label: 'Shop',
+    links: [
+      { name: 'All Products', href: '/' },
+      { name: 'New Arrivals', href: '/' },
+      { name: 'Best Sellers', href: '/' },
+      { name: 'Deals', href: '/' },
+    ],
+  },
+  {
+    label: 'Company',
+    links: [
+      { name: 'About', href: '/' },
+      { name: 'Careers', href: '/' },
+      { name: 'Press', href: '/' },
+      { name: 'Blog', href: '/' },
+    ],
+  },
+  {
+    label: 'Support',
+    links: [
+      { name: 'Help Center', href: '/' },
+      { name: 'Shipping', href: '/' },
+      { name: 'Returns', href: '/' },
+      { name: 'Contact', href: '/' },
+    ],
+  },
+];
+
+const socials = [
+  { icon: Twitter, href: '#', label: 'Twitter' },
+  { icon: Instagram, href: '#', label: 'Instagram' },
+  { icon: Linkedin, href: '#', label: 'LinkedIn' },
+  { icon: Github, href: '#', label: 'GitHub' },
+];
+
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-
-  const footerLinks = [
-    {
-      label: 'Shop',
-      links: [
-        { name: 'Products', href: '/shop' },
-        { name: 'New Arrivals', href: '/shop/new' },
-        { name: 'Deals', href: '/deals' },
-      ],
-    },
-    {
-      label: 'Company',
-      links: [
-        { name: 'About', href: '/about' },
-        { name: 'Contact', href: '/contact' },
-        { name: 'Blog', href: '/blog' },
-      ],
-    },
-    {
-      label: 'Legal',
-      links: [
-        { name: 'Privacy', href: '/privacy' },
-        { name: 'Terms', href: '/terms' },
-        { name: 'Returns', href: '/returns' },
-      ],
-    },
-  ];
-
-  const socials = [
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Github, href: '#', label: 'GitHub' },
-  ];
+  const year = new Date().getFullYear();
 
   return (
-    <footer className='relative border-t border-border bg-linear-to-b from-primary/45 to-accent/30'>
-      <div className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8'>
-        {/* Newsletter Section */}
-        <div className='mb-12 rounded-2xl bg-secondary/40 border border-border/50 p-8 backdrop-blur-sm'>
-          <div className='flex flex-col items-start justify-between gap-6 md:flex-row md:items-center'>
-            <div>
-              <h3 className='text-lg font-semibold text-foreground'>
-                Stay in the loop
-              </h3>
-              <p className='mt-1 text-sm text-muted-foreground'>
-                Get updates on new products and exclusive offers.
-              </p>
+    <footer
+      className='relative overflow-hidden text-foreground'
+      style={{
+        background: 'var(--brand)',
+      }}
+    >
+      <div
+        className='relative mx-auto max-w-7xl px-6 pt-20 pb-10 lg:px-8'
+        style={{ color: '#ffffff' }}
+      >
+        {/* Newsletter */}
+        <div className='grid gap-10 rounded-3xl border border-white/20 bg-white/10 p-8 md:grid-cols-2 md:p-12'>
+          <div>
+            <div className='mb-3 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs text-white/80'>
+              <Sparkles className='h-3 w-3' />
+              Join 50,000+ shoppers
             </div>
-            <div className='flex w-full gap-2 md:w-auto'>
-              <input
-                type='email'
-                placeholder='Enter your email'
-                className='rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50'
-              />
-              <button className='rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 active:scale-95'>
-                <Mail className='h-4 w-4' />
-              </button>
-            </div>
+
+            <h2 className='text-3xl font-semibold tracking-tight md:text-4xl text-white'>
+              <span className='shimmer-text'>Stay in the loop.</span>
+            </h2>
+
+            <p className='mt-3 max-w-md text-sm text-white/80'>
+              Early access to drops, members-only deals, and stories from the
+              makers we love. No spam — unsubscribe anytime.
+            </p>
           </div>
+
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className='flex flex-col items-stretch gap-3 self-center sm:flex-row'
+          >
+            <Input
+              type='email'
+              required
+              placeholder='you@domain.com'
+              className='h-12 flex-1'
+              style={{
+                background: 'rgba(255, 255, 255, 0.15)',
+                borderColor: 'var(--accent)',
+                color: '#ffffff',
+              }}
+            />
+
+            <Button
+              type='submit'
+              className='group h-12 gap-2 px-6 font-medium transition-transform hover:scale-[1.02]'
+              style={{
+                background: 'var(--accent)',
+                color: '#000000',
+              }}
+            >
+              Subscribe
+              <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-0.5' />
+            </Button>
+          </form>
         </div>
 
-        {/* Main Footer Grid */}
-        <div className='grid grid-cols-1 gap-8 md:grid-cols-12'>
-          {/* Brand Section - Spans 4 cols */}
-          <div className='md:col-span-4'>
-            <div className='flex items-center gap-3'>
-              <div className='relative h-8 w-8'>
-                <Image src={logo} alt='Logo' fill className='object-contain' />
+        {/* Main grid */}
+        <div className='mt-16 grid grid-cols-1 gap-12 lg:grid-cols-12'>
+          {/* Brand */}
+          <div className='lg:col-span-4'>
+            <Link href='/' className='flex items-center gap-2'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-lg overflow-hidden bg-white/20'>
+                {/* show logo if available */}
+                <div className='relative h-6 w-6'>
+                  <Image
+                    src={logo}
+                    alt='VendorEase'
+                    fill
+                    className='object-contain'
+                  />
+                </div>
               </div>
-              <span className='text-lg font-bold text-foreground'>
+
+              <span className='text-xl font-semibold tracking-tight text-white'>
                 VendorEase
               </span>
-            </div>
-            <p className='mt-3 text-sm text-muted-foreground leading-relaxed'>
-              Curated shopping that respects your time. Quality over quantity.
+            </Link>
+
+            <p className='mt-5 max-w-sm text-sm leading-relaxed text-white/70'>
+              Curated shopping that respects your time. Quality over quantity,
+              always.
             </p>
-            {/* Social Icons */}
-            <div className='mt-6 flex gap-3'>
-              {socials.map((social) => {
-                const Icon = social.icon;
+
+            <ul className='mt-6 space-y-3 text-sm text-white/70'>
+              <li className='flex items-center gap-3'>
+                <MapPin className='h-4 w-4 text-white/50' />
+                221B Baker Street, London
+              </li>
+              <li className='flex items-center gap-3'>
+                <Mail className='h-4 w-4 text-white/50' />
+                hello@vendorease.com
+              </li>
+              <li className='flex items-center gap-3'>
+                <Phone className='h-4 w-4 text-white/50' />
+                +1 (555) 010-2024
+              </li>
+            </ul>
+
+            <div className='mt-7 flex gap-2'>
+              {socials.map((s) => {
+                const Icon = s.icon;
                 return (
-                  <Link
-                    key={social.label}
-                    href={social.href}
-                    className='inline-flex h-9 w-9 items-center justify-center rounded-lg bg-secondary/50 text-muted-foreground transition-all hover:bg-primary hover:text-primary-foreground'
-                    aria-label={social.label}
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    aria-label={s.label}
+                    className='group flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white/70 transition-all hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/20 hover:text-white'
                   >
                     <Icon className='h-4 w-4' />
-                  </Link>
+                  </a>
                 );
               })}
             </div>
           </div>
 
-          {/* Links Grid - Spans 8 cols */}
-          <div className='grid grid-cols-3 gap-6 md:col-span-8'>
+          {/* Links */}
+          <div className='grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8'>
             {footerLinks.map((section) => (
               <div key={section.label}>
-                <h4 className='text-sm font-semibold text-foreground'>
+                <h3 className='text-xs font-semibold uppercase tracking-[0.18em] text-white/60'>
                   {section.label}
-                </h4>
-                <ul className='mt-4 space-y-2.5'>
+                </h3>
+
+                <ul className='mt-5 space-y-3'>
                   {section.links.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href}
-                        className='group inline-flex text-sm text-muted-foreground transition-colors hover:text-primary'
+                        className='group inline-flex items-center gap-1.5 text-sm text-white/70 transition-colors hover:text-white'
                       >
                         {link.name}
-                        <ArrowRight className='ml-1 h-3 w-3 opacity-0 transition-all group-hover:opacity-100' />
+                        <ArrowRight className='h-3.5 w-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100' />
                       </Link>
                     </li>
                   ))}
@@ -133,32 +202,35 @@ export function Footer() {
         </div>
 
         {/* Divider */}
-        <div className='my-8 h-px bg-gradient-to-r from-border via-border/50 to-border' />
+        <div className='mt-16 h-px w-full bg-white/20' />
 
-        {/* Bottom Bar */}
-        <div className='flex flex-col items-center justify-between gap-4 sm:flex-row'>
-          <p className='text-xs text-muted-foreground'>
-            © {currentYear} VendorEase. All rights reserved.
-          </p>
-          <div className='flex gap-6'>
-            <Link
-              href='/privacy'
-              className='text-xs text-muted-foreground transition-colors hover:text-primary'
-            >
+        {/* Bottom bar */}
+        <div className='mt-8 flex flex-col items-center justify-between gap-4 text-xs text-white/60 sm:flex-row'>
+          <p>© {year} VendorEase. Crafted with care.</p>
+
+          <div className='flex items-center gap-6'>
+            <a href='#' className='transition-colors hover:text-white'>
               Privacy
-            </Link>
-            <Link
-              href='/terms'
-              className='text-xs text-muted-foreground transition-colors hover:text-primary'
-            >
+            </a>
+            <a href='#' className='transition-colors hover:text-white'>
               Terms
-            </Link>
-            <Link
-              href='/cookies'
-              className='text-xs text-muted-foreground transition-colors hover:text-primary'
-            >
+            </a>
+            <a href='#' className='transition-colors hover:text-white'>
               Cookies
-            </Link>
+            </a>
+          </div>
+        </div>
+
+        {/* Oversized wordmark */}
+        <div
+          aria-hidden
+          className='pointer-events-none select-none overflow-hidden mt-16'
+        >
+          <div
+            className='-mb-6 text-center text-[20vw] font-bold leading-none tracking-tighter md:-mb-10'
+            style={{ fontFamily: 'inherit', color: 'rgba(255, 255, 255, 0.1)' }}
+          >
+            VENDOREASE
           </div>
         </div>
       </div>
