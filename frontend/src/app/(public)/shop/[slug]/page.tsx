@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  InlineEmpty,
+  InlineError,
+  InlineLoader,
+} from '@/components/common/loader';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/auth-context';
 import { useCartContext } from '@/contexts/cart-context';
@@ -36,6 +41,7 @@ export default function ProductDetailPage() {
     data: product,
     isLoading: loadingProduct,
     isError: productError,
+    refetch,
   } = useProductBySlug(slug || '');
 
   const { data: reviewsData, isLoading: loadingReviews } = useReviewsByProduct(
@@ -126,10 +132,60 @@ export default function ProductDetailPage() {
         ).toFixed(1)
       : 0;
 
-  if (!slug) return <div className='p-8'>Invalid product slug</div>;
-  if (loadingProduct) return <div className='p-8'>Loading product…</div>;
+  if (!slug)
+    return (
+      <InlineError
+        icon={<AlertCircle size={48} className='text-destructive/50' />}
+        title='Invalid product'
+        message='This product link looks broken.'
+        backHref='/shop'
+        backLabel='Back to shop'
+      />
+    );
+  if (loadingProduct) return <InlineLoader message='Loading product…' />;
   if (productError || !product)
-    return <div className='p-8'>Product not found</div>;
+    return (
+      <InlineEmpty
+        icon={<AlertCircle size={48} className='text-destructive/50' />}
+        title='Product not found'
+        message='It may have been removed or is no longer available.'
+        backHref='/shop'
+        backLabel='Browse shop'
+        onRetry={() => refetch()}
+      />
+    );
+
+
+const handleShare = async () => {
+  if (typeof window === 'undefined' || !product) return;
+
+  const url = window.location.href;
+  const shareData: ShareData = {
+    title: product.name,
+    text: product.description
+      ? `${product.name} — ${product.description.slice(0, 100)}${product.description.length > 100 ? '...' : ''}`
+      : `Check out ${product.name}`,
+    url,
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      return;
+    } catch {
+      // User cancelled or share failed — fall through to clipboard
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(url);
+    alert('Product link copied to clipboard');
+  } catch {
+    alert('Unable to share or copy link');
+  }
+};
+
+
 
   return (
     <main className='min-h-screen bg-background'>
@@ -281,49 +337,59 @@ export default function ProductDetailPage() {
               >
                 Add to Cart
               </Button>
-              <Button
-                variant='outline'
-                className='py-6 text-base font-bold rounded-xl border-2 hover:bg-muted transition-all duration-200'
-              >
-                <Share2 size={20} />
-                Share
-              </Button>
+         <Button
+  onClick={handleShare}
+  variant='outline'
+  className='py-6 text-base font-bold rounded-xl border-2 hover:bg-muted transition-all duration-200'
+>
+  <Share2 size={20} />
+  Share
+</Button>
+
             </div>
 
             {/* Product Info Grid */}
             <div className='grid grid-cols-2 gap-4 pt-6 border-t border-border'>
-              <div className='p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors'>
-                <p className='text-xs font-bold text-foreground/50 mb-2 uppercase tracking-wider'>
-                  SKU
-                </p>
-                <p className='text-sm font-semibold text-foreground'>
-                  {product.sku}
-                </p>
-              </div>
-              <div className='p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors'>
-                <p className='text-xs font-bold text-foreground/50 mb-2 uppercase tracking-wider'>
-                  Brand
-                </p>
-                <p className='text-sm font-semibold text-foreground'>
-                  {product.brand || 'N/A'}
-                </p>
-              </div>
-              <div className='p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors'>
-                <p className='text-xs font-bold text-foreground/50 mb-2 uppercase tracking-wider'>
-                  Category
-                </p>
-                <p className='text-sm font-semibold text-foreground'>
-                  {product.category?.name}
-                </p>
-              </div>
-              <div className='p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors'>
-                <p className='text-xs font-bold text-foreground/50 mb-2 uppercase tracking-wider'>
-                  Subcategory
-                </p>
-                <p className='text-sm font-semibold text-foreground'>
-                  {product.subcategory?.name || 'N/A'}
-                </p>
-              </div>
+              {product.sku && (
+                <div className='p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors'>
+                  <p className='text-xs font-bold text-foreground/50 mb-2 uppercase tracking-wider'>
+                    SKU
+                  </p>
+                  <p className='text-sm font-semibold text-foreground'>
+                    {product.sku}
+                  </p>
+                </div>
+              )}
+              {product.brand && (
+                <div className='p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors'>
+                  <p className='text-xs font-bold text-foreground/50 mb-2 uppercase tracking-wider'>
+                    Brand
+                  </p>
+                  <p className='text-sm font-semibold text-foreground'>
+                    {product.brand}
+                  </p>
+                </div>
+              )}
+              {product.category && (
+                <div className='p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors'>
+                  <p className='text-xs font-bold text-foreground/50 mb-2 uppercase tracking-wider'>
+                    Category
+                  </p>
+                  <p className='text-sm font-semibold text-foreground'>
+                    {product.category?.name}
+                  </p>
+                </div>
+              )}
+              {product.subcategory && (
+                <div className='p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors'>
+                  <p className='text-xs font-bold text-foreground/50 mb-2 uppercase tracking-wider'>
+                    Subcategory
+                  </p>
+                  <p className='text-sm font-semibold text-foreground'>
+                    {product.subcategory?.name || 'N/A'}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

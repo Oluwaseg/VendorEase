@@ -6,8 +6,9 @@ import { useCurrency } from '@/contexts/currency-context';
 import { useCategories } from '@/hooks/use-category';
 import { useSubcategories } from '@/hooks/use-subcategory';
 import { formatPrice } from '@/lib/format-price';
-import { X } from 'lucide-react';
+import { Crown, Search, SlidersHorizontal, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { MiniEmpty, MiniLoader } from '../common/loader';
 
 interface ProductFiltersProps {
   onFilterChange: (filters: FilterState) => void;
@@ -52,15 +53,12 @@ export function ProductFilters({
     useSubcategories();
   const { currency, convert } = useCurrency();
 
-  // Type-safe subcategories array
   const safeSubcategories = Array.isArray(subcategoriesData)
     ? subcategoriesData
     : [];
 
-  // Filter subcategories by selected category
   const filteredSubcategories = filters.category
     ? safeSubcategories.filter((sub: any) => {
-        // Handle both string and object category formats
         const subCategoryId =
           typeof sub.category === 'string' ? sub.category : sub.category?._id;
         return subCategoryId === filters.category;
@@ -69,7 +67,6 @@ export function ProductFilters({
 
   const handleFilterChange = (newFilters: Partial<FilterState>) => {
     const updated = { ...filters, ...newFilters };
-    // Reset subcategory when category changes
     if (newFilters.category !== undefined) {
       updated.subcategory = '';
     }
@@ -82,14 +79,16 @@ export function ProductFilters({
     onFilterChange(DEFAULT_FILTERS);
   };
 
-  const hasActiveFilters =
-    filters.search ||
-    filters.category ||
-    filters.subcategory ||
-    filters.minPrice > 0 ||
-    filters.maxPrice < maxPrice ||
-    filters.isBestSeller ||
-    filters.flashSaleActive;
+  const activeCount =
+    (filters.search ? 1 : 0) +
+    (filters.category ? 1 : 0) +
+    (filters.subcategory ? 1 : 0) +
+    (filters.minPrice > 0 ? 1 : 0) +
+    (filters.maxPrice < maxPrice ? 1 : 0) +
+    (filters.isBestSeller ? 1 : 0) +
+    (filters.flashSaleActive ? 1 : 0);
+
+  const hasActiveFilters = activeCount > 0;
 
   return (
     <>
@@ -98,15 +97,18 @@ export function ProductFilters({
         onClick={() => setIsOpen(!isOpen)}
         className='lg:hidden mb-6 w-full px-4 py-3 border border-border rounded-lg text-sm font-medium text-foreground hover:bg-muted transition-colors flex items-center justify-between'
       >
-        <span>Filters</span>
-        <span className='text-xs bg-primary text-primary-foreground px-2 py-1 rounded'>
-          {hasActiveFilters ? '1+' : '0'}
+        <span className='flex items-center gap-2'>
+          <SlidersHorizontal size={16} />
+          Filters
+        </span>
+        <span className='text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full min-w-6 text-center'>
+          {activeCount}
         </span>
       </button>
 
-      {/* Filter Panel */}
+      {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity ${
+        className={`fixed inset-0 bg-foreground/40 backdrop-blur-sm z-40 lg:hidden transition-opacity ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setIsOpen(false)}
@@ -117,7 +119,6 @@ export function ProductFilters({
           isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
         }`}
       >
-        {/* Close Button - Mobile Only */}
         <button
           onClick={() => setIsOpen(false)}
           className='lg:hidden absolute top-4 right-4 p-2 hover:bg-muted rounded-lg transition-colors'
@@ -125,25 +126,51 @@ export function ProductFilters({
           <X size={20} />
         </button>
 
-        {/* Filters Header */}
-        <div className='sticky top-0 bg-card border-b border-border p-4 lg:p-0 lg:mb-6 lg:border-0'>
-          <h3 className='text-lg font-semibold text-foreground'>Filters</h3>
+        {/* Header */}
+        <div className='sticky top-0 bg-card border-b border-border p-4 lg:p-0 lg:mb-6 lg:border-0 lg:bg-transparent flex items-center justify-between'>
+          <h3 className='text-lg font-semibold text-foreground flex items-center gap-2'>
+            <SlidersHorizontal size={18} className='text-brand' />
+            Filters
+          </h3>
+          {hasActiveFilters && (
+            <button
+              onClick={handleReset}
+              className='hidden lg:inline text-xs font-medium text-brand hover:underline'
+            >
+              Clear all
+            </button>
+          )}
         </div>
 
-        {/* Filters Content */}
         <div className='overflow-y-auto h-[calc(100vh-120px)] lg:h-auto p-4 lg:p-0 space-y-6'>
-          {/* Search */}
+          {/* Search — polished input */}
           <div>
             <label className='block text-sm font-semibold text-foreground mb-2'>
               Search
             </label>
-            <Input
-              type='text'
-              placeholder='Search products...'
-              value={filters.search}
-              onChange={(e) => handleFilterChange({ search: e.target.value })}
-              className='w-full'
-            />
+            <div className='relative group'>
+              <Search
+                size={16}
+                className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-brand transition-colors pointer-events-none'
+              />
+              <Input
+                type='text'
+                placeholder='Search products...'
+                value={filters.search}
+                onChange={(e) => handleFilterChange({ search: e.target.value })}
+                className='w-full pl-9 pr-9 h-11 rounded-lg bg-background/60 border-border/70 focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:border-brand transition-all'
+              />
+              {filters.search && (
+                <button
+                  type='button'
+                  onClick={() => handleFilterChange({ search: '' })}
+                  aria-label='Clear search'
+                  className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Category */}
@@ -151,46 +178,26 @@ export function ProductFilters({
             <label className='block text-sm font-semibold text-foreground mb-3'>
               Category
             </label>
-            <div className='space-y-2'>
-              <label className='flex items-center gap-3 cursor-pointer'>
-                <input
-                  type='radio'
-                  name='category'
-                  value=''
-                  checked={filters.category === ''}
-                  onChange={(e) =>
-                    handleFilterChange({ category: e.target.value })
-                  }
-                  className='w-4 h-4'
-                />
-                <span className='text-sm text-foreground/70'>
-                  All Categories
-                </span>
-              </label>
+            <div className='space-y-1.5'>
+              <RadioRow
+                name='category'
+                value=''
+                checked={filters.category === ''}
+                onChange={(v) => handleFilterChange({ category: v })}
+                label='All Categories'
+              />
               {categoriesLoading ? (
-                <div className='text-xs text-foreground/50 py-2'>
-                  Loading categories...
-                </div>
+                <MiniLoader rows={3} message='Loading categories...' />
               ) : (
                 categories.map((cat) => (
-                  <label
+                  <RadioRow
                     key={cat._id}
-                    className='flex items-center gap-3 cursor-pointer'
-                  >
-                    <input
-                      type='radio'
-                      name='category'
-                      value={cat._id}
-                      checked={filters.category === cat._id}
-                      onChange={(e) =>
-                        handleFilterChange({ category: e.target.value })
-                      }
-                      className='w-4 h-4'
-                    />
-                    <span className='text-sm text-foreground/70'>
-                      {cat.name}
-                    </span>
-                  </label>
+                    name='category'
+                    value={cat._id}
+                    checked={filters.category === cat._id}
+                    onChange={(v) => handleFilterChange({ category: v })}
+                    label={cat.name}
+                  />
                 ))
               )}
             </div>
@@ -202,53 +209,34 @@ export function ProductFilters({
               <label className='block text-sm font-semibold text-foreground mb-3'>
                 Subcategory
               </label>
-              <div className='space-y-2'>
-                <label className='flex items-center gap-3 cursor-pointer'>
-                  <input
-                    type='radio'
-                    name='subcategory'
-                    value=''
-                    checked={filters.subcategory === ''}
-                    onChange={(e) =>
-                      handleFilterChange({ subcategory: e.target.value })
-                    }
-                    className='w-4 h-4'
-                  />
-                  <span className='text-sm text-foreground/70'>
-                    All Subcategories
-                  </span>
-                </label>
+              <div className='space-y-1.5'>
+                <RadioRow
+                  name='subcategory'
+                  value=''
+                  checked={filters.subcategory === ''}
+                  onChange={(v) => handleFilterChange({ subcategory: v })}
+                  label='All Subcategories'
+                />
                 {subcategoriesLoading ? (
-                  <div className='text-xs text-foreground/50 py-2'>
-                    Loading subcategories...
-                  </div>
-                ) : subcategoriesLoading === false &&
-                  filteredSubcategories.length === 0 ? (
-                  <div className='text-xs text-foreground/50 py-2'>
-                    {safeSubcategories.length === 0
-                      ? 'No subcategories found in system'
-                      : 'No subcategories for this category'}
-                  </div>
+                  <MiniLoader rows={3} message='Loading subcategories...' />
+                ) : filteredSubcategories.length === 0 ? (
+                  <MiniEmpty
+                    message={
+                      safeSubcategories.length === 0
+                        ? 'No subcategories found in system'
+                        : 'No subcategories for this category'
+                    }
+                  />
                 ) : (
                   filteredSubcategories.map((sub) => (
-                    <label
+                    <RadioRow
                       key={sub._id}
-                      className='flex items-center gap-3 cursor-pointer'
-                    >
-                      <input
-                        type='radio'
-                        name='subcategory'
-                        value={sub._id}
-                        checked={filters.subcategory === sub._id}
-                        onChange={(e) =>
-                          handleFilterChange({ subcategory: e.target.value })
-                        }
-                        className='w-4 h-4'
-                      />
-                      <span className='text-sm text-foreground/70'>
-                        {sub.name}
-                      </span>
-                    </label>
+                      name='subcategory'
+                      value={sub._id}
+                      checked={filters.subcategory === sub._id}
+                      onChange={(v) => handleFilterChange({ subcategory: v })}
+                      label={sub.name}
+                    />
                   ))
                 )}
               </div>
@@ -260,11 +248,14 @@ export function ProductFilters({
             <label className='block text-sm font-semibold text-foreground mb-4'>
               Price Range ({currency})
             </label>
-            <div className='space-y-3'>
+            <div className='space-y-4'>
               <div>
-                <label className='text-xs text-foreground/60 mb-1 block'>
-                  Min Price: {formatPrice(convert(filters.minPrice), currency)}
-                </label>
+                <div className='flex items-center justify-between mb-1.5'>
+                  <span className='text-xs text-muted-foreground'>Min</span>
+                  <span className='text-xs font-medium text-foreground tabular-nums'>
+                    {formatPrice(convert(filters.minPrice), currency)}
+                  </span>
+                </div>
                 <input
                   type='range'
                   min='0'
@@ -273,13 +264,16 @@ export function ProductFilters({
                   onChange={(e) =>
                     handleFilterChange({ minPrice: Number(e.target.value) })
                   }
-                  className='w-full'
+                  className='w-full accent-brand'
                 />
               </div>
               <div>
-                <label className='text-xs text-foreground/60 mb-1 block'>
-                  Max Price: {formatPrice(convert(filters.maxPrice), currency)}
-                </label>
+                <div className='flex items-center justify-between mb-1.5'>
+                  <span className='text-xs text-muted-foreground'>Max</span>
+                  <span className='text-xs font-medium text-foreground tabular-nums'>
+                    {formatPrice(convert(filters.maxPrice), currency)}
+                  </span>
+                </div>
                 <input
                   type='range'
                   min='0'
@@ -288,52 +282,33 @@ export function ProductFilters({
                   onChange={(e) =>
                     handleFilterChange({ maxPrice: Number(e.target.value) })
                   }
-                  className='w-full'
+                  className='w-full accent-brand'
                 />
               </div>
             </div>
           </div>
 
-          {/* Best Sellers */}
-          <div>
-            <label className='flex items-center gap-3 cursor-pointer'>
-              <input
-                type='checkbox'
-                checked={filters.isBestSeller}
-                onChange={(e) =>
-                  handleFilterChange({ isBestSeller: e.target.checked })
-                }
-                className='w-4 h-4'
-              />
-              <span className='text-sm font-medium text-foreground'>
-                Best Sellers Only
-              </span>
-            </label>
+          {/* Toggles */}
+          <div className='space-y-2'>
+            <ToggleRow
+              checked={filters.isBestSeller}
+              onChange={(v) => handleFilterChange({ isBestSeller: v })}
+              icon={<Crown size={14} className='text-amber-500' />}
+              label='Best Sellers Only'
+            />
+            <ToggleRow
+              checked={filters.flashSaleActive}
+              onChange={(v) => handleFilterChange({ flashSaleActive: v })}
+              icon={<Zap size={14} className='text-rose-500 fill-rose-500' />}
+              label='Flash Sale Active'
+            />
           </div>
 
-          {/* Flash Sale */}
-          <div>
-            <label className='flex items-center gap-3 cursor-pointer'>
-              <input
-                type='checkbox'
-                checked={filters.flashSaleActive}
-                onChange={(e) =>
-                  handleFilterChange({ flashSaleActive: e.target.checked })
-                }
-                className='w-4 h-4'
-              />
-              <span className='text-sm font-medium text-foreground'>
-                Flash Sale Active
-              </span>
-            </label>
-          </div>
-
-          {/* Reset Button */}
           {hasActiveFilters && (
             <Button
               onClick={handleReset}
               variant='outline'
-              className='w-full mt-6'
+              className='w-full mt-4'
             >
               Reset Filters
             </Button>
@@ -341,5 +316,72 @@ export function ProductFilters({
         </div>
       </div>
     </>
+  );
+}
+
+function RadioRow({
+  name,
+  value,
+  checked,
+  onChange,
+  label,
+}: {
+  name: string;
+  value: string;
+  checked: boolean;
+  onChange: (v: string) => void;
+  label: string;
+}) {
+  return (
+    <label
+      className={`flex items-center gap-3 cursor-pointer px-2.5 py-2 rounded-md transition-colors ${
+        checked
+          ? 'bg-brand/10 text-foreground'
+          : 'hover:bg-muted/60 text-foreground/75'
+      }`}
+    >
+      <input
+        type='radio'
+        name={name}
+        value={value}
+        checked={checked}
+        onChange={(e) => onChange(e.target.value)}
+        className='w-4 h-4 accent-brand'
+      />
+      <span className='text-sm'>{label}</span>
+    </label>
+  );
+}
+
+function ToggleRow({
+  checked,
+  onChange,
+  icon,
+  label,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  icon: React.ReactNode;
+  label: string;
+}) {
+  return (
+    <label
+      className={`flex items-center gap-3 cursor-pointer px-3 py-2.5 rounded-lg border transition-all ${
+        checked
+          ? 'border-brand/50 bg-brand/5 shadow-sm'
+          : 'border-border hover:border-border/80 hover:bg-muted/40'
+      }`}
+    >
+      <input
+        type='checkbox'
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className='w-4 h-4 accent-brand'
+      />
+      <span className='flex items-center gap-1.5 text-sm font-medium text-foreground'>
+        {icon}
+        {label}
+      </span>
+    </label>
   );
 }

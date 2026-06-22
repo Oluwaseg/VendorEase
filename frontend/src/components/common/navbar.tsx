@@ -622,21 +622,21 @@ export function Navbar() {
                         Dashboard
                       </UserLink>
                       <UserLink
-                        href='/orders'
+                        href='/dashboard/orders'
                         icon={<ShoppingBag className='h-4 w-4' />}
                         onClick={() => setIsUserDropdownOpen(false)}
                       >
                         Orders
                       </UserLink>
                       <UserLink
-                        href='/settings'
+                        href='/dashboard/settings'
                         icon={<Settings className='h-4 w-4' />}
                         onClick={() => setIsUserDropdownOpen(false)}
                       >
                         Settings
                       </UserLink>
                       <UserLink
-                        href='/referrals'
+                        href='/dashboard/referrals'
                         icon={<Gift className='h-4 w-4' />}
                         onClick={() => setIsUserDropdownOpen(false)}
                       >

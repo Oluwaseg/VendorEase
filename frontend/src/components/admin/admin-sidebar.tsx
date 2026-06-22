@@ -24,17 +24,17 @@ export function AdminSidebar({ collapsed, onNavigate }: AdminSidebarProps) {
   const pathname = usePathname() ?? '';
 
   return (
-    <div className='flex h-full min-h-svh flex-col bg-card'>
+    <div className='flex h-full min-h-svh flex-col bg-surface'>
       <div
         className={cn(
-          'flex shrink-0 items-center gap-3 border-border border-b px-4 py-4',
+          'flex shrink-0 items-center gap-3 border-border border-b px-4 py-4 transition-colors hover:bg-muted/90',
           collapsed && 'justify-center px-2'
         )}
       >
         <Link
           href='/admin'
           className={cn(
-            'flex items-center gap-3 rounded-lg transition-colors hover:bg-muted/60',
+            'flex items-center gap-3 rounded-lg ',
             collapsed && 'justify-center p-2'
           )}
           onClick={onNavigate}
@@ -61,7 +61,7 @@ export function AdminSidebar({ collapsed, onNavigate }: AdminSidebarProps) {
         </Link>
       </div>
 
-      <nav className='flex-1 space-y-5 overflow-y-auto px-3 py-4'>
+      <nav className=' flex-1 space-y-5 overflow-y-auto px-3 py-4'>
         {collapsed ? (
           <div className='space-y-1'>
             {ADMIN_NAV_SECTIONS.flatMap((section) => section.items).map(

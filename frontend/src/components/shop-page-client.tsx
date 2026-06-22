@@ -37,7 +37,7 @@ export default function ShopPageClient() {
     };
   });
 
-  const { data, isLoading, isError } = useProducts({
+  const { data, isLoading, isError, refetch } = useProducts({
     page,
     limit,
     ...(filters.search && { search: filters.search }),
@@ -111,6 +111,7 @@ export default function ShopPageClient() {
                 isError={isError}
                 emptyMessage='No products found.'
                 skeletonCount={12}
+                refetch={refetch}
                 actions={
                   <div className='hidden sm:flex items-center gap-2 rounded-lg bg-muted p-1'>
                     <select

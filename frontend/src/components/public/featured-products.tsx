@@ -1,5 +1,6 @@
 'use client';
 
+import { ProductCard, ProductGridSection } from '@/components/products';
 import {
   Carousel,
   CarouselContent,
@@ -7,7 +8,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { ProductCard, ProductGridSection } from '@/components/products';
 import { useProducts } from '@/hooks/use-product';
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
@@ -27,7 +27,7 @@ function FeaturedProductsSection({
   viewAllHref,
   filter,
 }: FeaturedProductsSectionProps) {
-  const { data, isLoading } = useProducts({
+  const { data, isLoading, refetch } = useProducts({
     page: 1,
     limit: 8,
     ...filter,
@@ -44,6 +44,7 @@ function FeaturedProductsSection({
       products={products}
       isLoading={isLoading}
       skeletonCount={4}
+      refetch={refetch}
       gridClassName='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'
       skeletonClassName='rounded-2xl bg-card/50 h-96'
       actions={

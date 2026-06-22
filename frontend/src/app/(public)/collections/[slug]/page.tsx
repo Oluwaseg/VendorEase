@@ -2,12 +2,12 @@
 
 import { ProductCard } from '@/components/products/product-card';
 import { ProductGridSection } from '@/components/products/product-grid-section';
+import { Button } from '@/components/ui/button';
 import {
   useCollectionBySlug,
   useCollectionProducts,
 } from '@/hooks/use-collection';
 import { getCollectionCtaText } from '@/lib/collection-hero';
-import { Button } from '@/components/ui/button';
 import type { Collection } from '@/types/collection';
 import type { Product } from '@/types/product';
 import Image from 'next/image';
@@ -28,15 +28,20 @@ export default function CollectionDetailPage() {
   const params = useParams();
   const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
 
-  const { data: collection, isLoading, isError } = useCollectionBySlug(
-    slug ?? ''
-  );
+  const {
+    data: collection,
+    isLoading,
+    isError,
+  } = useCollectionBySlug(slug ?? '');
 
   const collectionId =
     collection && typeof collection._id === 'string' ? collection._id : '';
 
-  const { data: productsFromApi, isLoading: productsLoading } =
-    useCollectionProducts(collectionId);
+  const {
+    data: productsFromApi,
+    isLoading: productsLoading,
+    refetch,
+  } = useCollectionProducts(collectionId);
 
   const populatedProducts = getPopulatedProducts(collection);
   const products =
@@ -111,7 +116,9 @@ export default function CollectionDetailPage() {
               asChild
               className='mt-6 rounded-full bg-accent px-8 py-3 font-semibold text-accent-foreground hover:bg-accent/90'
             >
-              <a href='#collection-products'>{getCollectionCtaText(collection)}</a>
+              <a href='#collection-products'>
+                {getCollectionCtaText(collection)}
+              </a>
             </Button>
           </div>
         </div>
@@ -125,6 +132,7 @@ export default function CollectionDetailPage() {
             products={products}
             isLoading={productsLoading && products.length === 0}
             emptyMessage='No products in this collection yet.'
+            refetch={refetch}
             renderItem={(product) => (
               <ProductCard key={product._id} product={product} />
             )}

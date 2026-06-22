@@ -30,7 +30,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
     setSidebarCollapsed((prev) => {
       const next = !prev;
       try {
-        window.localStorage.setItem(SIDEBAR_COLLAPSED_STORAGE_KEY, next ? '1' : '0');
+        window.localStorage.setItem(
+          SIDEBAR_COLLAPSED_STORAGE_KEY,
+          next ? '1' : '0'
+        );
       } catch {
         // ignore
       }
@@ -43,7 +46,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <aside
         className={cn(
           'sticky top-0 z-40 hidden h-svh shrink-0 border-border border-r bg-transparent lg:flex lg:flex-col lg:transition-[width] lg:duration-300 lg:ease-out',
-          sidebarCollapsed ? 'lg:w-[4.75rem]' : 'lg:w-64',
+          sidebarCollapsed ? 'lg:w-[4.75rem]' : 'lg:w-64'
         )}
       >
         <AdminSidebar collapsed={sidebarCollapsed} />
@@ -56,7 +59,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
           onToggleSidebarCollapsed={toggleSidebarCollapsed}
         />
         <div className='relative flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto'>
-          <div className='mx-auto w-full max-w-[1600px] flex-1 p-4 md:p-6'>{children}</div>
+          <div className='mx-auto w-full max-w-[1600px] flex-1 p-4 md:p-6'>
+            {children}
+          </div>
         </div>
       </div>
 

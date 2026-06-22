@@ -86,86 +86,90 @@ export function Hero({ slides }: HeroCarouselProps) {
                 : undefined;
 
             return (
-            <CarouselItem key={slide.id} className='p-0'>
-              <div className='relative h-[500px] w-full lg:h-[500px]'>
-                <Image
-                  src={slide.image}
-                  alt={slide.alt}
-                  fill
-                  className='absolute inset-0 object-cover'
-                  priority
-                  unoptimized
-                />
+              <CarouselItem key={slide.id} className='p-0'>
+                <div className='relative h-[500px] w-full lg:h-[500px]'>
+                  <Image
+                    src={slide.image}
+                    alt={slide.alt}
+                    fill
+                    className='absolute inset-0 object-cover'
+                    priority
+                    unoptimized
+                  />
 
-                {hasOverlay ? (
-                  <div className='absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40' />
-                ) : null}
+                  {hasOverlay ? (
+                    <div className='absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40' />
+                  ) : null}
 
-                {hasOverlay ? (
-                <div
-                  className={`absolute inset-0 flex px-6 py-12 ${
-                    slide.position?.includes('top')
-                      ? 'justify-start'
-                      : slide.position?.includes('bottom')
-                        ? 'justify-end'
-                        : 'justify-center'
-                  } ${
-                    slide.position?.includes('left')
-                      ? 'items-start'
-                      : slide.position?.includes('right')
-                        ? 'items-end'
-                        : 'items-center'
-                  }`}
-                  style={{
-                    flexDirection: 'column',
-                    justifyContent: slide.position?.includes('top')
-                      ? 'flex-start'
-                      : slide.position?.includes('bottom')
-                        ? 'flex-end'
-                        : 'center',
-                  }}
-                >
-                  <div
-                    className={`space-y-6 max-w-3xl ${
-                      slide.position?.includes('left')
-                        ? 'text-left'
-                        : slide.position?.includes('right')
-                          ? 'text-right'
-                          : 'text-center'
-                    }`}
-                  >
-                    {showTitle ? (
-                      <h1 className='text-balance font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] text-white/70'>
-                        {slide.title}
-                      </h1>
-                    ) : null}
+                  {hasOverlay ? (
+                    <div
+                      className={`absolute inset-0 flex px-6 py-12 ${
+                        slide.position?.includes('top')
+                          ? 'justify-start'
+                          : slide.position?.includes('bottom')
+                            ? 'justify-end'
+                            : 'justify-center'
+                      } ${
+                        slide.position?.includes('left')
+                          ? 'items-start'
+                          : slide.position?.includes('right')
+                            ? 'items-end'
+                            : 'items-center'
+                      }`}
+                      style={{
+                        flexDirection: 'column',
+                        justifyContent: slide.position?.includes('top')
+                          ? 'flex-start'
+                          : slide.position?.includes('bottom')
+                            ? 'flex-end'
+                            : 'center',
+                      }}
+                    >
+                      <div
+                        className={`space-y-6 max-w-3xl ${
+                          slide.position?.includes('left')
+                            ? 'text-left'
+                            : slide.position?.includes('right')
+                              ? 'text-right'
+                              : 'text-center'
+                        }`}
+                      >
+                        {showTitle ? (
+                          <h1 className='text-balance font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] text-white/70'>
+                            {slide.title}
+                          </h1>
+                        ) : null}
 
-                    {showSubtitle ? (
-                      <h2 className='text-balance font-serif text-4xl sm:text-5xl lg:text-6xl font-light leading-tight text-white'>
-                        {slide.subtitle}
-                      </h2>
-                    ) : null}
+                        {showSubtitle ? (
+                          <h2 className='text-balance font-serif text-4xl sm:text-5xl lg:text-6xl font-light leading-tight text-white'>
+                            {slide.subtitle}
+                          </h2>
+                        ) : null}
 
-                    {showButton ? (
-                      <div className={showTitle || showSubtitle ? 'pt-4' : undefined}>
-                        <Button
-                          asChild
-                          style={buttonStyle}
-                          className={
-                            buttonStyle
-                              ? 'rounded-full px-10 py-4 text-base font-semibold transition-all hover:opacity-90'
-                              : 'rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground hover:bg-accent/90 transition-all'
-                          }
-                        >
-                          <a href={slide.buttonHref}>{slide.buttonText}</a>
-                        </Button>
+                        {showButton ? (
+                          <div
+                            className={
+                              showTitle || showSubtitle ? 'pt-4' : undefined
+                            }
+                          >
+                            <Button
+                              asChild
+                              style={buttonStyle}
+                              className={
+                                buttonStyle
+                                  ? 'rounded-full px-10 py-4 text-base font-semibold transition-all hover:opacity-90'
+                                  : 'rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground hover:bg-accent/90 transition-all'
+                              }
+                            >
+                              <a href={slide.buttonHref}>{slide.buttonText}</a>
+                            </Button>
+                          </div>
+                        ) : null}
                       </div>
-                    ) : null}
-                  </div>
-                </div>
-                ) : null}
+                    </div>
+                  ) : null}
 
-                {/* <div className='absolute bottom-6 left-6 right-6 flex items-center justify-between'>
+                  {/* <div className='absolute bottom-6 left-6 right-6 flex items-center justify-between'>
                   <div className='text-sm font-medium text-white/80'>
                     {current} of {count}
                   </div>
@@ -182,8 +186,8 @@ export function Hero({ slides }: HeroCarouselProps) {
                     />
                   </div>
                 </div> */}
-              </div>
-            </CarouselItem>
+                </div>
+              </CarouselItem>
             );
           })}
         </CarouselContent>
