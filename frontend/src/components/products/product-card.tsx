@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { useCartContext } from '@/contexts/cart-context';
 import { useCurrency } from '@/contexts/currency-context';
 import { useWishlist } from '@/contexts/wishlist-context';
-import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/format-price';
+import { cn } from '@/lib/utils';
 import type { Product } from '@/types/product';
 import { Heart, ShoppingCart, Star, Zap } from 'lucide-react';
 import Image from 'next/image';
@@ -93,17 +93,24 @@ export function ProductCard({
       href={`/shop/${product.slug}`}
       className={cn(
         'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-1 transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:shadow-xl',
-        className,
+        className
       )}
     >
       <div
         className={cn(
           'relative mb-4 aspect-square overflow-hidden rounded-xl bg-surface',
-          imageClassName,
+          imageClassName
         )}
       >
         <Image
-          src={product.images?.[0]?.url ?? '/placeholder.png'}
+          src={
+            product.images?.[0]?.url ??
+            'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400'
+          }
+          onError={(e) => {
+            (e.target as HTMLImageElement).src =
+              'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400';
+          }}
           alt={product.name}
           fill
           className='object-cover transition-transform duration-500 group-hover:scale-105'
@@ -130,7 +137,7 @@ export function ProductCard({
             size={17}
             className={cn(
               'transition-colors',
-              inWishlist ? 'fill-danger text-danger' : 'text-foreground',
+              inWishlist ? 'fill-danger text-danger' : 'text-foreground'
             )}
           />
         </button>
@@ -155,7 +162,7 @@ export function ProductCard({
               className={cn(
                 index < Math.round(product.averageRating ?? 0)
                   ? 'fill-accent text-accent'
-                  : 'text-foreground/20',
+                  : 'text-foreground/20'
               )}
             />
           ))}
@@ -183,7 +190,7 @@ export function ProductCard({
             className={cn(
               'h-9 w-9 rounded-lg border border-border/70 bg-surface-2 text-foreground hover:bg-surface-3',
               isAdded &&
-                'border-success/40 bg-success/15 text-success hover:bg-success/20',
+                'border-success/40 bg-success/15 text-success hover:bg-success/20'
             )}
             aria-label='Add to cart'
           >

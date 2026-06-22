@@ -75,7 +75,7 @@ export function FeaturedCollections({ className }: FeaturedCollectionsProps) {
         <div className='mt-8 text-center'>
           <Link
             href='/collections'
-            className='inline-flex rounded-full border border-border px-6 py-3 text-sm font-semibold hover:bg-muted transition-colors'
+            className='inline-flex rounded-full border border-border px-6 py-3 text-sm font-semibold bg-brand hover:text-brand-foreground transition-colors'
           >
             View all collections
           </Link>
@@ -98,7 +98,14 @@ function CollectionCard({ collection }: { collection: Collection }) {
       <div className='relative h-56'>
         {collection.image?.url ? (
           <Image
-            src={collection.image.url}
+            src={
+              collection.image.url ||
+              'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400'
+            }
+            onError={(e) => {
+              (e.target as HTMLImageElement).src =
+                'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400';
+            }}
             alt={collection.name}
             fill
             className='object-cover transition-transform duration-300 group-hover:scale-105'
