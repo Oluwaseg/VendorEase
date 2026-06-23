@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  InlineEmpty,
+  InlineError,
+  InlineLoader,
+} from '@/components/common/loader';
 import { ProductCard } from '@/components/products/product-card';
 import { ProductGridSection } from '@/components/products/product-grid-section';
 import { Button } from '@/components/ui/button';
@@ -32,16 +37,14 @@ export default function CollectionDetailPage() {
     data: collection,
     isLoading,
     isError,
+    refetch,
   } = useCollectionBySlug(slug ?? '');
 
   const collectionId =
     collection && typeof collection._id === 'string' ? collection._id : '';
 
-  const {
-    data: productsFromApi,
-    isLoading: productsLoading,
-    refetch,
-  } = useCollectionProducts(collectionId);
+  const { data: productsFromApi, isLoading: productsLoading } =
+    useCollectionProducts(collectionId);
 
   const populatedProducts = getPopulatedProducts(collection);
   const products =
@@ -51,38 +54,31 @@ export default function CollectionDetailPage() {
 
   if (!slug) {
     return (
-      <main className='min-h-screen py-20'>
-        <div className='container mx-auto px-4'>
-          <p className='text-foreground/70'>Invalid collection.</p>
-        </div>
-      </main>
+      <InlineError
+        title='Invalid collection'
+        message='The collection you are looking for does not exist.'
+        size='lg'
+        backHref='/collections'
+        backLabel='Back to collections'
+        onRetry={() => refetch()}
+      />
     );
   }
 
   if (isLoading) {
-    return (
-      <main className='min-h-screen py-20'>
-        <div className='container mx-auto px-4'>
-          <div className='h-64 rounded-3xl bg-muted animate-pulse mb-8' />
-          <div className='h-8 w-1/2 bg-muted rounded animate-pulse' />
-        </div>
-      </main>
-    );
+    return <InlineLoader size='lg' message='Loading collection...' />;
   }
 
   if (isError || !collection) {
     return (
-      <main className='min-h-screen py-20'>
-        <div className='container mx-auto px-4'>
-          <h1 className='text-4xl font-bold mb-6'>Collection not found</h1>
-          <Link
-            href='/collections'
-            className='inline-flex rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground'
-          >
-            Back to collections
-          </Link>
-        </div>
-      </main>
+      <InlineEmpty
+        title='No collection found'
+        message='The collection you are looking for does not exist.'
+        size='lg'
+        backHref='/collections'
+        backLabel='Back to collections'
+        onRetry={() => refetch()}
+      />
     );
   }
 

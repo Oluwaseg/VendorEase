@@ -13,6 +13,7 @@ import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
+import { InlineLoader } from '../common/loader';
 
 interface FeaturedCollectionsProps {
   className?: string;
@@ -25,10 +26,7 @@ export function FeaturedCollections({ className }: FeaturedCollectionsProps) {
   if (isLoading) {
     return (
       <section className={`py-16 ${className ?? ''}`}>
-        <div className='container mx-auto px-4'>
-          <h2 className='text-4xl font-bold mb-12'>Featured Collections</h2>
-          <div className='h-64 rounded-xl bg-muted animate-pulse' />
-        </div>
+        <InlineLoader size='lg' message='Loading featured collections...' />
       </section>
     );
   }

@@ -1,8 +1,12 @@
 import { cn } from '@/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { AlertTriangle, PackageX, RefreshCw } from 'lucide-react';
+import { ArrowLeft, PackageX, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
+import {
+  EcommerceIllustration,
+  type EcommerceIllustrationVariant,
+} from './illustration';
 
 // ---------------------------------------------------------------------------
 // Velour status surfaces
@@ -10,6 +14,7 @@ import * as React from 'react';
 //   - FullPageLoader : fixed full-viewport overlay with blurred backdrop
 //   - InlineError    : centered error state with optional retry / back action
 //   - InlineEmpty    : centered empty / not-found state
+//   - InlineSuccess  : centered success confirmation state
 // ---------------------------------------------------------------------------
 
 const markSizes = {
@@ -327,7 +332,7 @@ export function MiniEmpty({
 // Status states (error / empty)
 // ---------------------------------------------------------------------------
 
-type StatusVariant = 'error' | 'empty';
+type StatusVariant = 'error' | 'empty' | 'success';
 
 export interface StatusStateProps
   extends
@@ -344,6 +349,31 @@ export interface StatusStateProps
   icon?: React.ReactNode;
 }
 
+const statusConfig: Record<
+  StatusVariant,
+  {
+    illustration: EcommerceIllustrationVariant;
+    tone: string;
+    halo: string;
+  }
+> = {
+  error: {
+    illustration: 'alert',
+    tone: 'text-destructive bg-destructive/10 border-destructive/30',
+    halo: 'bg-destructive/15',
+  },
+  empty: {
+    illustration: 'empty',
+    tone: 'text-muted-foreground bg-muted border-border',
+    halo: 'bg-muted-foreground/10',
+  },
+  success: {
+    illustration: 'success',
+    tone: 'text-success bg-success/10 border-success/30',
+    halo: 'bg-success/15',
+  },
+};
+
 function StatusBadge({
   variant,
   icon,
@@ -354,17 +384,13 @@ function StatusBadge({
   size: SizeKey;
 }) {
   const s = markSizes[size];
-  const Fallback = variant === 'error' ? AlertTriangle : PackageX;
-  const tone =
-    variant === 'error'
-      ? 'text-destructive bg-destructive/10 border-destructive/30'
-      : 'text-muted-foreground bg-muted border-border';
+  const config = statusConfig[variant];
   return (
     <div
       className={cn(
         'relative grid place-items-center rounded-full border',
         s.box,
-        tone
+        config.tone
       )}
       aria-hidden='true'
     >
@@ -372,19 +398,19 @@ function StatusBadge({
         aria-hidden='true'
         className={cn(
           'absolute inset-[-15%] rounded-full blur-3xl opacity-60',
-          variant === 'error' ? 'bg-destructive/15' : 'bg-muted-foreground/10'
+          config.halo
         )}
       />
-      <span className='relative grid place-items-center'>
-        {icon ?? <Fallback className='h-1/2 w-1/2' strokeWidth={1.5} />}
+      <span className='relative flex h-full w-full items-center justify-center overflow-hidden '>
+        {icon ?? <EcommerceIllustration variant={config.illustration} />}
       </span>
     </div>
   );
 }
 
 /**
- * InlineStatus — shared inline error / empty surface. Centered, padded, with
- * optional retry + back actions. Use with `variant="error"` or `variant="empty"`.
+ * InlineStatus — shared inline error / empty / success surface. Centered,
+ * padded, with optional retry + back actions.
  */
 export function InlineStatus({
   className,
@@ -400,14 +426,18 @@ export function InlineStatus({
 }: StatusStateProps) {
   const key = (size ?? 'default') as SizeKey;
   const s = markSizes[key];
-  const resolvedTitle =
-    title ??
-    (variant === 'error' ? 'Something went wrong' : 'Nothing here yet');
+  const titleMap: Record<StatusVariant, string> = {
+    error: 'Something went wrong',
+    empty: 'Nothing here yet',
+    success: 'All set',
+  };
+  const resolvedTitle = title ?? titleMap[variant];
+  const live = variant === 'error' ? 'assertive' : 'polite';
   return (
     <div
       className={cn(surfaceVariants({ size }), className)}
       role={variant === 'error' ? 'alert' : 'status'}
-      aria-live={variant === 'error' ? 'assertive' : 'polite'}
+      aria-live={live}
       aria-atomic='true'
       {...props}
     >
@@ -434,14 +464,14 @@ export function InlineStatus({
         )}
       </div>
       {(onRetry || backHref) && (
-        <div className='flex flex-wrap items-center justify-center gap-2 pt-1'>
+        <div className='flex flex-wrap items-center justify-center gap-3 pt-1'>
           {onRetry && (
             <button
               type='button'
               onClick={onRetry}
               className={cn(
-                'inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-medium tracking-wide text-foreground',
-                'transition-colors hover:bg-accent hover:text-accent-foreground focus-ring'
+                'inline-flex items-center gap-2 rounded-full border border-border bg-brand px-4 py-2 text-xs font-medium tracking-wide text-foreground',
+                'transition-colors hover:bg-accent hover:text-accent-foreground '
               )}
             >
               <RefreshCw className='h-3.5 w-3.5' />
@@ -452,10 +482,11 @@ export function InlineStatus({
             <Link
               href={backHref}
               className={cn(
-                'inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium tracking-wide text-muted-foreground',
-                'transition-colors hover:text-foreground focus-ring'
+                'inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium tracking-wide text-foreground',
+                'transition-colors hover:bg-brand hover:text-muted bg-accent'
               )}
             >
+              <ArrowLeft className='h-3.5 w-3.5' />
               {backLabel}
             </Link>
           )}
@@ -473,4 +504,9 @@ export function InlineError(props: Omit<StatusStateProps, 'variant'>) {
 /** Convenience wrapper — `InlineStatus` preset to the empty variant. */
 export function InlineEmpty(props: Omit<StatusStateProps, 'variant'>) {
   return <InlineStatus variant='empty' {...props} />;
+}
+
+/** Convenience wrapper — `InlineStatus` preset to the success variant. */
+export function InlineSuccess(props: Omit<StatusStateProps, 'variant'>) {
+  return <InlineStatus variant='success' {...props} />;
 }

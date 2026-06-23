@@ -2,7 +2,6 @@
 
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types/product';
-import { AlertCircle } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { InlineEmpty, InlineError } from '../common/loader';
 
@@ -78,14 +77,12 @@ export function ProductGridSection({
           </div>
         ) : isError ? (
           <InlineError
-            icon={<AlertCircle size={48} className='text-destructive/50' />}
             title='Error'
             message={errorMessage}
             onRetry={() => refetch()}
           />
         ) : products.length === 0 ? (
           <InlineEmpty
-            icon={<AlertCircle size={48} className='text-destructive/50' />}
             title='No products found'
             message={emptyMessage}
             onRetry={() => refetch()}
