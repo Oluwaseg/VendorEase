@@ -1,20 +1,23 @@
 'use client';
 
+import {
+  InlineEmpty,
+  InlineError,
+  InlineLoader,
+} from '@/components/common/loader';
 import { OrdersList } from '@/components/orders/orders-list';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useMyOrders } from '@/hooks/use-order';
 import {
-  Loader2,
+  ArrowLeft,
   Package,
   ShoppingBag,
   TrendingUp,
   Wallet,
 } from 'lucide-react';
-import Link from 'next/link';
 
 export default function OrdersPage() {
-  const { data, isLoading, error } = useMyOrders();
+  const { data, isLoading, error, refetch } = useMyOrders();
   const orders = data?.orders || [];
   const stats = data?.stats;
 
@@ -117,43 +120,28 @@ export default function OrdersPage() {
         </div>
 
         {/* Content Section */}
-        {isLoading && (
-          <div className='flex flex-col items-center justify-center py-20'>
-            <Loader2 className='w-10 h-10 text-primary animate-spin mb-3' />
-            <p className='text-muted-foreground font-medium'>
-              Loading your orders...
-            </p>
-          </div>
-        )}
+        {isLoading && <InlineLoader message='Loading your orders...' />}
 
         {error && (
-          <div className='rounded-lg border border-destructive/20 bg-destructive/5 p-6 text-center'>
-            <p className='text-destructive font-semibold mb-1'>
-              Failed to load orders
-            </p>
-            <p className='text-sm text-muted-foreground'>{error.message}</p>
-          </div>
+          <InlineError
+            title='Failed to load orders'
+            message="We couldn't fetch your orders. Please try again."
+            backHref='/dashboard'
+            backLabel='Return to Dashboard'
+            backIcon={<ArrowLeft className='h-3.5 w-3.5' />}
+            onRetry={() => refetch()}
+          />
         )}
 
         {!isLoading && !error && orders.length === 0 && (
-          <div className='rounded-xl border border-border/40 bg-card/30 backdrop-blur-sm p-12 text-center'>
-            <div className='inline-flex items-center justify-center w-14 h-14 rounded-full bg-muted/40 mb-4'>
-              <ShoppingBag className='w-7 h-7 text-muted-foreground' />
-            </div>
-            <h3 className='text-lg font-semibold text-foreground mb-2'>
-              No orders yet
-            </h3>
-            <p className='text-muted-foreground mb-6 max-w-sm mx-auto'>
-              You haven&apos;t placed any orders. Start shopping to see them
-              here!
-            </p>
-            <Link href='/shop'>
-              <Button className='gap-2'>
-                <ShoppingBag className='w-4 h-4' />
-                Start Shopping
-              </Button>
-            </Link>
-          </div>
+          <InlineEmpty
+            title='No orders yet'
+            message="You haven't placed any orders. Start shopping to see them here!"
+            backHref='/shop'
+            backLabel='Start Shopping'
+            backIcon={<ShoppingBag className='h-3.5 w-3.5' />}
+            onRetry={() => refetch()}
+          />
         )}
 
         {!isLoading && !error && orders.length > 0 && (

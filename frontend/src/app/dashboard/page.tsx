@@ -1,5 +1,6 @@
 'use client';
 
+import { InlineEmpty, InlineError } from '@/components/common/loader';
 import { CartOverview } from '@/components/dashboard/cart-overview';
 import { DashboardHeader } from '@/components/dashboard/header';
 import { RecentOrders } from '@/components/dashboard/recent-orders';
@@ -9,7 +10,7 @@ import { StatsGrid } from '@/components/dashboard/stats-grid';
 import { useUserDashboard } from '@/hooks/use-auth';
 
 export default function DashboardPage() {
-  const { data, isLoading, error } = useUserDashboard();
+  const { data, isLoading, error, refetch } = useUserDashboard();
 
   if (isLoading) {
     return <DashboardSkeleton />;
@@ -17,23 +18,22 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className='min-h-screen bg-background px-4 py-12'>
-        <div className='max-w-7xl mx-auto'>
-          <div className='bg-destructive/10 border border-destructive/20 rounded-lg p-6 text-center'>
-            <h2 className='text-xl font-semibold text-destructive mb-2'>
-              Failed to load dashboard
-            </h2>
-            <p className='text-foreground/60'>
-              Please try refreshing the page or contact support
-            </p>
-          </div>
-        </div>
-      </div>
+      <InlineError
+        title='Failed to load Dashboard'
+        message='Please try refreshing the page or contact support'
+        onRetry={() => refetch()}
+      />
     );
   }
 
   if (!data) {
-    return null;
+    return (
+      <InlineEmpty
+        title='No data found'
+        message=' please try again'
+        onRetry={() => refetch()}
+      />
+    );
   }
 
   return (

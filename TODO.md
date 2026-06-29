@@ -2,6 +2,32 @@
 
 This document outlines planned improvements for the VendorEase ecommerce backend MVP. These features will be implemented as the platform scales and adds more clients.
 
+## Priority 0: MVP Enhancements (Quick Wins)
+
+### 🎯 Core Features
+
+- [ ] **Product Search & Filters**: Full-text search, price range filters, category/subcategory filtering
+- [ ] **Product Stock Management**: Stock status display, out-of-stock handling, low stock admin warnings
+- [ ] **Wishlist/Save for Later**: Users save products without purchasing for later review
+- [ ] **User Profile & Settings**: Saved addresses, payment methods, order history, preferences
+- [ ] **Product Reviews/Ratings**: Display existing reviews on product pages, rating system
+- [ ] **Related Products**: Show similar/recommended items to boost AOV
+- [ ] **Guest Checkout**: Allow purchases without account registration
+- [ ] **Order Tracking**: Real-time shipment status in user dashboard
+- [ ] **Email Confirmations**: Order confirmation, shipping, delivery notification emails
+
+### 👨‍💼 Admin Dashboard Features
+
+- [ ] **Order Management**: Bulk actions, order status workflow, refund handling
+- [ ] **Inventory Dashboard**: Stock levels, low stock alerts, top sellers overview
+- [ ] **Sales Analytics**: Revenue charts, conversion rates, best-performing products
+- [ ] **Customer Management**: View customer details, purchase history, segmentation
+
+### 💬 Frontend Completion
+
+- [ ] **Live Chat Widget**: Complete frontend component for existing chat system backend
+- [ ] **Chat Icon in Navbar**: Notification badge for unread messages
+
 ## Priority 1: Security & Reliability (Next Sprint)
 
 ### 🔒 Security Enhancements

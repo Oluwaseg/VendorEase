@@ -3,14 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Ecommerce theme — "Velour"
- * A refined, high-end commerce palette: warm ivory canvas, deep espresso ink,
- * a confident terracotta brand, and a quiet champagne accent for CTAs.
- * Dark mode shifts to a graphite/onyx surface with the same warm accents.
- * All colors in oklch. Tokens only — no hardcoded colors in components.
- */
-
 @theme inline {
   /* radii */
   --radius-sm: calc(var(--radius) - 4px);

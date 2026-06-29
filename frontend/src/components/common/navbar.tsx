@@ -851,18 +851,25 @@ export function Navbar() {
                       Dashboard
                     </MobileItem>
                     <MobileItem
-                      href='/orders'
+                      href='/dashboard/orders'
                       icon={<ShoppingBag className='h-4 w-4' />}
                       onClick={() => setIsOpen(false)}
                     >
                       Orders
                     </MobileItem>
                     <MobileItem
-                      href='/settings'
+                      href='/dashboard/settings'
                       icon={<Settings className='h-4 w-4' />}
                       onClick={() => setIsOpen(false)}
                     >
                       Settings
+                    </MobileItem>
+                    <MobileItem
+                      href='/dashboard/referrals'
+                      icon={<Gift className='h-4 w-4' />}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Referrals
                     </MobileItem>
                   </nav>
                 </>

@@ -1,5 +1,6 @@
 'use client';
 
+import { InlineError, InlineLoader } from '@/components/common/loader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -161,7 +162,7 @@ const OrderTimeline = ({ order }: { order: any }) => {
 export default function OrderDetailPage() {
   const params = useParams();
   const orderId = params.id as string;
-  const { data, isLoading, error } = useMyOrder(orderId);
+  const { data, isLoading, error, refetch } = useMyOrder(orderId);
   const { mutate: downloadInvoice, isPending: isDownloading } =
     useDownloadInvoice();
   const order = data;
@@ -181,29 +182,17 @@ export default function OrderDetailPage() {
           </Button>
         </Link>
 
-        {isLoading && (
-          <div className='flex flex-col items-center justify-center py-24'>
-            <Loader2 className='w-10 h-10 text-primary animate-spin mb-3' />
-            <p className='text-muted-foreground font-medium'>
-              Loading order details...
-            </p>
-          </div>
-        )}
+        {isLoading && <InlineLoader message='Loading order details...' />}
 
         {error && (
-          <div className='rounded-lg border border-destructive/20 bg-destructive/5 p-6 text-center'>
-            <p className='text-destructive font-semibold mb-1'>
-              Failed to load order
-            </p>
-            <p className='text-sm text-muted-foreground mb-4'>
-              {error.message}
-            </p>
-            <Link href='/dashboard/orders'>
-              <Button variant='outline' size='sm'>
-                Return to Orders
-              </Button>
-            </Link>
-          </div>
+          <InlineError
+            title='Failed to load orders'
+            message="We couldn't fetch your order details. Please try again."
+            backHref='/dashboard/orders'
+            backLabel='Return to Orders'
+            backIcon={<ArrowLeft className='h-3.5 w-3.5' />}
+            onRetry={() => refetch()}
+          />
         )}
 
         {!isLoading && !error && order && (

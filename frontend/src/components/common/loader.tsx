@@ -329,7 +329,7 @@ export function MiniEmpty({
 }
 
 // ---------------------------------------------------------------------------
-// Status states (error / empty)
+// Status states (error / empty / success)
 // ---------------------------------------------------------------------------
 
 type StatusVariant = 'error' | 'empty' | 'success';
@@ -343,10 +343,13 @@ export interface StatusStateProps
   variant?: StatusVariant;
   /** Optional retry handler — renders a "Try again" button. */
   onRetry?: () => void;
-  /** Optional back link target — renders a secondary "Go back" link. */
+  /** Optional back link target — renders a secondary link. */
   backHref?: string;
   backLabel?: string;
+  /** Custom icon override inside the primary status badge circle. */
   icon?: React.ReactNode;
+  /** Custom icon override inside the back link action button. */
+  backIcon?: React.ReactNode;
 }
 
 const statusConfig: Record<
@@ -422,6 +425,7 @@ export function InlineStatus({
   backHref,
   backLabel = 'Go back',
   icon,
+  backIcon,
   ...props
 }: StatusStateProps) {
   const key = (size ?? 'default') as SizeKey;
@@ -486,7 +490,7 @@ export function InlineStatus({
                 'transition-colors hover:bg-brand hover:text-muted bg-accent'
               )}
             >
-              <ArrowLeft className='h-3.5 w-3.5' />
+              {backIcon ?? <ArrowLeft className='h-3.5 w-3.5' />}
               {backLabel}
             </Link>
           )}
