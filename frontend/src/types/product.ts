@@ -47,10 +47,13 @@ export interface ProductQueryParams {
   page?: number;
   limit?: number;
   category?: string;
+  subcategory?: string;
   minPrice?: number;
   maxPrice?: number;
   sort?: string; // e.g., 'price_asc', 'price_desc', 'latest'
   search?: string;
+  isBestSeller?: boolean;
+  flashSaleActive?: boolean;
 }
 
 // Paginated payload from API

@@ -39,11 +39,15 @@ const PRODUCT_KEYS = {
    GET ALL PRODUCTS
 ================================= */
 
-export const useProducts = (params?: ProductQueryParams) => {
+export const useProducts = (
+  params?: ProductQueryParams,
+  options?: { enabled?: boolean }
+) => {
   return useQuery<ProductListPayload, Error>({
     queryKey: PRODUCT_KEYS.lists(params),
     queryFn: () => getProducts(params),
     staleTime: 1000 * 60 * 5, // cache 5 mins
+    enabled: options?.enabled ?? true,
   });
 };
 

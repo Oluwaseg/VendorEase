@@ -1,17 +1,5 @@
 'use client';
 
-/* ============================================================================
- *  StoreNavbar — redesigned UI shell
- *  ---------------------------------------------------------------------------
- *  ✦ LOGIC PRESERVED (do not edit): all imports, hooks, state, refs, effects,
- *    handlers, context usage, routing, and data shape are identical to the
- *    original component.
- *  ✦ UI REDESIGNED: markup structure, classNames, layout primitives, animations,
- *    responsive behavior, and visual hierarchy are fully rebuilt around the
- *    provided theme tokens (brand, brand-2, accent, surface*, card, gradient-*,
- *    ring, hero-glow, radii). No new color values are introduced.
- * ========================================================================== */
-
 import { logo } from '@/assets';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/auth-context';
@@ -19,6 +7,7 @@ import { useCartContext } from '@/contexts/cart-context';
 import { useCurrency } from '@/contexts/currency-context';
 import { useWishlist } from '@/contexts/wishlist-context';
 import { useLogout } from '@/hooks/use-auth';
+import { useProducts } from '@/hooks/use-product';
 import { formatPrice } from '@/lib/format-price';
 import {
   Gift,
@@ -38,7 +27,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { CurrencySwitcher } from '../currency-switcher';
 
@@ -49,16 +38,21 @@ const NAV_ITEMS = [
   { label: 'Contact', href: '/contact' },
 ];
 
+const SEARCH_DEBOUNCE_MS = 300;
+const SEARCH_RESULT_LIMIT = 8;
+const FALLBACK_PRODUCT_IMAGE =
+  'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400';
+
 export function Navbar() {
-  /* ────────────────────────────────────────────────────────────────────────
-   *  LOGIC — PRESERVED EXACTLY
-   * ──────────────────────────────────────────────────────────────────────── */
   const [isOpen, setIsOpen] = useState(false);
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'cart' | 'wishlist'>('cart');
   const [searchFocused, setSearchFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const pathname = usePathname();
+  const router = useRouter();
   const { getCartCount, cartItems, removeFromCart, updateQuantity, clearCart } =
     useCartContext();
   const {
@@ -77,6 +71,19 @@ export function Navbar() {
   const cartButtonRef = useRef<HTMLButtonElement | null>(null);
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
   const userButtonRef = useRef<HTMLButtonElement | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  const { data: searchData, isLoading: isSearchLoading } = useProducts(
+    {
+      page: 1,
+      limit: SEARCH_RESULT_LIMIT,
+      search: debouncedSearch,
+    },
+    { enabled: debouncedSearch.length >= 2 }
+  );
+
+  const searchResults = debouncedSearch.length >= 2 ? (searchData?.products ?? []) : [];
+  const searchTotal = debouncedSearch.length >= 2 ? (searchData?.total ?? 0) : 0;
 
   // NEW (UI-only): scroll-aware adaptive navbar — purely presentational state.
   const [scrolled, setScrolled] = useState(false);
@@ -86,6 +93,34 @@ export function Navbar() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearch(searchQuery.trim());
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [searchQuery]);
+
+  const closeSearch = () => {
+    setSearchFocused(false);
+    setSearchQuery('');
+    setDebouncedSearch('');
+  };
+
+  const goToShopSearch = (query: string) => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    closeSearch();
+    router.push(`/shop?search=${encodeURIComponent(trimmed)}`);
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      goToShopSearch(searchQuery);
+    }
+  };
 
   useEffect(() => {
     setIsOpen(false);
@@ -124,7 +159,7 @@ export function Navbar() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
-      if (searchFocused) setSearchFocused(false);
+      if (searchFocused) closeSearch();
       if (isOpen) setIsOpen(false);
       if (isCartDropdownOpen) {
         setIsCartDropdownOpen(false);
@@ -692,7 +727,7 @@ export function Navbar() {
       {searchFocused && (
         <div
           className='fixed inset-0 z-[60] animate-in fade-in'
-          onClick={() => setSearchFocused(false)}
+          onClick={closeSearch}
           role='presentation'
         >
           <div
@@ -717,9 +752,13 @@ export function Navbar() {
                   Search products, brands, categories
                 </label>
                 <input
+                  ref={searchInputRef}
                   id='global-search-input'
                   autoFocus
-                  type='text'
+                  type='search'
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
                   placeholder='Search products, brands, categories…'
                   className='flex-1 bg-transparent text-sm text-foreground placeholder:text-foreground/40 focus:outline-none'
                 />
@@ -730,12 +769,101 @@ export function Navbar() {
                   esc
                 </kbd>
               </div>
-              <div className='px-4 py-6 text-center text-xs text-foreground/50'>
-                <Sparkles
-                  className='mx-auto mb-2 h-5 w-5 text-brand'
-                  aria-hidden='true'
-                />
-                Start typing to search the catalog
+
+              <div className='max-h-[min(60vh,28rem)] overflow-y-auto'>
+                {searchQuery.trim().length < 2 ? (
+                  <div className='px-4 py-6 text-center text-xs text-foreground/50'>
+                    <Sparkles
+                      className='mx-auto mb-2 h-5 w-5 text-brand'
+                      aria-hidden='true'
+                    />
+                    Type at least 2 characters to search the catalog
+                  </div>
+                ) : isSearchLoading ? (
+                  <div className='space-y-1 p-2'>
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className='flex animate-pulse items-center gap-3 rounded-xl px-3 py-2.5'
+                      >
+                        <div className='h-12 w-12 shrink-0 rounded-lg bg-muted' />
+                        <div className='flex-1 space-y-2'>
+                          <div className='h-3 w-2/3 rounded bg-muted' />
+                          <div className='h-2.5 w-1/3 rounded bg-muted' />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : searchResults.length === 0 ? (
+                  <div className='px-4 py-8 text-center text-sm text-foreground/50'>
+                    No products found for &ldquo;{debouncedSearch}&rdquo;
+                  </div>
+                ) : (
+                  <>
+                    <ul className='p-2' role='listbox' aria-label='Search results'>
+                      {searchResults.map((product) => (
+                        <li key={product._id}>
+                          <Link
+                            href={`/shop/${product.slug}`}
+                            onClick={closeSearch}
+                            className='flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-surface-2'
+                            role='option'
+                          >
+                            <div className='relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-surface'>
+                              <Image
+                                src={
+                                  product.images?.[0]?.url ??
+                                  FALLBACK_PRODUCT_IMAGE
+                                }
+                                alt={product.name}
+                                fill
+                                sizes='48px'
+                                className='object-cover'
+                              />
+                            </div>
+                            <div className='min-w-0 flex-1 text-left'>
+                              <p className='truncate text-sm font-medium text-foreground'>
+                                {product.name}
+                              </p>
+                              <p className='truncate text-xs text-foreground/50'>
+                                {product.category?.name ?? 'Product'}
+                                {product.brand ? ` · ${product.brand}` : ''}
+                              </p>
+                            </div>
+                            <span className='shrink-0 text-sm font-semibold text-foreground'>
+                              {formatPrice(
+                                convert(product.basePrice),
+                                currency
+                              )}
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                    {searchTotal > searchResults.length ? (
+                      <div className='border-t border-border/60 p-3'>
+                        <button
+                          type='button'
+                          onClick={() => goToShopSearch(searchQuery)}
+                          className='w-full rounded-xl px-3 py-2.5 text-sm font-medium text-brand transition-colors hover:bg-surface-2'
+                        >
+                          View all {searchTotal} results for &ldquo;
+                          {debouncedSearch}&rdquo;
+                        </button>
+                      </div>
+                    ) : (
+                      <div className='border-t border-border/60 p-3'>
+                        <button
+                          type='button'
+                          onClick={() => goToShopSearch(searchQuery)}
+                          className='w-full rounded-xl px-3 py-2.5 text-sm font-medium text-foreground/70 transition-colors hover:bg-surface-2 hover:text-foreground'
+                        >
+                          See results in shop →
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>
