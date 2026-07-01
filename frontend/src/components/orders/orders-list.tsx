@@ -1,7 +1,9 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import { useCurrency } from '@/contexts/currency-context';
 import { useInitializePayment } from '@/hooks/use-payment';
+import { formatPrice } from '@/lib/format-price';
 import { format } from 'date-fns';
 import {
   AlertCircle,
@@ -101,6 +103,7 @@ const getStatusColors = (status: string) => {
 };
 
 export function OrdersList({ orders }: OrdersListProps) {
+  const { currency, convert } = useCurrency();
   const { mutate: initializePayment, isPending } = useInitializePayment();
   const handleRetryPayment = (orderId: string) => {
     initializePayment(
@@ -166,7 +169,10 @@ export function OrdersList({ orders }: OrdersListProps) {
                           </span>
                         </div>
                         <span className='text-sm font-semibold text-foreground flex-shrink-0'>
-                          ₦{(item.price * item.quantity).toLocaleString()}
+                          {formatPrice(
+                            convert(item.price * item.quantity),
+                            currency
+                          )}
                         </span>
                       </div>
                     ))}
@@ -226,10 +232,7 @@ export function OrdersList({ orders }: OrdersListProps) {
                         Total
                       </p>
                       <p className='text-lg sm:text-xl font-bold text-foreground'>
-                        ₦
-                        {order.total.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        })}
+                        {formatPrice(convert(order.total), currency)}
                       </p>
                     </div>
                   </div>

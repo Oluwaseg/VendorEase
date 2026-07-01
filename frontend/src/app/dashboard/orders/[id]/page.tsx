@@ -4,7 +4,9 @@ import { InlineError, InlineLoader } from '@/components/common/loader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useCurrency } from '@/contexts/currency-context';
 import { useDownloadInvoice, useMyOrder } from '@/hooks/use-order';
+import { formatPrice } from '@/lib/format-price';
 import { format } from 'date-fns';
 import {
   AlertCircle,
@@ -163,6 +165,7 @@ export default function OrderDetailPage() {
   const params = useParams();
   const orderId = params.id as string;
   const { data, isLoading, error, refetch } = useMyOrder(orderId);
+  const { currency, convert } = useCurrency();
   const { mutate: downloadInvoice, isPending: isDownloading } =
     useDownloadInvoice();
   const order = data;
@@ -257,12 +260,15 @@ export default function OrderDetailPage() {
                               <span className='font-medium'>
                                 {item.quantity}
                               </span>{' '}
-                              × ₦{item.price.toLocaleString()}
+                              × {formatPrice(convert(item.price), currency)}
                             </p>
                           </div>
                           <div className='text-right flex-shrink-0'>
                             <p className='font-bold text-foreground text-lg'>
-                              ₦{(item.price * item.quantity).toLocaleString()}
+                              {formatPrice(
+                                convert(item.price * item.quantity),
+                                currency
+                              )}
                             </p>
                           </div>
                         </div>
@@ -274,7 +280,10 @@ export default function OrderDetailPage() {
                       <div className='flex items-center justify-between'>
                         <span className='text-muted-foreground'>Subtotal</span>
                         <span className='font-semibold'>
-                          ₦{(order.subtotal || order.total).toLocaleString()}
+                          {formatPrice(
+                            convert(order.subtotal || order.total),
+                            currency
+                          )}
                         </span>
                       </div>
                       {order.discount > 0 && (
@@ -283,7 +292,7 @@ export default function OrderDetailPage() {
                             Discount
                           </span>
                           <span className='font-semibold text-emerald-600'>
-                            -₦{order.discount.toLocaleString()}
+                            -{formatPrice(convert(order.discount), currency)}
                           </span>
                         </div>
                       )}
@@ -293,14 +302,14 @@ export default function OrderDetailPage() {
                             Shipping
                           </span>
                           <span className='font-semibold'>
-                            ₦{order.shippingFee.toLocaleString()}
+                            {formatPrice(convert(order.shippingFee), currency)}
                           </span>
                         </div>
                       )}
                       <div className='flex items-center justify-between pt-4 border-t border-border/40 bg-primary/5 px-4 py-3 rounded-lg'>
                         <span className='font-bold text-lg'>Total</span>
                         <span className='text-2xl font-bold text-primary'>
-                          ₦{order.total.toLocaleString()}
+                          {formatPrice(convert(order.total), currency)}
                         </span>
                       </div>
                     </div>
@@ -397,7 +406,7 @@ export default function OrderDetailPage() {
                           Order Total
                         </p>
                         <p className='font-bold text-foreground text-lg'>
-                          ₦{order.total.toLocaleString()}
+                          {formatPrice(convert(order.total), currency)}
                         </p>
                       </div>
                     </div>

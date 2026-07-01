@@ -7,7 +7,9 @@ import {
 } from '@/components/common/loader';
 import { OrdersList } from '@/components/orders/orders-list';
 import { Card, CardContent } from '@/components/ui/card';
+import { useCurrency } from '@/contexts/currency-context';
 import { useMyOrders } from '@/hooks/use-order';
+import { formatPrice } from '@/lib/format-price';
 import {
   ArrowLeft,
   Package,
@@ -18,6 +20,7 @@ import {
 
 export default function OrdersPage() {
   const { data, isLoading, error, refetch } = useMyOrders();
+  const { currency, convert } = useCurrency();
   const orders = data?.orders || [];
   const stats = data?.stats;
 
@@ -68,7 +71,7 @@ export default function OrdersPage() {
                         Total Spent
                       </p>
                       <p className='text-3xl font-bold text-foreground'>
-                        ₦{(stats.totalAmount || 0).toLocaleString()}
+                        {formatPrice(convert(stats.totalAmount || 0), currency)}
                       </p>
                     </div>
                     <div className='p-2.5 bg-blue-500/10 rounded-lg'>
@@ -87,7 +90,7 @@ export default function OrdersPage() {
                         Amount Paid
                       </p>
                       <p className='text-3xl font-bold text-foreground'>
-                        ₦{(stats.totalPaid || 0).toLocaleString()}
+                        {formatPrice(convert(stats.totalPaid || 0), currency)}
                       </p>
                     </div>
                     <div className='p-2.5 bg-emerald-500/10 rounded-lg'>
@@ -106,7 +109,10 @@ export default function OrdersPage() {
                         Pending Payment
                       </p>
                       <p className='text-3xl font-bold text-foreground'>
-                        ₦{(stats.totalPending || 0).toLocaleString()}
+                        {formatPrice(
+                          convert(stats.totalPending || 0),
+                          currency
+                        )}
                       </p>
                     </div>
                     <div className='p-2.5 bg-amber-500/10 rounded-lg'>
