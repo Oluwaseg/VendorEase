@@ -1,6 +1,7 @@
 'use client';
 
 import { AddressAutocomplete } from '@/components/address-autocomplete';
+import { InlineError, InlineLoader } from '@/components/common/loader';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -66,6 +67,7 @@ export default function CheckoutPage() {
     data: checkoutInfo,
     isLoading: isLoadingCheckoutInfo,
     error: checkoutError,
+    refetch: refetchCheckoutInfo,
   } = useCheckoutInfo();
   const { mutateAsync: checkout, isPending: isCheckoutPending } = useCheckout();
   const { mutateAsync: initializePayment, isPending: isPaymentPending } =
@@ -206,37 +208,17 @@ export default function CheckoutPage() {
   };
 
   if (isLoadingCheckoutInfo) {
-    return (
-      <div className='min-h-screen bg-background flex items-center justify-center'>
-        <div className='text-center'>
-          <Loader2 className='w-12 h-12 animate-spin mx-auto mb-4 text-primary' />
-          <p className='text-foreground/60'>Loading checkout...</p>
-        </div>
-      </div>
-    );
+    return <InlineLoader size='lg' message='Loading checkout...' />;
   }
 
   if (checkoutError) {
     return (
-      <div className='min-h-screen bg-background flex items-center justify-center px-4'>
-        <Card className='max-w-md w-full border-destructive/20'>
-          <CardHeader>
-            <div className='flex items-center gap-3'>
-              <AlertCircle className='w-6 h-6 text-destructive' />
-              <CardTitle>Error Loading Checkout</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className='text-foreground/60 mb-4'>
-              We encountered an error loading your checkout information. Please
-              try again later.
-            </p>
-            <Button className='w-full' onClick={() => window.location.reload()}>
-              Retry
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      <InlineError
+        size='lg'
+        title='Error loading checkout'
+        message='We encountered an error loading your checkout information. Please try again.'
+        onRetry={() => refetchCheckoutInfo()}
+      />
     );
   }
 

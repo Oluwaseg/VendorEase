@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { useCollections } from '@/hooks/use-collection';
+import { DEFAULT_PRODUCT_IMAGE_FALLBACK } from '@/lib/image-fallbacks';
 import type { Collection } from '@/types/collection';
 import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
@@ -17,11 +18,16 @@ import { InlineLoader } from '../common/loader';
 
 interface FeaturedCollectionsProps {
   className?: string;
+  fallbackImageSrc?: string;
 }
 
-export function FeaturedCollections({ className }: FeaturedCollectionsProps) {
+export function FeaturedCollections({
+  className,
+  fallbackImageSrc,
+}: FeaturedCollectionsProps) {
   const { data: collections, isLoading } = useCollections({ isActive: true });
   const plugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
+  const fallbackImage = fallbackImageSrc?.trim() || DEFAULT_PRODUCT_IMAGE_FALLBACK;
 
   if (isLoading) {
     return (
@@ -31,7 +37,7 @@ export function FeaturedCollections({ className }: FeaturedCollectionsProps) {
     );
   }
 
-  const active = (collections ?? []).filter((c) => c.image?.url);
+  const active = collections ?? [];
 
   if (active.length === 0) {
     return null;
@@ -64,7 +70,7 @@ export function FeaturedCollections({ className }: FeaturedCollectionsProps) {
                 key={collection._id}
                 className='pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3'
               >
-                <CollectionCard collection={collection} />
+                <CollectionCard collection={collection} fallbackImageSrc={fallbackImage} />
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -83,7 +89,13 @@ export function FeaturedCollections({ className }: FeaturedCollectionsProps) {
   );
 }
 
-function CollectionCard({ collection }: { collection: Collection }) {
+function CollectionCard({
+  collection,
+  fallbackImageSrc,
+}: {
+  collection: Collection;
+  fallbackImageSrc: string;
+}) {
   const productCount = Array.isArray(collection.productIds)
     ? collection.productIds.length
     : 0;
@@ -94,21 +106,12 @@ function CollectionCard({ collection }: { collection: Collection }) {
       className='group block overflow-hidden rounded-2xl border border-border bg-card h-full transition-shadow hover:shadow-lg'
     >
       <div className='relative h-56'>
-        {collection.image?.url ? (
-          <Image
-            src={
-              collection.image.url ||
-              'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400'
-            }
-            onError={(e) => {
-              (e.target as HTMLImageElement).src =
-                'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400';
-            }}
-            alt={collection.name}
-            fill
-            className='object-cover transition-transform duration-300 group-hover:scale-105'
-          />
-        ) : null}
+        <Image
+          src={collection.image?.url?.trim() || fallbackImageSrc}
+          alt={collection.name}
+          fill
+          className='object-cover transition-transform duration-300 group-hover:scale-105'
+        />
         <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent' />
         <div className='absolute bottom-4 left-4 right-4 text-white'>
           <h3 className='text-xl font-bold'>{collection.name}</h3>

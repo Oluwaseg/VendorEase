@@ -72,7 +72,7 @@ class SubcategoryService {
   async getSubcategoryById(id: string): Promise<ISubcategory> {
     const subcategory = await Subcategory.findById(id).populate(
       'category',
-      'name'
+      'name slug'
     );
 
     if (!subcategory) {
@@ -85,7 +85,7 @@ class SubcategoryService {
   async getSubcategoryBySlug(slug: string): Promise<ISubcategory> {
     const subcategory = await Subcategory.findOne({ slug }).populate(
       'category',
-      'name'
+      'name slug'
     );
 
     if (!subcategory) {

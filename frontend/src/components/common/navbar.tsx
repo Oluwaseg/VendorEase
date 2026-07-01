@@ -9,6 +9,7 @@ import { useWishlist } from '@/contexts/wishlist-context';
 import { useLogout } from '@/hooks/use-auth';
 import { useProducts } from '@/hooks/use-product';
 import { formatPrice } from '@/lib/format-price';
+import { DEFAULT_PRODUCT_IMAGE_FALLBACK } from '@/lib/image-fallbacks';
 import {
   Gift,
   Heart,
@@ -34,14 +35,14 @@ import { CurrencySwitcher } from '../currency-switcher';
 const NAV_ITEMS = [
   { label: 'Home', href: '/' },
   { label: 'Shop', href: '/shop' },
+  { label: 'Categories', href: '/category' },
+  { label: 'Subcategories', href: '/subcategory' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
 
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_RESULT_LIMIT = 8;
-const FALLBACK_PRODUCT_IMAGE =
-  'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -812,8 +813,8 @@ export function Navbar() {
                             <div className='relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-surface'>
                               <Image
                                 src={
-                                  product.images?.[0]?.url ??
-                                  FALLBACK_PRODUCT_IMAGE
+                                  product.images?.[0]?.url?.trim() ||
+                                  DEFAULT_PRODUCT_IMAGE_FALLBACK
                                 }
                                 alt={product.name}
                                 fill

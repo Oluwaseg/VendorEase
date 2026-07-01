@@ -7,7 +7,7 @@ export interface Subcategory {
   slug: string;
 
   // Relation
-  category: Category; // Category _id
+  category: Category | string;
 
   description?: string;
   isPublished: boolean;

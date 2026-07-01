@@ -347,6 +347,11 @@
     background: var(--color-brand);
     color: var(--color-brand-foreground);
   }
+  img {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
 }
 
 /* ---------- Reusable utilities ---------- */

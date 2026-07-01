@@ -5,12 +5,13 @@ import { useCartContext } from '@/contexts/cart-context';
 import { useCurrency } from '@/contexts/currency-context';
 import { useWishlist } from '@/contexts/wishlist-context';
 import { formatPrice } from '@/lib/format-price';
+import { DEFAULT_PRODUCT_IMAGE_FALLBACK } from '@/lib/image-fallbacks';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types/product';
 import { Heart, ShoppingCart, Star, Zap } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { type MouseEvent, useState } from 'react';
+import { type MouseEvent, useEffect, useState } from 'react';
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +19,7 @@ interface ProductCardProps {
   imageClassName?: string;
   contentClassName?: string;
   showDescription?: boolean;
+  fallbackImageSrc?: string;
 }
 
 function getSalePrice(product: Product) {
@@ -53,11 +55,19 @@ export function ProductCard({
   imageClassName,
   contentClassName,
   showDescription = false,
+  fallbackImageSrc,
 }: ProductCardProps) {
+  const fallbackImage = fallbackImageSrc?.trim() || DEFAULT_PRODUCT_IMAGE_FALLBACK;
+  const initialImageSrc = product.images?.[0]?.url?.trim() || fallbackImage;
   const { currency, convert } = useCurrency();
   const { addToCart } = useCartContext();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [isAdded, setIsAdded] = useState(false);
+  const [imageSrc, setImageSrc] = useState(initialImageSrc);
+
+  useEffect(() => {
+    setImageSrc(initialImageSrc);
+  }, [initialImageSrc]);
 
   const { hasFlashSale, salePrice, discountPercent } = getSalePrice(product);
   const inWishlist = isInWishlist(product._id);
@@ -92,30 +102,28 @@ export function ProductCard({
     <Link
       href={`/shop/${product.slug}`}
       className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-1 transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:shadow-xl',
+        'group relative isolate flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-1 transition-all duration-300 md:hover:-translate-y-1 hover:border-brand/40 hover:shadow-xl [transform:translateZ(0)]',
         className
       )}
     >
       <div
         className={cn(
-          'relative mb-4 aspect-square overflow-hidden rounded-xl bg-surface',
+          'relative mb-4 aspect-square overflow-hidden rounded-xl bg-surface [backface-visibility:hidden] [transform:translateZ(0)]',
           imageClassName
         )}
       >
         <Image
-          src={
-            product.images?.[0]?.url ??
-            'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400'
-          }
-          onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400';
+          src={imageSrc}
+          onError={() => {
+            if (imageSrc !== fallbackImage) {
+              setImageSrc(fallbackImage);
+            }
           }}
           alt={product.name}
           fill
-          className='object-cover transition-transform duration-500 group-hover:scale-105'
+          className='object-cover [backface-visibility:hidden] [transform:translateZ(0)] transition-transform duration-500 group-hover:scale-105'
         />
-        <div className='absolute inset-0 bg-gradient-to-t from-black/20 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
+        <div className='absolute inset-0 [backface-visibility:hidden] [transform:translateZ(0)] bg-gradient-to-t from-black/20 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
 
         {hasFlashSale ? (
           <div className='flashsale absolute left-3 top-3 flex items-center gap-1.5 rounded-lg bg-accent px-2.5 py-1.5 text-xs font-bold text-accent-foreground shadow'>

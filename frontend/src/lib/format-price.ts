@@ -7,10 +7,13 @@ export function formatPrice(
   currency: SupportedCurrency,
 ): string {
   const { locale } = CURRENCY_CONFIG[currency];
+  const hasFraction = Math.round(amount * 100) % 100 !== 0;
 
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
+    minimumFractionDigits: hasFraction ? 2 : 0,
+    maximumFractionDigits: hasFraction ? 2 : 0,
   }).format(amount);
 }
 

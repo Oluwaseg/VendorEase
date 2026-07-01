@@ -2,15 +2,15 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import {
+  InlineError,
+  InlineLoader,
+} from '@/components/common/loader';
 import { useVerifyPayment } from '@/hooks/use-payment';
 import {
-  AlertCircle,
   Check,
   ChevronLeft,
-  Home,
   LayoutDashboard,
-  Loader2,
-  RefreshCw,
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useMemo } from 'react';
@@ -45,93 +45,27 @@ function PaymentSuccessContent() {
       <section className='pt-16 pb-24 px-4 sm:px-6 lg:px-8 bg-background min-h-[calc(100vh-80px)] flex items-center'>
         <div className='w-full max-w-2xl mx-auto'>
           {!reference ? (
-            // Missing Reference State
-            <Card className='border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden'>
-              <div className='p-8 sm:p-12 text-center space-y-6'>
-                <div className='inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10'>
-                  <AlertCircle className='w-8 h-8 text-destructive' />
-                </div>
-                <div>
-                  <h1 className='text-2xl sm:text-3xl font-bold text-foreground mb-2'>
-                    Missing Payment Reference
-                  </h1>
-                  <p className='text-muted-foreground'>
-                    We couldn't find your payment reference. Please return to
-                    checkout and try again.
-                  </p>
-                </div>
-                <div className='flex flex-col sm:flex-row gap-3 justify-center pt-4'>
-                  <Button asChild className='gap-2'>
-                    <a href='/'>
-                      <Home className='w-4 h-4' />
-                      Back to Home
-                    </a>
-                  </Button>
-                  <Button asChild variant='outline' className='gap-2'>
-                    <a href='/shop'>
-                      <RefreshCw className='w-4 h-4' />
-                      Try Checkout Again
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </Card>
+            <InlineError
+              size='lg'
+              title='Missing payment reference'
+              message="We couldn't find your payment reference. Please return to checkout and try again."
+              backHref='/'
+              backLabel='Back to home'
+            />
           ) : isPending ? (
-            // Loading State
-            <Card className='border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden'>
-              <div className='p-8 sm:p-12 text-center space-y-6'>
-                <div className='flex justify-center'>
-                  <div className='relative'>
-                    <div className='absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/0 rounded-full blur-xl animate-pulse' />
-                    <div className='relative w-16 h-16 border-4 border-border rounded-full border-t-primary animate-spin' />
-                  </div>
-                </div>
-                <div>
-                  <h1 className='text-2xl sm:text-3xl font-bold text-foreground mb-2'>
-                    Verifying Payment
-                  </h1>
-                  <p className='text-muted-foreground'>
-                    Please wait while we confirm your transaction...
-                  </p>
-                </div>
-                <Loader2 className='w-5 h-5 text-primary animate-spin mx-auto' />
-              </div>
-            </Card>
+            <InlineLoader size='lg' message='Verifying payment...' />
           ) : isError ? (
-            // Error State
-            <Card className='border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden'>
-              <div className='p-8 sm:p-12 text-center space-y-6'>
-                <div className='inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10'>
-                  <AlertCircle className='w-8 h-8 text-destructive' />
-                </div>
-                <div>
-                  <h1 className='text-2xl sm:text-3xl font-bold text-foreground mb-2'>
-                    Payment Verification Failed
-                  </h1>
-                  <p className='text-muted-foreground mb-2'>
-                    {error?.message ||
-                      'We encountered an error while verifying your payment.'}
-                  </p>
-                  <p className='text-xs text-muted-foreground font-mono bg-muted/30 p-3 rounded-lg'>
-                    Reference: {reference}
-                  </p>
-                </div>
-                <div className='flex flex-col sm:flex-row gap-3 justify-center pt-4'>
-                  <Button asChild className='gap-2'>
-                    <a href='/'>
-                      <Home className='w-4 h-4' />
-                      Back to Home
-                    </a>
-                  </Button>
-                  <Button asChild variant='outline' className='gap-2'>
-                    <a href='/orders'>
-                      <LayoutDashboard className='w-4 h-4' />
-                      View Orders
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </Card>
+            <InlineError
+              size='lg'
+              title='Payment verification failed'
+              message={
+                error?.message ||
+                'We encountered an error while verifying your payment.'
+              }
+              backHref='/orders'
+              backLabel='View orders'
+              onRetry={() => verify(reference)}
+            />
           ) : data ? (
             // Success or Completed State
             <div className='space-y-6'>
@@ -216,31 +150,7 @@ function PaymentSuccessContent() {
 
 export default function PaymentSuccessPage() {
   return (
-    <Suspense
-      fallback={
-        <main className='min-h-screen bg-background'>
-          <section className='pt-16 pb-24 px-4 sm:px-6 lg:px-8 bg-background min-h-[calc(100vh-80px)] flex items-center'>
-            <div className='w-full max-w-2xl mx-auto'>
-              <Card className='border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden'>
-                <div className='p-8 sm:p-12 text-center space-y-6'>
-                  <div className='flex justify-center'>
-                    <div className='relative'>
-                      <div className='absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/0 rounded-full blur-xl animate-pulse' />
-                      <div className='relative w-16 h-16 border-4 border-border rounded-full border-t-primary animate-spin' />
-                    </div>
-                  </div>
-                  <div>
-                    <h1 className='text-2xl sm:text-3xl font-bold text-foreground mb-2'>
-                      Loading...
-                    </h1>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </section>
-        </main>
-      }
-    >
+    <Suspense fallback={<InlineLoader size='lg' message='Loading...' />}>
       <PaymentSuccessContent />
     </Suspense>
   );

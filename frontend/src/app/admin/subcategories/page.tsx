@@ -106,11 +106,16 @@ export default function SubcategoriesPage() {
 
   // Open modal for edit
   const handleOpenEditModal = (subcategory: Subcategory) => {
+    const categoryId =
+      typeof subcategory.category === 'string'
+        ? subcategory.category
+        : subcategory.category._id;
+
     setSelectedSubcategory(subcategory);
     setFormData({
       name: subcategory.name,
       slug: subcategory.slug,
-      category: subcategory.category._id,
+      category: categoryId,
       description: subcategory.description || '',
       isPublished: subcategory.isPublished,
     });
@@ -272,7 +277,9 @@ export default function SubcategoriesPage() {
                       variant='secondary'
                       className='bg-brand/15 text-brand border-brand/20 font-medium'
                     >
-                      {subcategory.category.name}
+                      {typeof subcategory.category === 'string'
+                        ? 'Uncategorized'
+                        : subcategory.category.name}
                     </Badge>
                     <div className='flex items-center gap-1'>
                       <div

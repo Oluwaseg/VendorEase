@@ -13,6 +13,7 @@ import {
   useCollectionProducts,
 } from '@/hooks/use-collection';
 import { getCollectionCtaText } from '@/lib/collection-hero';
+import { DEFAULT_PRODUCT_IMAGE_FALLBACK } from '@/lib/image-fallbacks';
 import type { Collection } from '@/types/collection';
 import type { Product } from '@/types/product';
 import Image from 'next/image';
@@ -86,15 +87,13 @@ export default function CollectionDetailPage() {
     <main className='min-h-screen'>
       <section className='relative'>
         <div className='relative h-[280px] sm:h-[360px] bg-muted'>
-          {collection.image?.url ? (
-            <Image
-              src={collection.image.url}
-              alt={collection.name}
-              fill
-              className='object-cover'
-              priority
-            />
-          ) : null}
+          <Image
+            src={collection.image?.url?.trim() || DEFAULT_PRODUCT_IMAGE_FALLBACK}
+            alt={collection.name}
+            fill
+            className='object-cover'
+            priority
+          />
           <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent' />
           <div className='absolute bottom-0 left-0 right-0 container mx-auto px-4 pb-10'>
             <p className='text-sm uppercase tracking-[0.3em] text-white/80'>

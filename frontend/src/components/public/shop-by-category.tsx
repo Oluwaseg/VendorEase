@@ -7,7 +7,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import { InlineLoader } from '@/components/common/loader';
 import { useCategories } from '@/hooks/use-category';
+import { DEFAULT_PRODUCT_IMAGE_FALLBACK } from '@/lib/image-fallbacks';
 import { Category } from '@/types/category';
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
@@ -15,6 +17,7 @@ import { useRef } from 'react';
 
 interface ShopByCategoryProps {
   className?: string;
+  fallbackImageSrc?: string;
 }
 
 const categoryColors = [
@@ -24,17 +27,18 @@ const categoryColors = [
   'bg-pink-100',
 ];
 
-export function ShopByCategory({ className }: ShopByCategoryProps) {
+export function ShopByCategory({
+  className,
+  fallbackImageSrc,
+}: ShopByCategoryProps) {
   const { data: categories, isLoading } = useCategories();
   const plugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
+  const fallbackImage = fallbackImageSrc?.trim() || DEFAULT_PRODUCT_IMAGE_FALLBACK;
 
   if (isLoading) {
     return (
       <section className={`py-16 ${className}`}>
-        <div className='container mx-auto px-4'>
-          <h2 className='text-4xl font-bold mb-12'>Shop by Category</h2>
-          <div className='h-64 bg-gradient-to-br from-card/50 to-card/30 rounded-xl animate-pulse' />
-        </div>
+        <InlineLoader size='lg' message='Loading categories...' />
       </section>
     );
   }
@@ -79,6 +83,7 @@ export function ShopByCategory({ className }: ShopByCategoryProps) {
                 <CategoryCard
                   category={category}
                   colorClass={categoryColors[index % categoryColors.length]}
+                  fallbackImageSrc={fallbackImage}
                 />
               </CarouselItem>
             ))}
@@ -92,9 +97,14 @@ export function ShopByCategory({ className }: ShopByCategoryProps) {
 interface CategoryCardProps {
   category: Category;
   colorClass: string;
+  fallbackImageSrc: string;
 }
 
-function CategoryCard({ category, colorClass }: CategoryCardProps) {
+function CategoryCard({
+  category,
+  colorClass,
+  fallbackImageSrc,
+}: CategoryCardProps) {
   return (
     <Link href={`/category/${category.slug}`}>
       <div className='group overflow-hidden rounded-2xl bg-white transition-shadow duration-300 cursor-pointer h-full flex flex-col'>
@@ -103,8 +113,13 @@ function CategoryCard({ category, colorClass }: CategoryCardProps) {
           <img
             src={
               (category.image && category.image.url) ||
-              'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400'
+              fallbackImageSrc
             }
+            onError={(e) => {
+              if (e.currentTarget.src !== fallbackImageSrc) {
+                e.currentTarget.src = fallbackImageSrc;
+              }
+            }}
             alt={category.name}
             className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
           />

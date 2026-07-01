@@ -1,8 +1,9 @@
 'use client';
 
+import { DEFAULT_PRODUCT_IMAGE_FALLBACK } from '@/lib/image-fallbacks';
 import { ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 interface ProductImage {
   url: string;
@@ -11,6 +12,7 @@ interface ProductImage {
 interface ImageGalleryProps {
   images: ProductImage[] | undefined;
   productName: string;
+  fallbackImageSrc?: string;
   flashSale?: {
     isActive: boolean;
     discountType: 'percentage' | 'fixed';
@@ -21,15 +23,26 @@ interface ImageGalleryProps {
 export function ImageGallery({
   images,
   productName,
+  fallbackImageSrc,
   flashSale,
 }: ImageGalleryProps) {
   const [selectedImage, setSelectedImage] = useState(0);
+  const fallbackImage = fallbackImageSrc?.trim() || DEFAULT_PRODUCT_IMAGE_FALLBACK;
+  const currentImageSrc = useMemo(
+    () => images?.[selectedImage]?.url?.trim() || fallbackImage,
+    [fallbackImage, images, selectedImage]
+  );
+  const [mainImageSrc, setMainImageSrc] = useState(currentImageSrc);
+
+  useEffect(() => {
+    setMainImageSrc(currentImageSrc);
+  }, [currentImageSrc]);
 
   if (!images || images.length === 0) {
     return (
       <div className='relative bg-linear-to-br from-muted to-muted/50 rounded-2xl overflow-hidden flex items-center justify-center aspect-square lg:aspect-auto lg:h-[650px] group shadow-lg hover:shadow-xl transition-shadow duration-300'>
         <Image
-          src='https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400'
+          src={fallbackImage}
           alt={productName}
           width={650}
           height={650}
@@ -45,13 +58,11 @@ export function ImageGallery({
       {/* Main Image Container */}
       <div className='relative bg-linear-to-br from-muted to-muted/50 rounded-2xl overflow-hidden flex items-center justify-center aspect-square lg:aspect-auto lg:h-[650px] group shadow-lg hover:shadow-xl transition-shadow duration-300'>
         <Image
-          src={
-            images[selectedImage]?.url ||
-            'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400'
-          }
-          onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              'https://www.puravidabracelets.com/cdn/shop/files/square-image_2_1.jpg?crop=center&height=400&v=1774219636&width=400';
+          src={mainImageSrc}
+          onError={() => {
+            if (mainImageSrc !== fallbackImage) {
+              setMainImageSrc(fallbackImage);
+            }
           }}
           alt={productName}
           width={650}
@@ -121,7 +132,7 @@ export function ImageGallery({
               aria-label={`Select image ${idx + 1}`}
             >
               <Image
-                src={img.url}
+                src={img.url?.trim() || fallbackImage}
                 alt={`${productName} image ${idx + 1}`}
                 width={96}
                 height={96}
