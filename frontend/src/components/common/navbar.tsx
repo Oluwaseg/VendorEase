@@ -37,8 +37,6 @@ const NAV_ITEMS = [
   { label: 'Shop', href: '/shop' },
   { label: 'Categories', href: '/category' },
   { label: 'Subcategories', href: '/subcategory' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
 ];
 
 const SEARCH_DEBOUNCE_MS = 300;
@@ -83,8 +81,10 @@ export function Navbar() {
     { enabled: debouncedSearch.length >= 2 }
   );
 
-  const searchResults = debouncedSearch.length >= 2 ? (searchData?.products ?? []) : [];
-  const searchTotal = debouncedSearch.length >= 2 ? (searchData?.total ?? 0) : 0;
+  const searchResults =
+    debouncedSearch.length >= 2 ? (searchData?.products ?? []) : [];
+  const searchTotal =
+    debouncedSearch.length >= 2 ? (searchData?.total ?? 0) : 0;
 
   // NEW (UI-only): scroll-aware adaptive navbar — purely presentational state.
   const [scrolled, setScrolled] = useState(false);
@@ -801,7 +801,11 @@ export function Navbar() {
                   </div>
                 ) : (
                   <>
-                    <ul className='p-2' role='listbox' aria-label='Search results'>
+                    <ul
+                      className='p-2'
+                      role='listbox'
+                      aria-label='Search results'
+                    >
                       {searchResults.map((product) => (
                         <li key={product._id}>
                           <Link
