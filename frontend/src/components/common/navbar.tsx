@@ -464,7 +464,7 @@ export function Navbar() {
               />
               <span className='absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/20' />
             </span>
-            <span className='hidden font-mono text-base font-semibold tracking-tight text-foreground sm:inline'>
+            <span className='font-mono text-base font-semibold tracking-tight text-foreground sm:inline'>
               VendorEase
             </span>
           </Link>
