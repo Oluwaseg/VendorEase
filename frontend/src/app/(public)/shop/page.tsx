@@ -1,5 +1,5 @@
 import { FullPageLoader } from '@/components/common/loader';
-import ShopPageClient from '@/components/shop-page-client';
+import ShopPageClient from '@/components/public/shop-page-client';
 import { Suspense } from 'react';
 
 export default function ShopPage() {

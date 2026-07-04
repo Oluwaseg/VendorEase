@@ -1,8 +1,6 @@
 'use client';
 
 import { logo } from '@/assets';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   ArrowRight,
   Github,
@@ -11,7 +9,6 @@ import {
   Mail,
   MapPin,
   Phone,
-  Sparkles,
   Twitter,
 } from 'lucide-react';
 import Image from 'next/image';
@@ -69,7 +66,7 @@ export function Footer() {
         style={{ color: '#ffffff' }}
       >
         {/* Newsletter */}
-        <div className='grid gap-10 rounded-3xl border border-white/20 bg-white/10 p-8 md:grid-cols-2 md:p-12'>
+        {/* <div className='grid gap-10 rounded-3xl border border-white/20 bg-white/10 p-8 md:grid-cols-2 md:p-12'>
           <div>
             <div className='mb-3 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs text-white/80'>
               <Sparkles className='h-3 w-3' />
@@ -114,7 +111,7 @@ export function Footer() {
               <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-0.5' />
             </Button>
           </form>
-        </div>
+        </div> */}
 
         {/* Main grid */}
         <div className='mt-16 grid grid-cols-1 gap-12 lg:grid-cols-12'>
