@@ -38,6 +38,9 @@ RUN pnpm install --frozen-lockfile --prod
 # Copy built application from builder
 COPY --from=builder /app/dist ./dist
 
+# Copy email templates into dist for runtime template loading
+COPY backend/src/templates ./dist/templates
+
 # Expose port
 EXPOSE 3025
 
