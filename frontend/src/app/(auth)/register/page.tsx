@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Check, ChevronRight, Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -27,6 +27,7 @@ const steps = [
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { mutate: register, isPending } = useRegister();
   const { mutate: googleAuth, isPending: isGooglePending } = useGoogleAuth();
   const googleButtonRef = useRef<HTMLDivElement>(null);
@@ -41,12 +42,21 @@ export default function RegisterPage() {
     formState: { errors },
     watch,
     trigger,
+    setValue,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     mode: 'onChange',
   });
 
   const watchedValues = watch();
+
+  // Prefill referral code from URL query parameter
+  useEffect(() => {
+    const referralCode = searchParams.get('ref');
+    if (referralCode) {
+      setValue('referralCode', referralCode);
+    }
+  }, [searchParams, setValue]);
 
   useEffect(() => {
     // Load Google Sign-In script
