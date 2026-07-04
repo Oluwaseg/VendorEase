@@ -10,6 +10,7 @@ import {
   type ForgotPasswordFormData,
 } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft, CheckCircle2, Mail } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -46,130 +47,163 @@ export default function ForgotPasswordPage() {
 
   return (
     <main>
-      <section className='min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-background py-8 sm:py-12'>
-        <Card className='w-full max-w-sm border-2 border-border shadow-lg'>
-          <div className='p-6 sm:p-8 space-y-5'>
-            {!emailSent ? (
-              <>
-                <div className='text-center space-y-1'>
-                  <div className='flex justify-center'>
-                    <Image
-                      src={logo}
-                      alt='VendorEase Logo'
-                      width={60}
-                      height={30}
-                      priority
-                      className='object-contain'
-                    />
-                  </div>
-                  <h1 className='text-2xl sm:text-3xl font-bold text-foreground'>
-                    Forgot Password?
-                  </h1>
-                  <p className='text-sm text-foreground/60'>
-                    No worries, we'll send you reset instructions.
-                  </p>
-                </div>
+      <section className='min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-background via-background to-secondary/5 py-8 sm:py-12'>
+        <div className='w-full max-w-md'>
+          {/* Logo */}
+          <div className='flex justify-center mb-8'>
+            <Image
+              src={logo}
+              alt='VendorEase Logo'
+              width={50}
+              height={24}
+              priority
+              className='object-contain'
+            />
+          </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-                  <div className='space-y-1.5'>
-                    <label className='text-xs sm:text-sm font-medium text-foreground'>
-                      Email
-                    </label>
-                    <Input
-                      type='email'
-                      placeholder='you@example.com'
-                      className='bg-secondary/50 border-border h-9 sm:h-10 text-sm'
-                      {...register('email')}
-                    />
-                    {errors.email && (
-                      <p className='text-xs text-red-500 line-clamp-1'>
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <Button
-                    type='submit'
-                    disabled={isPending}
-                    className='w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold h-10 sm:h-11 text-sm'
-                  >
-                    {isPending ? 'Sending...' : 'Send Reset Link'}
-                  </Button>
-                </form>
-
-                <div className='text-center'>
-                  <p className='text-xs text-foreground/60'>
-                    Remember your password?{' '}
-                    <Link
-                      href='/login'
-                      className='text-accent hover:text-accent/80 font-semibold'
-                    >
-                      Sign in
-                    </Link>
-                  </p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className='text-center space-y-3'>
-                  <div className='mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center'>
-                    <svg
-                      className='w-6 h-6 text-green-600'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M5 13l4 4L19 7'
-                      />
-                    </svg>
-                  </div>
-                  <div className='space-y-1'>
-                    <h2 className='text-xl sm:text-2xl font-bold text-foreground'>
-                      Check your email
-                    </h2>
-                    <p className='text-foreground/60 text-xs sm:text-sm'>
-                      We've sent a password reset link to{' '}
-                      <span className='font-semibold text-foreground break-all'>
-                        {emailValue}
-                      </span>
+          <Card className='border border-border/60 shadow-xl overflow-hidden'>
+            <div className='p-8 sm:p-10'>
+              {!emailSent ? (
+                <div className='space-y-6 animate-in fade-in duration-300'>
+                  {/* Header */}
+                  <div className='space-y-2 text-center'>
+                    <div className='flex justify-center'>
+                      <div className='w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center'>
+                        <Mail className='w-7 h-7 text-primary' />
+                      </div>
+                    </div>
+                    <h1 className='text-3xl font-bold text-foreground'>
+                      Forgot Password?
+                    </h1>
+                    <p className='text-sm text-foreground/65 leading-relaxed'>
+                      No worries! Enter your email address and we&apos;ll send
+                      you a link to reset your password.
                     </p>
                   </div>
-                </div>
 
-                <div className='bg-secondary/30 border border-border rounded-lg p-3 sm:p-4 text-xs sm:text-sm text-foreground/70'>
-                  <p>
-                    If you don't see the email, check your spam folder or try
-                    sending another reset link.
-                  </p>
-                </div>
+                  {/* Form */}
+                  <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+                    <div className='space-y-2'>
+                      <label className='text-sm font-semibold text-foreground'>
+                        Email Address
+                      </label>
+                      <Input
+                        type='email'
+                        placeholder='you@example.com'
+                        className='bg-secondary/40 border-border/60 h-11 text-sm placeholder:text-foreground/40 focus:bg-secondary/60 transition-colors'
+                        {...register('email')}
+                      />
+                      {errors.email && (
+                        <p className='text-xs text-red-500 font-medium'>
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </div>
 
-                <Button
-                  onClick={() => setEmailSent(false)}
-                  variant='outline'
-                  className='w-full border-2 border-border bg-transparent h-10 sm:h-11 text-sm'
-                >
-                  Try another email
-                </Button>
+                    <Button
+                      type='submit'
+                      disabled={isPending}
+                      className='w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold h-11 text-sm transition-all duration-200'
+                    >
+                      {isPending ? (
+                        <span className='flex items-center gap-2'>
+                          <div className='w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin' />
+                          Sending...
+                        </span>
+                      ) : (
+                        'Send Reset Link'
+                      )}
+                    </Button>
+                  </form>
 
-                <div className='text-center'>
-                  <p className='text-xs text-foreground/60'>
-                    Back to{' '}
+                  {/* Footer */}
+                  <div className='text-center pt-2'>
                     <Link
                       href='/login'
-                      className='text-accent hover:text-accent/80 font-semibold'
+                      className='inline-flex items-center gap-2 text-sm text-foreground/65 hover:text-foreground transition-colors group'
                     >
-                      Sign in
+                      <ArrowLeft className='w-4 h-4 group-hover:-translate-x-1 transition-transform' />
+                      Back to Sign in
                     </Link>
-                  </p>
+                  </div>
                 </div>
-              </>
-            )}
-          </div>
-        </Card>
+              ) : (
+                <div className='space-y-6 animate-in fade-in duration-300'>
+                  {/* Success State */}
+                  <div className='space-y-2 text-center'>
+                    <div className='flex justify-center'>
+                      <div className='w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center'>
+                        <CheckCircle2 className='w-8 h-8 text-green-500' />
+                      </div>
+                    </div>
+                    <h2 className='text-2xl font-bold text-foreground'>
+                      Check Your Email
+                    </h2>
+                    <p className='text-sm text-foreground/65'>
+                      We&apos;ve sent a password reset link to:
+                    </p>
+                  </div>
+
+                  {/* Email Display */}
+                  <div className='bg-primary/5 border border-primary/20 rounded-xl p-4'>
+                    <p className='text-center font-semibold text-foreground text-sm break-all'>
+                      {emailValue}
+                    </p>
+                  </div>
+
+                  {/* Info Box */}
+                  <div className='bg-secondary/40 border border-border/60 rounded-xl p-4 space-y-2'>
+                    <h3 className='font-semibold text-sm text-foreground'>
+                      What&apos;s next?
+                    </h3>
+                    <ul className='text-xs text-foreground/70 space-y-1.5'>
+                      <li className='flex gap-2'>
+                        <span className='text-primary font-bold'>1.</span>
+                        <span>Click the link in your email</span>
+                      </li>
+                      <li className='flex gap-2'>
+                        <span className='text-primary font-bold'>2.</span>
+                        <span>Create a new password</span>
+                      </li>
+                      <li className='flex gap-2'>
+                        <span className='text-primary font-bold'>3.</span>
+                        <span>You&apos;re all set!</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Spam Notice */}
+                  <div className='bg-amber-50 border border-amber-200 rounded-lg p-3'>
+                    <p className='text-xs text-amber-800'>
+                      <span className='font-semibold'>Tip:</span> If you
+                      don&apos;t see the email in a few minutes, check your spam
+                      folder.
+                    </p>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className='space-y-2 pt-2'>
+                    <Button
+                      onClick={() => setEmailSent(false)}
+                      variant='outline'
+                      className='w-full border-border/60 h-11 text-sm font-medium hover:bg-secondary/40 transition-colors'
+                    >
+                      Try Another Email
+                    </Button>
+                    <Link href='/login' className='block'>
+                      <Button
+                        variant='ghost'
+                        className='w-full h-11 text-sm text-foreground/65 hover:text-foreground'
+                      >
+                        Back to Sign in
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+        </div>
       </section>
     </main>
   );
