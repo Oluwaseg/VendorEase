@@ -1,6 +1,7 @@
 'use client';
 import ChatWidget from '@/components/chat-widget';
 import { Footer } from '@/components/common/footer';
+import { InlineLoader } from '@/components/common/loader';
 import { Navbar } from '@/components/common/navbar';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
@@ -11,6 +12,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace('/login?redirect=/dashboard');
+      return;
+    }
+
     if (
       !isLoading &&
       isAuthenticated &&
@@ -19,6 +25,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       router.replace('/admin');
     }
   }, [isLoading, isAuthenticated, user, router]);
+
+  if (isLoading) {
+    return (
+      <InlineLoader message='Checking your session…' className='min-h-svh' />
+    );
+  }
+
+  if (!isAuthenticated || !user) {
+    return null;
+  }
 
   return (
     <>

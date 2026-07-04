@@ -1,6 +1,7 @@
 'use client';
 
 import { AdminShell } from '@/components/admin';
+import { InlineLoader } from '@/components/common/loader';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useEffect } from 'react';
@@ -10,6 +11,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace('/login?redirect=/admin');
+      return;
+    }
+
     if (
       !isLoading &&
       isAuthenticated &&
@@ -19,12 +25,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     }
   }, [isLoading, isAuthenticated, user, router]);
 
-  if (isLoading || !user) {
+  if (isLoading) {
     return (
-      <div className='flex min-h-svh items-center justify-center bg-background'>
-        <p className='text-muted-foreground'>Loading admin dashboard…</p>
-      </div>
+      <InlineLoader message='Checking admin access…' className='min-h-svh' />
     );
+  }
+
+  if (!isAuthenticated || !user) {
+    return null;
   }
 
   return <AdminShell>{children}</AdminShell>;

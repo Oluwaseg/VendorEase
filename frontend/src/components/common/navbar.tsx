@@ -19,7 +19,6 @@ import {
   Minus,
   Plus,
   Search,
-  Settings,
   ShoppingBag,
   ShoppingCart,
   Sparkles,
@@ -664,13 +663,13 @@ export function Navbar() {
                       >
                         Orders
                       </UserLink>
-                      <UserLink
+                      {/* <UserLink
                         href='/dashboard/settings'
                         icon={<Settings className='h-4 w-4' />}
                         onClick={() => setIsUserDropdownOpen(false)}
                       >
                         Settings
-                      </UserLink>
+                      </UserLink> */}
                       <UserLink
                         href='/dashboard/referrals'
                         icon={<Gift className='h-4 w-4' />}
@@ -990,13 +989,13 @@ export function Navbar() {
                     >
                       Orders
                     </MobileItem>
-                    <MobileItem
+                    {/* <MobileItem
                       href='/dashboard/settings'
                       icon={<Settings className='h-4 w-4' />}
                       onClick={() => setIsOpen(false)}
                     >
                       Settings
-                    </MobileItem>
+                    </MobileItem> */}
                     <MobileItem
                       href='/dashboard/referrals'
                       icon={<Gift className='h-4 w-4' />}
